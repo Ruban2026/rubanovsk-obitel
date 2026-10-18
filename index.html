@@ -24,7 +24,7 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <header><div class="brand">Рубановск<span>Территория общих идей</span></div><nav aria-label="Основная навигация"><a href="#map">Карта</a><a href="#about">О проекте</a></nav></header>
 <main>
 <section class="hero"><div class="eyebrow">Наше место · наше будущее</div><h1>Рубановский монастырь начинается с каждого</h1><p class="hero-slogan">Создадим Рай на земле вместе!</p></section>
-<section id="map" aria-labelledby="map-title"><div class="section-head"><div><h2 id="map-title">Территория на карте</h2><p>Нажмите на метку, чтобы узнать больше о месте.</p></div></div>
+<section id="map" aria-label="Карта территории">
 <div class="map-shell"><div class="map-stage"><img src="RubanovskPlane_3x.png" alt="Аэрофотография территории Рубановского с прудом, зелёной зоной, дорогами и садами" loading="eager">
 <button class="marker" style="left:34%;top:57%" data-title="Пруд" data-description="Водоём — один из заметных природных объектов территории. Здесь можно собирать предложения по бережному использованию и сохранению прибрежной зоны." aria-label="Информация: пруд">1</button>
 <button class="marker" style="left:49%;top:48%" data-title="Зелёная зона" data-description="Участок с деревьями и садами. Жители могут предложить идеи по уходу за зелёными насаждениями и улучшению проходов." aria-label="Информация: зелёная зона">2</button>
@@ -37,13 +37,76 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <div class="card"><span class="pill">Обсуждение</span><h3>Предложения сообщества</h3><p>Здесь будут отображаться идеи и поддержка жителей.</p><div id="idea-list" class="idea-list"><p class="notice">Загружаем предложения…</p></div><p class="notice">Голосование подключим отдельным шагом после проверки сохранения предложений.</p></div></div>
 </section>
 <section id="about" class="card" style="margin-top:28px"><h3>О проекте</h3><p>«Рубановск — территория общих идей» — начальная площадка для совместного обсуждения развития территории. Карта создана на основе предоставленной аэрофотографии. Описания и расположение меток являются предварительными и могут уточняться жителями.</p></section>
-</main><footer>Рубановск · Вместе заботимся о месте, которое объединяет нас</footer>
+</main><footer>Рубановск · Вместе заботимся о месте, которое объединяет нас<br><button type="button" id="admin-open" style="margin-top:10px;border:0;background:transparent;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit">Вход администратора</button></footer>
 <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal"><div class="modal-top"><h3 id="modal-title"></h3><button class="close" id="modal-close" aria-label="Закрыть">×</button></div><p id="modal-description"></p><button class="primary" id="modal-idea">Предложить идею об этом месте</button></div></div>
+<div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-top"><h3 id="admin-modal-title">Вход администратора</h3><button class="close" id="admin-close" aria-label="Закрыть">×</button></div><p>Войдите в административную учётную запись, чтобы модерировать предложения.</p><form id="admin-login-form"><div><label for="admin-email">Электронная почта</label><input id="admin-email" type="email" autocomplete="username" required></div><div><label for="admin-password">Пароль</label><input id="admin-password" type="password" autocomplete="current-password" required></div><button class="primary" type="submit">Войти</button><p class="notice" id="admin-login-status" role="status"></p></form><button class="primary" id="admin-logout" type="button" style="display:none">Выйти из режима администратора</button></div></div>
 <script>
 const modal=document.getElementById('modal'),titleEl=document.getElementById('modal-title'),descriptionEl=document.getElementById('modal-description'),placeSelect=document.getElementById('idea-place');
 document.querySelectorAll('.marker').forEach(marker=>marker.addEventListener('click',()=>{titleEl.textContent=marker.dataset.title;descriptionEl.textContent=marker.dataset.description;placeSelect.value=marker.dataset.title==='Существующие дороги'?'Дороги':marker.dataset.title==='Сады и открытые участки'?'Сады и открытые участки':marker.dataset.title;modal.classList.add('open');document.getElementById('modal-close').focus()}));
 function closeModal(){modal.classList.remove('open')}document.getElementById('modal-close').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});document.getElementById('modal-idea').addEventListener('click',()=>{closeModal();const ideasSection=document.getElementById('ideas');ideasSection.style.display='block';ideasSection.scrollIntoView({behavior:'smooth'});document.getElementById('idea-title').focus()});
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
+let adminSession=null;
+let isAdmin=false;
+const adminModal=document.getElementById('admin-modal');
+const adminLoginForm=document.getElementById('admin-login-form');
+const adminLoginStatus=document.getElementById('admin-login-status');
+const adminLogout=document.getElementById('admin-logout');
+function openAdminModal(){adminModal.classList.add('open');document.getElementById('admin-email').focus()}
+function closeAdminModal(){adminModal.classList.remove('open')}
+document.getElementById('admin-open').addEventListener('click',openAdminModal);
+document.getElementById('admin-close').addEventListener('click',closeAdminModal);
+adminModal.addEventListener('click',e=>{if(e.target===adminModal)closeAdminModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAdminModal()});
+adminLoginForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const submit=adminLoginForm.querySelector('button[type="submit"]');
+  submit.disabled=true;
+  adminLoginStatus.textContent='Проверяем данные…';
+  try{
+    const response=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:document.getElementById('admin-email').value.trim(),password:document.getElementById('admin-password').value})
+    });
+    const result=await response.json();
+    if(!response.ok) throw new Error(result.msg||result.message||'Не удалось войти. Проверьте почту и пароль.');
+    if(!result.user||!result.user.app_metadata||result.user.app_metadata.role!=='admin'){
+      await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+result.access_token}});
+      throw new Error('У этой учётной записи нет прав администратора.');
+    }
+    adminSession=result;
+    isAdmin=true;
+    adminLoginStatus.textContent='Вход выполнен. Кнопки удаления доступны только администратору.';
+    adminLoginForm.style.display='none';
+    adminLogout.style.display='block';
+    const ideasSection=document.getElementById('ideas');
+    ideasSection.style.display='block';
+    closeAdminModal();
+    await loadIdeas();
+    ideasSection.scrollIntoView({behavior:'smooth'});
+  }catch(error){adminLoginStatus.textContent=error.message}
+  finally{submit.disabled=false}
+});
+adminLogout.addEventListener('click',async()=>{
+  if(adminSession&&adminSession.access_token){
+    await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token}});
+  }
+  adminSession=null;isAdmin=false;
+  adminLoginForm.reset();adminLoginForm.style.display='grid';adminLogout.style.display='none';adminLoginStatus.textContent='';
+  await loadIdeas();
+  closeAdminModal();
+});
+async function deleteIdea(id,title){
+  if(!isAdmin||!adminSession||!confirm('Удалить предложение «'+title+'»? Это действие нельзя отменить.')) return;
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/ideas?id=eq.'+encodeURIComponent(id),{
+      method:'DELETE',
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,Prefer:'return=minimal'}
+    });
+    if(!response.ok) throw new Error('Удаление не выполнено (HTTP '+response.status+'). Проверьте политику администратора в Supabase.');
+    await loadIdeas();
+  }catch(error){alert(error.message)}
+}
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';
 const ideaList=document.getElementById('idea-list');
 const ideaForm=document.getElementById('idea-form');
@@ -89,6 +152,15 @@ function makeIdeaCard(idea){
   date.className='notice';
   date.textContent=idea.created_at ? new Date(idea.created_at).toLocaleString('ru-RU') : 'Предложение сообщества';
   card.append(heading,description,date);
+  if(isAdmin){
+    const remove=document.createElement('button');
+    remove.type='button';
+    remove.className='vote';
+    remove.textContent='Удалить предложение';
+    remove.style.marginTop='8px';
+    remove.addEventListener('click',()=>deleteIdea(idea.id,idea.title));
+    card.append(remove);
+  }
   return card;
 }
 async function loadIdeas(){

@@ -114,7 +114,8 @@ async function deleteIdea(id,title){
           method:'DELETE',headers:authHeaders
         });
         if(!imageResponse.ok && imageResponse.status!==404){
-          throw new Error('Картинка не удалена (HTTP '+imageResponse.status+'). Проверьте политику удаления в Storage. Само предложение пока сохранено.');
+          const storageError=await imageResponse.text();
+          throw new Error('Картинка не удалена (HTTP '+imageResponse.status+'): '+storageError+'. Само предложение пока сохранено.');
         }
       }
     }

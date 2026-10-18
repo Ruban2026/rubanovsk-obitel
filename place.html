@@ -134,7 +134,7 @@ function makeProjectCard(project,index,ratingRows){
   if(project.image_url){const image=document.createElement('img');image.className='project-image';image.src=project.image_url;image.alt='Фотография проекта: '+project.title;image.loading='lazy';middle.append(image)}
   else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
   const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
-  const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString('ru-RU'):'';details.append(date);
+  const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString(({ru:'ru-RU',uk:'uk-UA',en:'en-GB',pl:'pl-PL',de:'de-DE',fr:'fr-FR'})[window.siteLanguage]||'ru-RU'):'';details.append(date);
   if(isAdmin){const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='10px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));details.append(remove)}
   card.append(top,middle,details);return card;
 }
@@ -221,5 +221,6 @@ form.addEventListener('submit',async event=>{
 });
 loadProjects();
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>

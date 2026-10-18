@@ -33,8 +33,8 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 </div><div class="map-hint"><span class="dot"></span> Метки показывают примерные тематические точки для обсуждения. Их положение и описания можно уточнить вместе с жителями.</div></div></section>
 <section id="ideas" style="padding-top:12px"><div class="section-head"><div><h2>Идеи жителей</h2><p>Собираем предложения о том, что важно для Рубановского.</p></div></div>
 <div class="panel-grid"><div class="card"><span class="pill">Добавить предложение</span><h3>Что хотелось бы улучшить?</h3><p>Опишите идею и укажите, к какой части территории она относится.</p>
-<form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><button class="primary" type="submit">Добавить в список на этом устройстве</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
-<div class="card"><span class="pill">Обсуждение</span><h3>Предложения сообщества</h3><p>Здесь будут отображаться идеи и поддержка жителей.</p><div id="idea-list" class="idea-list"><div class="idea"><strong>Сохранить природную зону у пруда</strong><p>Обсудить, как бережно поддерживать прибрежную зелень и чистоту.</p><button class="vote" type="button" data-demo-vote>♡ Поддержать <span>0</span></button></div><div class="idea"><strong>Собрать предложения по дорожкам</strong><p>Определить участки, где проходы требуют внимания жителей.</p><button class="vote" type="button" data-demo-vote>♡ Поддержать <span>0</span></button></div></div><p class="notice">Голоса пока демонстрационные. Для общего голосования потребуется подключить базу данных и защиту от повторных голосов.</p></div></div>
+<form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><button class="primary" type="submit">Опубликовать предложение</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
+<div class="card"><span class="pill">Обсуждение</span><h3>Предложения сообщества</h3><p>Здесь будут отображаться идеи и поддержка жителей.</p><div id="idea-list" class="idea-list"><p class="notice">Загружаем предложения…</p></div><p class="notice">Голосование подключим отдельным шагом после проверки сохранения предложений.</p></div></div>
 </section>
 <section id="about" class="card" style="margin-top:28px"><h3>О проекте</h3><p>«Рубановск — территория общих идей» — начальная площадка для совместного обсуждения развития территории. Карта создана на основе предоставленной аэрофотографии. Описания и расположение меток являются предварительными и могут уточняться жителями.</p></section>
 </main><footer>Рубановск · Вместе заботимся о месте, которое объединяет нас</footer>
@@ -43,9 +43,93 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 const modal=document.getElementById('modal'),titleEl=document.getElementById('modal-title'),descriptionEl=document.getElementById('modal-description'),placeSelect=document.getElementById('idea-place');
 document.querySelectorAll('.marker').forEach(marker=>marker.addEventListener('click',()=>{titleEl.textContent=marker.dataset.title;descriptionEl.textContent=marker.dataset.description;placeSelect.value=marker.dataset.title==='Существующие дороги'?'Дороги':marker.dataset.title==='Сады и открытые участки'?'Сады и открытые участки':marker.dataset.title;modal.classList.add('open');document.getElementById('modal-close').focus()}));
 function closeModal(){modal.classList.remove('open')}document.getElementById('modal-close').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});document.getElementById('modal-idea').addEventListener('click',()=>{closeModal();document.getElementById('ideas').scrollIntoView({behavior:'smooth'});document.getElementById('idea-title').focus()});
-document.querySelectorAll('[data-demo-vote]').forEach(btn=>btn.addEventListener('click',()=>{const n=btn.querySelector('span');n.textContent=String(Number(n.textContent)+1);btn.disabled=true;btn.firstChild.textContent='♥ Вы поддержали '}));
-const form=document.getElementById('idea-form'),list=document.getElementById('idea-list');const storageKey='rubanovsk-demo-ideas-v1';let ideas=[];try{ideas=JSON.parse(localStorage.getItem(storageKey)||'[]')}catch(e){ideas=[]}
-function renderIdea(idea){const card=document.createElement('div');card.className='idea';const strong=document.createElement('strong');strong.textContent=idea.title;const p=document.createElement('p');p.textContent=idea.place+' — '+idea.description;const tag=document.createElement('span');tag.className='pill';tag.textContent='Новое предложение';card.append(strong,p,tag);list.prepend(card)}
-ideas.forEach(renderIdea);form.addEventListener('submit',e=>{e.preventDefault();const data={title:form.elements.title.value.trim(),place:form.elements.place.value,description:form.elements.description.value.trim()};if(!data.title||!data.description)return;ideas.push(data);try{localStorage.setItem(storageKey,JSON.stringify(ideas))}catch(e){}renderIdea(data);form.reset();alert('Предложение добавлено в список на этом устройстве. Чтобы его увидели другие жители, нужно подключить общую базу данных.')});
+const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';
+const ideaList=document.getElementById('idea-list');
+const ideaForm=document.getElementById('idea-form');
+const submitButton=ideaForm.querySelector('button[type="submit"]');
+const statusNotice=document.querySelector('#idea-form').parentElement.querySelector('.notice');
+const communityNotice=ideaList.parentElement.querySelector('.notice');
+ideaList.replaceChildren();
+const loadingMessage=document.createElement('p');
+loadingMessage.className='notice';
+loadingMessage.textContent='Загружаем предложения…';
+ideaList.append(loadingMessage);
+submitButton.textContent='Опубликовать предложение';
+statusNotice.textContent='Предложение будет сохранено в общей базе и станет доступно другим посетителям сайта.';
+communityNotice.textContent='Предложения загружаются из общей базы Supabase.';
+function makeIdeaCard(idea){
+  const card=document.createElement('div');
+  card.className='idea';
+  const heading=document.createElement('strong');
+  heading.textContent=idea.title;
+  const description=document.createElement('p');
+  description.textContent=idea.place+' — '+idea.description;
+  const date=document.createElement('p');
+  date.className='notice';
+  date.textContent=idea.created_at ? new Date(idea.created_at).toLocaleString('ru-RU') : 'Предложение сообщества';
+  card.append(heading,description,date);
+  return card;
+}
+async function loadIdeas(){
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/ideas?select=id,title,place,description,created_at&order=created_at.desc',{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}
+    });
+    if(!response.ok) throw new Error('Не удалось загрузить предложения (HTTP '+response.status+').');
+    const ideas=await response.json();
+    ideaList.replaceChildren();
+    if(!ideas.length){
+      const empty=document.createElement('p');
+      empty.className='notice';
+      empty.textContent='Пока нет предложений. Будьте первым, кто поделится идеей!';
+      ideaList.append(empty);
+      return;
+    }
+    ideas.forEach(idea=>ideaList.append(makeIdeaCard(idea)));
+  }catch(error){
+    ideaList.replaceChildren();
+    const message=document.createElement('p');
+    message.className='notice';
+    message.textContent=error.message+' Проверьте настройки API и политики доступа Supabase.';
+    ideaList.append(message);
+  }
+}
+ideaForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const data={
+    title:ideaForm.elements.title.value.trim(),
+    place:ideaForm.elements.place.value,
+    description:ideaForm.elements.description.value.trim()
+  };
+  if(!data.title||!data.description) return;
+  submitButton.disabled=true;
+  submitButton.textContent='Сохраняем…';
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/ideas',{
+      method:'POST',
+      headers:{
+        apikey:SUPABASE_PUBLISHABLE_KEY,
+        Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY,
+        'Content-Type':'application/json',
+        Prefer:'return=representation'
+      },
+      body:JSON.stringify(data)
+    });
+    if(!response.ok){
+      const detail=await response.text();
+      throw new Error('Не удалось сохранить предложение (HTTP '+response.status+'). '+detail);
+    }
+    ideaForm.reset();
+    await loadIdeas();
+    alert('Предложение сохранено! Теперь оно доступно всем посетителям сайта.');
+  }catch(error){
+    alert('Ошибка подключения к Supabase: '+error.message);
+  }finally{
+    submitButton.disabled=false;
+    submitButton.textContent='Опубликовать предложение';
+  }
+});
+loadIdeas();
 </script>
 </body></html>

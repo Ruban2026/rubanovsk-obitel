@@ -97,14 +97,34 @@ adminLogout.addEventListener('click',async()=>{
   closeAdminModal();
 });
 async function deleteIdea(id,title){
-  if(!isAdmin||!adminSession||!confirm('Удалить предложение «'+title+'»? Это действие нельзя отменить.')) return;
+  if(!isAdmin||!adminSession||!confirm('Удалить предложение «'+title+'» вместе с прикреплённой картинкой? Это действие нельзя отменить.')) return;
   try{
+    const authHeaders={apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token};
+    const lookup=await fetch(SUPABASE_URL+'/rest/v1/ideas?select=id,image_url&id=eq.'+encodeURIComponent(id),{headers:authHeaders});
+    if(!lookup.ok) throw new Error('Не удалось получить данные предложения (HTTP '+lookup.status+').');
+    const rows=await lookup.json();
+    if(!rows.length) throw new Error('Предложение уже удалено или не найдено.');
+    const imageUrl=rows[0].image_url;
+    if(imageUrl){
+      const publicPrefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';
+      if(imageUrl.startsWith(publicPrefix)){
+        const objectPath=imageUrl.slice(publicPrefix.length).split('/').map(part=>decodeURIComponent(part)).join('/');
+        const storagePath=objectPath.split('/').map(part=>encodeURIComponent(part)).join('/');
+        const imageResponse=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images/'+storagePath,{
+          method:'DELETE',headers:authHeaders
+        });
+        if(!imageResponse.ok && imageResponse.status!==404){
+          throw new Error('Картинка не удалена (HTTP '+imageResponse.status+'). Проверьте политику удаления в Storage. Само предложение пока сохранено.');
+        }
+      }
+    }
     const response=await fetch(SUPABASE_URL+'/rest/v1/ideas?id=eq.'+encodeURIComponent(id),{
       method:'DELETE',
-      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,Prefer:'return=minimal'}
+      headers:{...authHeaders,Prefer:'return=minimal'}
     });
-    if(!response.ok) throw new Error('Удаление не выполнено (HTTP '+response.status+'). Проверьте политику администратора в Supabase.');
+    if(!response.ok) throw new Error('Удаление предложения не выполнено (HTTP '+response.status+').');
     await loadIdeas();
+    alert('Предложение и его картинка удалены.');
   }catch(error){alert(error.message)}
 }
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';

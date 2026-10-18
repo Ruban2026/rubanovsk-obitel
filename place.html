@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173f35">
+<title>Проекты территории — Рубановск</title>
+<style>
+:root{--forest:#173f35;--leaf:#477b59;--cream:#f6f4ed;--ink:#1d2c26;--muted:#64736b;--line:#dce4dc;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+header{background:var(--forest);color:white;padding:18px max(22px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-weight:800;letter-spacing:.02em;font-size:1.08rem}.brand span{display:block;font-size:.76rem;font-weight:500;opacity:.75;letter-spacing:.08em;text-transform:uppercase}
+a{color:inherit}.back{color:#e7eee8;text-decoration:none;border:1px solid #ffffff55;border-radius:10px;padding:8px 12px;white-space:nowrap}.back:hover{background:#ffffff12}
+main{max-width:1180px;margin:auto;padding:0 22px 64px}.intro{padding:38px 0 24px}.eyebrow{color:var(--leaf);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.13em}.intro h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.12;letter-spacing:-.04em;margin:10px 0;color:var(--forest)}.intro p{color:var(--muted);margin:0;max-width:760px}
+details.new-project{background:white;border:1px solid var(--line);border-radius:15px;margin:6px 0 32px;overflow:hidden;box-shadow:0 8px 24px #1b3a2b08}
+details.new-project>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;color:var(--forest);font-weight:800;font-size:1.05rem}
+details.new-project>summary::-webkit-details-marker{display:none}details.new-project>summary:after{content:"＋";font-size:1.35rem;line-height:1;color:var(--leaf)}details.new-project[open]>summary:after{content:"−"}
+.form-inner{padding:0 20px 22px;border-top:1px solid var(--line)}.form-inner>p{color:var(--muted);font-size:.92rem;margin:15px 0}
+form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;font-size:.9rem;font-weight:750;margin-bottom:5px}input,textarea{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}textarea{min-height:115px;resize:vertical}input:focus,textarea:focus{outline:3px solid #477b5933;border-color:var(--leaf)}button.primary{background:var(--forest);color:white;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;width:fit-content}button.primary:hover{background:#245444}button:disabled{opacity:.6;cursor:wait}.notice{font-size:.84rem;color:var(--muted)}.preview{display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:10px}
+.projects-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:0 0 14px}.projects-heading h2{margin:0;color:var(--forest);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.025em}.projects-heading p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.project-list{display:grid;gap:14px}.project{display:grid;grid-template-columns:minmax(145px, .75fr) minmax(190px, .95fr) minmax(230px, 1.6fr);gap:20px;align-items:start;background:white;border:1px solid var(--line);border-radius:16px;padding:17px}.project-name{display:flex;gap:12px;align-items:flex-start}.number{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:50%;background:#eaf1e9;color:var(--forest);font-weight:850}.project h3{margin:5px 0 0;color:var(--forest);font-size:1.08rem;line-height:1.35;overflow-wrap:anywhere}.project-image{width:100%;max-height:230px;aspect-ratio:4/3;object-fit:cover;border-radius:11px;background:#f2f2ec}.project-description{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.project-date{font-size:.8rem;color:var(--muted);margin-top:12px}.empty{background:white;border:1px dashed #c8d5ca;border-radius:15px;padding:26px;color:var(--muted)}.empty strong{display:block;color:var(--forest);font-size:1.05rem;margin-bottom:5px}
+.admin{margin-top:35px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:.86rem}.text-button{background:transparent;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}
+.modal-backdrop{position:fixed;inset:0;background:#0b211bcc;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal-backdrop.open{display:flex}.modal{background:white;border-radius:18px;padding:26px;max-width:460px;width:100%;box-shadow:0 20px 80px #0004}.modal-top{display:flex;align-items:start;justify-content:space-between;gap:20px}.modal h2{font-size:1.4rem;margin:0;color:var(--forest)}.close{border:0;background:#edf1ec;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.2rem;flex:none}.modal form{margin-top:18px}
+@media(max-width:760px){header{align-items:flex-start;flex-direction:column}.project{grid-template-columns:1fr;gap:12px}.project-name{align-items:center}.project-image{max-height:320px;aspect-ratio:16/9}.projects-heading{align-items:start;flex-direction:column}.admin{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="brand">Рубановск<span>Территория общих идей</span></div><a class="back" href="index.html">← На карту</a></header>
+<main>
+<section class="intro"><div class="eyebrow">Проекты сообщества</div><h1 id="place-title">Проекты территории</h1><p id="place-description">Здесь собраны проекты, относящиеся к выбранному месту на карте.</p></section>
+<details class="new-project" id="new-project">
+<summary>＋ Предложить новый проект</summary>
+<div class="form-inner"><p>Опишите конкретную идею для этого места и, если есть, добавьте фотографию. После публикации проект появится в общем списке.</p>
+<form id="project-form">
+<div><label for="project-title">Название проекта</label><input id="project-title" name="title" required maxlength="120" placeholder="Например, обустроить прогулочную дорожку"></div>
+<div><label for="project-description">Описание проекта</label><textarea id="project-description" name="description" required maxlength="3000" placeholder="Что предлагается сделать, для чего это нужно и как это может выглядеть?"></textarea></div>
+<div><label for="project-image">Фотография проекта (JPG, PNG или WebP, до 3 МБ)</label><input id="project-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><img id="image-preview" class="preview" alt="Предварительный просмотр фотографии"></div>
+<button class="primary" id="project-submit" type="submit">Опубликовать проект</button><p class="notice" id="form-status" role="status">Заполните поля и нажмите «Опубликовать проект».</p>
+</form></div>
+</details>
+<section aria-labelledby="projects-title"><div class="projects-heading"><div><h2 id="projects-title">Проекты этого места</h2><p id="project-count">Загружаем список…</p></div></div><div id="project-list" class="project-list" aria-live="polite"><div class="empty">Загружаем проекты…</div></div></section>
+<div class="admin"><span id="admin-status">Предложения публикуются в общей базе проектов.</span><button class="text-button" id="admin-open" type="button">Вход администратора</button></div>
+</main>
+<div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-top"><h2 id="admin-modal-title">Вход администратора</h2><button class="close" id="admin-close" aria-label="Закрыть">×</button></div><form id="admin-login-form"><div><label for="admin-email">Электронная почта</label><input id="admin-email" type="email" autocomplete="username" required></div><div><label for="admin-password">Пароль</label><input id="admin-password" type="password" autocomplete="current-password" required></div><button class="primary" type="submit">Войти</button><p class="notice" id="admin-login-status" role="status"></p></form><button class="primary" id="admin-logout" type="button" style="display:none;margin-top:16px">Выйти из режима администратора</button></div></div>
+<script>
+const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';
+const places={
+  pond:{name:'Пруд',description:'Проекты по бережному использованию пруда, благоустройству берегов и сохранению природной среды.'},
+  'green-zone':{name:'Зелёная зона',description:'Проекты по уходу за деревьями и зелёными насаждениями, озеленению и удобным пешеходным проходам.'},
+  roads:{name:'Существующие дороги',description:'Проекты по улучшению дорог, проходов, доступности и удобству перемещения по территории.'},
+  gardens:{name:'Сады и открытые участки',description:'Проекты по развитию садов, использованию открытых участков и совместному уходу за территорией.'}
+};
+const params=new URLSearchParams(location.search);
+const placeSlug=params.get('place');
+const place=places[placeSlug];
+const title=document.getElementById('place-title');
+const placeDescription=document.getElementById('place-description');
+const projectList=document.getElementById('project-list');
+const projectCount=document.getElementById('project-count');
+const form=document.getElementById('project-form');
+const submitButton=document.getElementById('project-submit');
+const formStatus=document.getElementById('form-status');
+const imageInput=document.getElementById('project-image');
+const imagePreview=document.getElementById('image-preview');
+let adminSession=null;
+let isAdmin=false;
+if(!place){
+  title.textContent='Место не найдено';
+  placeDescription.textContent='Не удалось определить место на карте. Вернитесь на главную и выберите одну из меток.';
+  form.style.display='none';
+  document.getElementById('new-project').style.display='none';
+  projectList.innerHTML='<div class="empty"><strong>Неизвестное место</strong><a href="index.html">Вернуться к карте</a></div>';
+  projectCount.textContent='';
+}else{
+  document.title='Проекты: '+place.name+' — Рубановск';
+  title.textContent=place.name;
+  placeDescription.textContent=place.description;
+}
+const adminModal=document.getElementById('admin-modal');
+const adminLoginForm=document.getElementById('admin-login-form');
+const adminLoginStatus=document.getElementById('admin-login-status');
+const adminLogout=document.getElementById('admin-logout');
+function openAdminModal(){adminModal.classList.add('open');document.getElementById('admin-email').focus()}
+function closeAdminModal(){adminModal.classList.remove('open')}
+document.getElementById('admin-open').addEventListener('click',openAdminModal);
+document.getElementById('admin-close').addEventListener('click',closeAdminModal);
+adminModal.addEventListener('click',e=>{if(e.target===adminModal)closeAdminModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAdminModal()});
+adminLoginForm.addEventListener('submit',async e=>{
+  e.preventDefault();const button=adminLoginForm.querySelector('button[type="submit"]');button.disabled=true;adminLoginStatus.textContent='Проверяем данные…';
+  try{
+    const response=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('admin-email').value.trim(),password:document.getElementById('admin-password').value})});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.msg||result.message||'Не удалось войти. Проверьте почту и пароль.');
+    if(!result.user||!result.user.app_metadata||result.user.app_metadata.role!=='admin'){
+      await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+result.access_token}});
+      throw new Error('У этой учётной записи нет прав администратора.');
+    }
+    adminSession=result;isAdmin=true;adminLoginStatus.textContent='Вход выполнен.';adminLoginForm.style.display='none';adminLogout.style.display='block';document.getElementById('admin-status').textContent='Режим администратора включён: можно удалять проекты.';closeAdminModal();await loadProjects();
+  }catch(error){adminLoginStatus.textContent=error.message}finally{button.disabled=false}
+});
+adminLogout.addEventListener('click',async()=>{
+  if(adminSession&&adminSession.access_token)await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token}});
+  adminSession=null;isAdmin=false;adminLoginForm.reset();adminLoginForm.style.display='grid';adminLogout.style.display='none';adminLoginStatus.textContent='';document.getElementById('admin-status').textContent='Предложения публикуются в общей базе проектов.';closeAdminModal();await loadProjects();
+});
+function makeProjectCard(project,index){
+  const card=document.createElement('article');card.className='project';
+  const name=document.createElement('div');name.className='project-name';
+  const number=document.createElement('span');number.className='number';number.textContent=String(index+1);
+  const heading=document.createElement('h3');heading.textContent=project.title;name.append(number,heading);
+  const middle=document.createElement('div');
+  if(project.image_url){const image=document.createElement('img');image.className='project-image';image.src=project.image_url;image.alt='Фотография проекта: '+project.title;image.loading='lazy';middle.append(image)}
+  else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
+  const details=document.createElement('div');const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
+  const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString('ru-RU'):'';details.append(date);
+  if(isAdmin){const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='10px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));details.append(remove)}
+  card.append(name,middle,details);return card;
+}
+async function loadProjects(){
+  if(!place){return}
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?select=id,place,title,description,image_url,created_at&place=eq.'+encodeURIComponent(placeSlug)+'&order=created_at.asc',{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}
+    });
+    if(!response.ok){const detail=await response.text();throw new Error(response.status===404||response.status===400?'Таблица проектов ещё не создана в Supabase. Следующим шагом настроим её.':'Не удалось загрузить проекты (HTTP '+response.status+'). '+detail)}
+    const projects=await response.json();projectList.replaceChildren();projectCount.textContent=projects.length+' '+(projects.length===1?'проект':projects.length>1&&projects.length<5?'проекта':'проектов');
+    if(!projects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
+    projects.forEach((project,index)=>projectList.append(makeProjectCard(project,index)));
+  }catch(error){projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
+}
+imageInput.addEventListener('change',()=>{
+  const file=imageInput.files&&imageInput.files[0];if(!file){imagePreview.removeAttribute('src');imagePreview.style.display='none';return}
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>3*1024*1024){alert('Выберите JPG, PNG или WebP размером не более 3 МБ.');imageInput.value='';imagePreview.removeAttribute('src');imagePreview.style.display='none';return}
+  imagePreview.src=URL.createObjectURL(file);imagePreview.style.display='block';
+});
+async function uploadProjectImage(file){
+  if(!file)return null;
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Формат изображения должен быть JPG, PNG или WebP.');
+  if(file.size>3*1024*1024)throw new Error('Размер изображения не должен превышать 3 МБ.');
+  const extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+  const path='projects/'+placeSlug+'/'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)+'.'+extension;
+  const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images/'+path,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':file.type,'x-upsert':'false'},body:file});
+  if(!response.ok)throw new Error('Не удалось загрузить фотографию (HTTP '+response.status+'). '+await response.text());
+  return SUPABASE_URL+'/storage/v1/object/public/idea-images/'+path;
+}
+async function deleteProject(project){
+  if(!isAdmin||!adminSession||!confirm('Удалить проект «'+project.title+'» вместе с фотографией? Это действие нельзя отменить.'))return;
+  try{
+    const headers={apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token};
+    if(project.image_url){
+      const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';
+      if(project.image_url.startsWith(prefix)){
+        const path=project.image_url.slice(prefix.length).split('/').map(part=>decodeURIComponent(part)).join('/');
+        if(path.startsWith('projects/')){
+          const imageResponse=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})});
+          if(!imageResponse.ok&&imageResponse.status!==404)throw new Error('Фотография не удалена (HTTP '+imageResponse.status+'). Проект пока оставлен в базе.');
+        }
+      }
+    }
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{method:'DELETE',headers:{...headers,Prefer:'return=minimal'}});
+    if(!response.ok)throw new Error('Не удалось удалить проект (HTTP '+response.status+').');
+    await loadProjects();alert('Проект удалён.');
+  }catch(error){alert(error.message)}
+}
+form.addEventListener('submit',async event=>{
+  event.preventDefault();if(!place){formStatus.textContent='Сначала выберите место на карте.';return}
+  const data={place:placeSlug,title:form.elements.title.value.trim(),description:form.elements.description.value.trim()};
+  const file=imageInput.files&&imageInput.files[0];if(!data.title||!data.description)return;
+  submitButton.disabled=true;formStatus.textContent=file?'Загружаем фотографию…':'Сохраняем проект…';
+  let imageUrl=null;
+  try{
+    imageUrl=await uploadProjectImage(file);data.image_url=imageUrl;
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(data)});
+    if(!response.ok)throw new Error('Не удалось сохранить проект (HTTP '+response.status+'). '+await response.text());
+    form.reset();imagePreview.removeAttribute('src');imagePreview.style.display='none';formStatus.textContent='Проект опубликован и добавлен в общий список.';await loadProjects();document.getElementById('new-project').open=false;
+  }catch(error){
+    formStatus.textContent='Ошибка: '+error.message;
+    if(imageUrl){const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';if(imageUrl.startsWith(prefix)){const path=imageUrl.slice(prefix.length);if(path.startsWith('projects/'))fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})}).catch(()=>{})}}
+  }finally{submitButton.disabled=false}
+});
+loadProjects();
+</script>
+</body>
+</html>

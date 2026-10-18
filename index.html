@@ -33,7 +33,7 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 </div><div class="map-hint"><span class="dot"></span> Метки показывают примерные тематические точки для обсуждения. Их положение и описания можно уточнить вместе с жителями.</div></div></section>
 <section id="ideas" style="padding-top:12px"><div class="section-head"><div><h2>Идеи жителей</h2><p>Собираем предложения о том, что важно для Рубановского.</p></div></div>
 <div class="panel-grid"><div class="card"><span class="pill">Добавить предложение</span><h3>Что хотелось бы улучшить?</h3><p>Опишите идею и укажите, к какой части территории она относится.</p>
-<form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><div><label for="idea-image">Фотография или рисунок (до 5 МБ)</label><input id="idea-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><p class="notice">Можно прикрепить JPG, PNG или WebP. Изображение будет видно всем посетителям.</p><img id="image-preview" alt="Предварительный просмотр изображения" style="display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px"></div><button class="primary" type="submit">Опубликовать предложение</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
+<form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><div><label for="idea-image">Фотография или рисунок (до 3 МБ)</label><input id="idea-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><p class="notice">Можно прикрепить JPG, PNG или WebP. Изображение будет видно всем посетителям.</p><img id="image-preview" alt="Предварительный просмотр изображения" style="display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px"></div><button class="primary" type="submit">Опубликовать предложение</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
 <div class="card"><span class="pill">Обсуждение</span><h3>Предложения сообщества</h3><p>Здесь будут отображаться идеи и поддержка жителей.</p><div id="idea-list" class="idea-list"><p class="notice">Загружаем предложения…</p></div><p class="notice">Голосование подключим отдельным шагом после проверки сохранения предложений.</p></div></div>
 </section>
 <section id="about" class="card" style="margin-top:28px"><h3>О проекте</h3><p>«Рубановск — территория общих идей» — начальная площадка для совместного обсуждения развития территории. Карта создана на основе предоставленной аэрофотографии. Описания и расположение меток являются предварительными и могут уточняться жителями.</p></section>
@@ -64,7 +64,7 @@ imageInput.addEventListener('change',()=>{
   const file=imageInput.files && imageInput.files[0];
   if(!file){imagePreview.removeAttribute('src');imagePreview.style.display='none';return;}
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){
-    alert('Выберите изображение JPG, PNG или WebP размером не более 5 МБ.');
+    alert('Выберите изображение JPG, PNG или WebP размером не более 3 МБ.');
     imageInput.value='';imagePreview.removeAttribute('src');imagePreview.style.display='none';return;
   }
   imagePreview.src=URL.createObjectURL(file);
@@ -118,7 +118,7 @@ async function loadIdeas(){
 async function uploadImage(file){
   if(!file) return null;
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Формат изображения должен быть JPG, PNG или WebP.');
-  if(file.size>5*1024*1024) throw new Error('Размер изображения не должен превышать 5 МБ.');
+  if(file.size>3*1024*1024) throw new Error('Размер изображения не должен превышать 3 МБ.');
   const extension=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' })[file.type];
   const path=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)+'.'+extension;
   const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images/'+path,{

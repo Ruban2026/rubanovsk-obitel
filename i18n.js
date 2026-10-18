@@ -25,7 +25,12 @@ window.siteLanguage=currentLanguage;
 function translateValue(value){
   const key=String(value).trim();
   if(!key) return value;
-  const translated=dict[currentLanguage][key];
+  let sourceKey=key;
+  if(dict[currentLanguage][sourceKey]===undefined){
+    const matching=rows.find(row=>row.some(phrase=>phrase===key));
+    if(matching) sourceKey=matching[0];
+  }
+  const translated=dict[currentLanguage][sourceKey];
   if(translated===undefined) return value;
   const leading=String(value).match(/^\\s*/)?.[0]||'';
   const trailing=String(value).match(/\\s*$/)?.[0]||'';

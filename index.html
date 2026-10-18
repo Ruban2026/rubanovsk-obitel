@@ -11,7 +11,7 @@
 header{background:var(--forest);color:white;padding:18px max(22px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{font-weight:800;letter-spacing:.02em;font-size:1.08rem}.brand span{display:block;font-size:.76rem;font-weight:500;opacity:.75;letter-spacing:.08em;text-transform:uppercase}
 nav{display:flex;gap:22px;flex-wrap:wrap}nav a{color:#e7eee8;text-decoration:none;font-size:.93rem}nav a:hover{text-decoration:underline}
-main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;max-width:780px}.eyebrow{color:var(--leaf);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.13em}.hero h1{font-size:clamp(1.9rem,4vw,3.7rem);line-height:1.08;letter-spacing:-.045em;margin:12px 0 18px;color:var(--forest);white-space:nowrap;max-width:100%}.hero p{font-size:1.12rem;color:var(--muted);max-width:650px;margin:0}
+main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;max-width:780px}.eyebrow{color:var(--leaf);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.13em}.hero h1{font-size:clamp(1.9rem,4vw,3.7rem);line-height:1.08;letter-spacing:-.045em;margin:12px 0 18px;color:var(--forest);white-space:nowrap;max-width:100%}.hero p{font-size:1.12rem;color:var(--muted);max-width:650px;margin:0}.hero .hero-slogan{white-space:nowrap;max-width:none}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:30px 0 14px}.section-head h2{font-size:clamp(1.45rem,3vw,2rem);margin:0;color:var(--forest);letter-spacing:-.025em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:.94rem}
 .map-shell{background:#fff;border:1px solid var(--line);padding:10px;border-radius:20px;box-shadow:0 14px 40px #1b3a2b0d}#map{width:100vw;margin-left:calc(50% - 50vw)}#map .section-head{max-width:1224px;margin:30px auto 14px;padding:0 22px}#map .map-shell{padding:0;border-left:0;border-right:0;border-radius:0;box-shadow:none}#map .map-stage{border-radius:0}#map .map-hint{padding:12px 22px}.map-stage{position:relative;overflow:hidden;border-radius:13px;background:#dfe5d5}.map-stage img{display:block;width:100%;height:auto}.marker{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid white;border-radius:50%;background:var(--forest);color:#fff;font-weight:800;font-size:.88rem;box-shadow:0 3px 12px #10281f66;cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s}.marker:hover,.marker:focus-visible{transform:translate(-50%,-50%) scale(1.12);background:#c36b43;outline:3px solid #ffffffa8;outline-offset:2px}.map-hint{padding:10px 6px 2px;color:var(--muted);font-size:.87rem;display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;background:var(--leaf);border-radius:50%;display:inline-block;flex:none}
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px}.card h3{margin:0 0 8px;color:var(--forest);font-size:1.2rem}.card p{margin:0;color:var(--muted)}.pill{display:inline-flex;background:#eaf1e9;color:var(--forest);border-radius:99px;padding:5px 10px;font-size:.78rem;font-weight:750;margin-bottom:12px}
@@ -21,9 +21,9 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 </style>
 </head>
 <body>
-<header><div class="brand">Рубановск<span>Территория общих идей</span></div><nav aria-label="Основная навигация"><a href="#map">Карта</a><a href="#ideas">Предложения</a><a href="#about">О проекте</a></nav></header>
+<header><div class="brand">Рубановск<span>Территория общих идей</span></div><nav aria-label="Основная навигация"><a href="#map">Карта</a><a href="#about">О проекте</a></nav></header>
 <main>
-<section class="hero"><div class="eyebrow">Наше место · наше будущее</div><h1>Рубановский монастырь начинается с каждого</h1><p>Изучайте территорию, отмечайте важные места и предлагайте идеи, которые сделают нашу общую среду лучше.</p></section>
+<section class="hero"><div class="eyebrow">Наше место · наше будущее</div><h1>Рубановский монастырь начинается с каждого</h1><p class="hero-slogan">Создадим Рай на земле вместе!</p></section>
 <section id="map" aria-labelledby="map-title"><div class="section-head"><div><h2 id="map-title">Территория на карте</h2><p>Нажмите на метку, чтобы узнать больше о месте.</p></div></div>
 <div class="map-shell"><div class="map-stage"><img src="RubanovskPlane_3x.png" alt="Аэрофотография территории Рубановского с прудом, зелёной зоной, дорогами и садами" loading="eager">
 <button class="marker" style="left:34%;top:57%" data-title="Пруд" data-description="Водоём — один из заметных природных объектов территории. Здесь можно собирать предложения по бережному использованию и сохранению прибрежной зоны." aria-label="Информация: пруд">1</button>
@@ -31,7 +31,7 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <button class="marker" style="left:68%;top:56%" data-title="Существующие дороги" data-description="Дорожная сеть связывает разные части территории. Здесь можно обсуждать удобство прохода, доступность и содержание дорог." aria-label="Информация: дороги">3</button>
 <button class="marker" style="left:53%;top:30%" data-title="Сады и открытые участки" data-description="Зона садов и открытых участков. Добавляйте конкретные предложения, если хотите обсудить развитие или уход за этой территорией." aria-label="Информация: сады и открытые участки">4</button>
 </div><div class="map-hint"><span class="dot"></span> Метки показывают примерные тематические точки для обсуждения. Их положение и описания можно уточнить вместе с жителями.</div></div></section>
-<section id="ideas" style="padding-top:12px"><div class="section-head"><div><h2>Идеи жителей</h2><p>Собираем предложения о том, что важно для Рубановского.</p></div></div>
+<section id="ideas" style="display:none;padding-top:12px"><div class="section-head"><div><h2>Предложить свою идею ...</h2><p>Собираем предложения о том, что важно для Рубановского.</p></div></div>
 <div class="panel-grid"><div class="card"><span class="pill">Добавить предложение</span><h3>Что хотелось бы улучшить?</h3><p>Опишите идею и укажите, к какой части территории она относится.</p>
 <form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><div><label for="idea-image">Фотография или рисунок (до 3 МБ)</label><input id="idea-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><p class="notice">Можно прикрепить JPG, PNG или WebP. Изображение будет видно всем посетителям.</p><img id="image-preview" alt="Предварительный просмотр изображения" style="display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px"></div><button class="primary" type="submit">Опубликовать предложение</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
 <div class="card"><span class="pill">Обсуждение</span><h3>Предложения сообщества</h3><p>Здесь будут отображаться идеи и поддержка жителей.</p><div id="idea-list" class="idea-list"><p class="notice">Загружаем предложения…</p></div><p class="notice">Голосование подключим отдельным шагом после проверки сохранения предложений.</p></div></div>
@@ -42,7 +42,7 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <script>
 const modal=document.getElementById('modal'),titleEl=document.getElementById('modal-title'),descriptionEl=document.getElementById('modal-description'),placeSelect=document.getElementById('idea-place');
 document.querySelectorAll('.marker').forEach(marker=>marker.addEventListener('click',()=>{titleEl.textContent=marker.dataset.title;descriptionEl.textContent=marker.dataset.description;placeSelect.value=marker.dataset.title==='Существующие дороги'?'Дороги':marker.dataset.title==='Сады и открытые участки'?'Сады и открытые участки':marker.dataset.title;modal.classList.add('open');document.getElementById('modal-close').focus()}));
-function closeModal(){modal.classList.remove('open')}document.getElementById('modal-close').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});document.getElementById('modal-idea').addEventListener('click',()=>{closeModal();document.getElementById('ideas').scrollIntoView({behavior:'smooth'});document.getElementById('idea-title').focus()});
+function closeModal(){modal.classList.remove('open')}document.getElementById('modal-close').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});document.getElementById('modal-idea').addEventListener('click',()=>{closeModal();const ideasSection=document.getElementById('ideas');ideasSection.style.display='block';ideasSection.scrollIntoView({behavior:'smooth'});document.getElementById('idea-title').focus()});
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';
 const ideaList=document.getElementById('idea-list');
@@ -63,7 +63,7 @@ communityNotice.textContent='Предложения загружаются из 
 imageInput.addEventListener('change',()=>{
   const file=imageInput.files && imageInput.files[0];
   if(!file){imagePreview.removeAttribute('src');imagePreview.style.display='none';return;}
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>3*1024*1024){
     alert('Выберите изображение JPG, PNG или WebP размером не более 3 МБ.');
     imageInput.value='';imagePreview.removeAttribute('src');imagePreview.style.display='none';return;
   }
@@ -173,15 +173,5 @@ ideaForm.addEventListener('submit',async event=>{
     submitButton.textContent='Опубликовать предложение';
   }
 });
-loadIdeas();
-    alert('Предложение сохранено! Теперь оно доступно всем посетителям сайта.');
-  }catch(error){
-    alert('Ошибка подключения к Supabase: '+error.message);
-  }finally{
-    submitButton.disabled=false;
-    submitButton.textContent='Опубликовать предложение';
-  }
-});
-loadIdeas();
 </script>
 </body></html>

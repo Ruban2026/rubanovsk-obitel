@@ -22,6 +22,7 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Проекты по развитию садов, использованию открытых участков и совместному уходу за территорией.","Проєкти з розвитку садів, використання відкритих ділянок і спільного догляду за територією.","Projects for developing gardens, using open spaces, and caring for the area together.","Projekty rozwoju ogrodów, wykorzystania otwartych terenów i wspólnej troski o okolicę.","Projekte zur Entwicklung von Gärten, Nutzung offener Flächen und gemeinschaftlichen Pflege des Gebiets.","Projets pour développer les jardins, utiliser les espaces ouverts et entretenir le territoire ensemble."],
 ["Создадим Рай на земле вместе!","Створімо Рай на землі разом!","Let’s create a paradise on Earth together!","Stwórzmy razem raj na ziemi!","Erschaffen wir gemeinsam ein Paradies auf Erden!","Créons ensemble un paradis sur Terre !"]];
 const codes = ['ru','uk','en','pl','de','fr'];
+const selectorOrder = ['uk','en','pl','de','fr','ru'];
 const dict = Object.fromEntries(codes.map(code=>[code,{}]));
 for (const row of rows) for (let i=0;i<codes.length;i++) dict[codes[i]][row[0]]=row[i];
 function detectLanguage(){
@@ -33,7 +34,7 @@ function detectLanguage(){
   return 'ru';
 }
 const saved=localStorage.getItem('rubanovsk_language');
-let currentLanguage=saved && languages[saved] ? saved : detectLanguage();
+let currentLanguage=saved && languages[saved] ? saved : 'uk';
 window.siteLanguage=currentLanguage;
 function translateValue(value){
   const key=String(value).trim();
@@ -104,7 +105,7 @@ function addSelector(){
   select.id='language-select';
   select.setAttribute('aria-label','Website language');
   select.style.cssText='width:auto;max-width:100%;min-width:125px;padding:8px 10px;border:1px solid #ffffff66;border-radius:10px;background:#ffffff12;color:inherit;font:inherit;cursor:pointer';
-  for(const code of codes){
+  for(const code of selectorOrder){
     const option=document.createElement('option');
     option.value=code;option.textContent=languages[code].label;
     option.style.color='#1d2c26';option.style.background='#fff';

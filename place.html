@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
 header{background:var(--forest);color:white;padding:18px max(22px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{font-weight:800;letter-spacing:.02em;font-size:1.08rem}.brand span{display:block;font-size:.76rem;font-weight:500;opacity:.75;letter-spacing:.08em;text-transform:uppercase}
-a{color:inherit}.back{color:#e7eee8;text-decoration:none;border:1px solid #ffffff55;border-radius:10px;padding:8px 12px;white-space:nowrap}.back:hover{background:#ffffff12}
+a{color:inherit}.back{display:inline-flex;align-items:center;gap:8px;color:#173f35;text-decoration:none;border:1px solid #f0bd83;border-radius:12px;padding:10px 16px;white-space:nowrap;background:#f2b875;font-weight:800;box-shadow:0 4px 14px #071e1833;transition:background .18s ease,transform .18s ease,box-shadow .18s ease}.back:hover{background:#ffd09a;transform:translateY(-1px);box-shadow:0 7px 18px #071e1844}.back:focus-visible{outline:3px solid #fff;outline-offset:3px}
 main{max-width:1180px;margin:auto;padding:0 22px 64px}.intro{padding:38px 0 24px}.eyebrow{color:var(--leaf);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.13em}.intro h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.12;letter-spacing:-.04em;margin:10px 0;color:var(--forest)}.intro p{color:var(--muted);margin:0;max-width:760px}
 details.new-project{background:white;border:1px solid var(--line);border-radius:15px;margin:6px 0 32px;overflow:hidden;box-shadow:0 8px 24px #1b3a2b08}
 details.new-project>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;color:var(--forest);font-weight:800;font-size:1.05rem}
@@ -25,7 +25,7 @@ form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;f
 </style>
 </head>
 <body>
-<header><div class="brand">Рубановск<span>Территория общих идей</span></div><a class="back" href="index.html">← На карту</a></header>
+<header><div class="brand">Рубановск<span>Территория общих идей</span></div><a class="back" href="index.html" aria-label="Вернуться на карту">⌂ <span>← Вернуться на карту</span></a></header>
 <main>
 <section class="intro"><div class="eyebrow">Проекты сообщества</div><h1 id="place-title">Проекты территории</h1><p id="place-description">Здесь собраны проекты, относящиеся к выбранному месту на карте.</p></section>
 <details class="new-project" id="new-project">

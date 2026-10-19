@@ -65,6 +65,7 @@ const imageInput=document.getElementById('project-image');
 const imagePreview=document.getElementById('image-preview');
 let adminSession=null;
 let isAdmin=false;
+let projectLoadSequence=0;
 if(!place){
   title.textContent='Место не найдено';
   placeDescription.textContent='Не удалось определить место на карте. Вернитесь на главную и выберите одну из меток.';
@@ -183,6 +184,7 @@ async function loadProjectTranslations(projects, language){
 }
 async function loadProjects(){
   if(!place){return}
+  const loadSequence=++projectLoadSequence;
   try{
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects?select=id,place,title,description,image_url,created_at&place=eq.'+encodeURIComponent(placeSlug)+'&order=created_at.asc',{
       headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}
@@ -193,6 +195,7 @@ async function loadProjects(){
     let ratings=[];
     const ratingResponse=await fetch(SUPABASE_URL+'/rest/v1/project_ratings?select=project_id,rating,voter_id',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
     if(ratingResponse.ok)ratings=await ratingResponse.json();
+    if(loadSequence!==projectLoadSequence)return;
     projectList.replaceChildren();projectCount.textContent=projects.length+' '+(projects.length===1?'проект':projects.length>1&&projects.length<5?'проекта':'проектов');
     if(!projects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
     projects.forEach((project,index)=>{
@@ -200,7 +203,7 @@ async function loadProjects(){
       const localizedProject=translation?{...project,title:translation.title,description:translation.description}:project;
       projectList.append(makeProjectCard(localizedProject,index,ratings));
     });
-  }catch(error){projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
+  }catch(error){if(loadSequence!==projectLoadSequence)return;projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
 }
 imageInput.addEventListener('change',()=>{
   const file=imageInput.files&&imageInput.files[0];if(!file){imagePreview.removeAttribute('src');imagePreview.style.display='none';return}
@@ -252,8 +255,15 @@ form.addEventListener('submit',async event=>{
     if(imageUrl){const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';if(imageUrl.startsWith(prefix)){const path=imageUrl.slice(prefix.length);if(path.startsWith('projects/'))fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})}).catch(()=>{})}}
   }finally{submitButton.disabled=false}
 });
-document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});
-loadProjects();
+let lastProjectLanguage=null;
+function reloadProjectsForLanguage(){
+  const language=window.siteLanguage||'ru';
+  if(lastProjectLanguage===language)return;
+  lastProjectLanguage=language;
+  loadProjects();
+}
+document.addEventListener('rubanovsk:languagechange',reloadProjectsForLanguage);
+window.addEventListener('load',reloadProjectsForLanguage,{once:true});
 </script>
 <script src="i18n.js"></script>
 </body>

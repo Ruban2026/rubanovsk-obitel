@@ -163,7 +163,6 @@ async function loadProjects(){
     });
     if(!response.ok){const detail=await response.text();throw new Error(response.status===404||response.status===400?'Таблица проектов ещё не создана в Supabase. Следующим шагом настроим её.':'Не удалось загрузить проекты (HTTP '+response.status+'). '+detail)}
     const projects=await response.json();
-    const requestId=projectsLoadSequence;
     const language=String(window.siteLanguage||localStorage.getItem('rubanovsk_language')||'ru').toLowerCase();
     const translationsByProject={};
     if(language!=='ru'&&projects.length){

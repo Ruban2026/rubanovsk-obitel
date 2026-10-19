@@ -47,7 +47,7 @@ main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;
 .map-bird .body{fill:#263b3b;stroke:none}
 .map-bird .belly{fill:#d6d5c5;stroke:none}
 .map-bird .beak{fill:#263b3b;stroke:none}
-.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:43px 35px;animation:bird-flap 1.35s ease-in-out infinite alternate}
+.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:47px 35px;animation:bird-flap 1.35s ease-in-out infinite alternate}
 .map-bird .wing-bottom{animation-name:bird-flap}
 .map-bird.falcon{width:56px;height:40px}
 .map-bird.falcon .body{fill:#68523b}
@@ -168,6 +168,7 @@ async function loadMapMarkers(){
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=id,place,title,description,x,y&order=created_at.asc',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession&&adminSession.access_token?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}});
     if(!response.ok)throw new Error('HTTP '+response.status);
     mapMarkers=await response.json();mapDataReady=true;markerStatus.dataset.customMessage='';
+    if(!mapMarkers.length){mapMarkers=defaultMapMarkers.map(item=>({...item}));markerStatus.textContent='В таблице пока нет сохранённых меток. Показаны стартовые метки карты.';}
     try{
       const projectsResponse=await fetch(SUPABASE_URL+'/rest/v1/projects?select=place',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
       if(projectsResponse.ok){
@@ -522,16 +523,16 @@ let lastBirdSpawn=-5000,nextSwallowCall=0,nextFalconTime=0,falconActor=null;
 function readEffectPreference(key,defaultValue){try{const value=localStorage.getItem(key);return value===null?defaultValue:value==='true';}catch(error){return defaultValue;}}
 function smoothNoiseBuffer(ctx,seconds){const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*seconds),ctx.sampleRate),data=buffer.getChannelData(0);let low=0,mid=0;for(let i=0;i<data.length;i++){const white=Math.random()*2-1;low=low*.992+white*.08;mid=mid*.82+white*.18;data[i]=low*.8+mid*.2;}return buffer;}
 function makeWindAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!windAudioContext){windAudioContext=new AC();windSource=windAudioContext.createBufferSource();windSource.buffer=smoothNoiseBuffer(windAudioContext,7);windSource.loop=true;windFilter=windAudioContext.createBiquadFilter();windFilter.type='lowpass';windFilter.frequency.value=420;const body=windAudioContext.createBiquadFilter();body.type='peaking';body.frequency.value=260;body.Q.value=.7;body.gain.value=3;windGain=windAudioContext.createGain();windGain.gain.value=.00001;windSource.connect(windFilter);windFilter.connect(body);body.connect(windGain);windGain.connect(windAudioContext.destination);windLfo=windAudioContext.createOscillator();windLfo.type='sine';windLfo.frequency.value=.075;windLfoGain=windAudioContext.createGain();windLfoGain.gain.value=.00001;windLfo.connect(windLfoGain);windLfoGain.connect(windGain.gain);windSource.start();windLfo.start();}}
-function setWindEnvelope(){if(!windToggle.checked||!windAudioContext||!windGain)return;const now=windAudioContext.currentTime,strength=windCurrent,peak=.025+strength*strength*.075,attack=.6+Math.random()*1.4,hold=2+Math.random()*4,release=3+Math.random()*5;windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(Math.max(.00001,windGain.gain.value),now);windGain.gain.linearRampToValueAtTime(peak,now+attack);windGain.gain.setValueAtTime(peak,now+attack+hold);windGain.gain.linearRampToValueAtTime(.00001,now+attack+hold+release);windFilter.frequency.setTargetAtTime(260+strength*1450,now,1.5);if(windLfo){windLfo.frequency.setTargetAtTime(.045+strength*.12,now,.7);windLfoGain.gain.setTargetAtTime(peak*.25,now,.7);}}
+function setWindEnvelope(){if(!windToggle.checked||!windAudioContext||!windGain)return;const now=windAudioContext.currentTime,strength=windCurrent,peak=.10+strength*strength*.16,attack=.45+Math.random()*.8,hold=2+Math.random()*4,release=3+Math.random()*5;windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(Math.max(.00001,windGain.gain.value),now);windGain.gain.linearRampToValueAtTime(peak,now+attack);windGain.gain.setValueAtTime(peak,now+attack+hold);windGain.gain.linearRampToValueAtTime(.00001,now+attack+hold+release);windFilter.frequency.setTargetAtTime(260+strength*1450,now,1.5);if(windLfo){windLfo.frequency.setTargetAtTime(.045+strength*.12,now,.7);windLfoGain.gain.setTargetAtTime(peak*.25,now,.7);}}
 function updateCloudSpeed(){/* Fixed cloud durations prevent animation restarts and jitter during gusts. */}
 function scheduleWind(){if(windModulationTimer)clearTimeout(windModulationTimer);if(!windToggle.checked)return;const now=performance.now();if(now>=windNextChange){windTarget=Math.random()<.32?0:(.08+Math.pow(Math.random(),2.6)*.92);windNextChange=now+(windTarget===0?11000+Math.random()*21000:8000+Math.random()*17000);}const previous=windCurrent;windCurrent+=(windTarget-windCurrent)*(.08+Math.random()*.08);if(Math.abs(windCurrent-windTarget)<.035)windCurrent=windTarget;if(windCurrent>.17&&Math.abs(previous-windCurrent)>.025)setWindEnvelope();else if(windCurrent<=.17&&previous>.17&&windAudioContext&&windGain){const t=windAudioContext.currentTime;windGain.gain.cancelScheduledValues(t);windGain.gain.setTargetAtTime(.00001,t,3.2);}updateCloudSpeed();windModulationTimer=setTimeout(scheduleWind,850+Math.random()*1100);}
 async function startWindSound(){makeWindAudio();if(!windAudioContext)return;if(windAudioContext.state==='suspended')await windAudioContext.resume();windCurrent=.62;windTarget=.62;windNextChange=performance.now()+5000;setWindEnvelope();scheduleWind();}
-function chirpSwallow(){if(!windAudioContext||windAudioContext.state!=='running')return;const now=windAudioContext.currentTime,count=2+Math.floor(Math.random()*3);for(let i=0;i<count;i++){const t=now+i*(.08+Math.random()*.06),osc=windAudioContext.createOscillator(),gain=windAudioContext.createGain(),filter=windAudioContext.createBiquadFilter();osc.type='sine';osc.frequency.setValueAtTime(2500+Math.random()*1000,t);osc.frequency.exponentialRampToValueAtTime(1550+Math.random()*800,t+.09);filter.type='bandpass';filter.frequency.value=2800;filter.Q.value=1.4;gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.055+Math.random()*.025,t+.02);gain.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(filter);filter.connect(gain);gain.connect(windAudioContext.destination);osc.start(t);osc.stop(t+.14);}}
+function chirpSwallow(){if(!windAudioContext||windAudioContext.state!=='running')return;const now=windAudioContext.currentTime,count=2+Math.floor(Math.random()*3);for(let i=0;i<count;i++){const t=now+i*(.08+Math.random()*.06),osc=windAudioContext.createOscillator(),gain=windAudioContext.createGain(),filter=windAudioContext.createBiquadFilter();osc.type='sine';osc.frequency.setValueAtTime(2500+Math.random()*1000,t);osc.frequency.exponentialRampToValueAtTime(1550+Math.random()*800,t+.09);filter.type='bandpass';filter.frequency.value=2800;filter.Q.value=1.4;gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.10+Math.random()*.04,t+.02);gain.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(filter);filter.connect(gain);gain.connect(windAudioContext.destination);osc.start(t);osc.stop(t+.14);}}
 
 function createBird(kind){
   const ns='http://www.w3.org/2000/svg',el=document.createElementNS(ns,'svg');
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
-  el.innerHTML='<path class="wing wing-top" d="M43 35 C33 30 27 17 7 5 C11 23 20 34 43 40 Z"/><path class="wing wing-bottom" d="M43 35 C33 40 27 53 7 65 C11 47 20 36 43 30 Z"/><path class="body" d="M10 35 L22 31 Q34 29 48 31 L66 31 Q73 31 77 35 Q73 39 66 39 L48 39 Q34 41 22 39 Z M10 35 L1 30 L5 35 L1 40 Z"/><path class="belly" d="M28 34 Q46 32 65 34 Q69 35 65 36 Q46 38 28 36 Z"/><path class="beak" d="M73 32 L88 35 L73 38 Z"/>';
+  el.innerHTML='<path class="wing wing-top" d="M47 33 C42 26 34 15 23 10 C24 22 31 31 45 37 Z"/><path class="wing wing-bottom" d="M47 37 C42 44 34 55 23 60 C24 48 31 39 45 33 Z"/><path class="body" d="M10 35 L22 31 Q34 29 48 31 L66 31 Q73 31 77 35 Q73 39 66 39 L48 39 Q34 41 22 39 Z M10 35 L1 30 L5 35 L1 40 Z"/><path class="belly" d="M28 34 Q46 32 65 34 Q69 35 65 36 Q46 38 28 36 Z"/><path class="beak" d="M73 32 L88 35 L73 38 Z"/>';
   birdLayer.append(el);
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const initialAngle=Math.random()*Math.PI*2,speed=kind==='falcon'?.052:.038;const b={el,kind,x:Math.random()*w,y:h*(.12+Math.random()*.58),vx:Math.cos(initialAngle)*speed,vy:Math.sin(initialAngle)*speed,heading:initialAngle,speed,tx:Math.random()*w,ty:h*(.1+Math.random()*.65),changeAt:performance.now()+4500+Math.random()*6500,phase:Math.random()*7,age:0,life:kind==='falcon'?30000+Math.random()*18000:36000+Math.random()*42000,attack:kind==='falcon'&&Math.random()<.4};
@@ -540,8 +541,8 @@ function createBird(kind){
 
 function maybeSpawnBirds(now){
   const w=birdLayer.clientWidth||window.innerWidth;
-  if(now-lastBirdSpawn>1800+Math.random()*4500&&birdActors.filter(b=>b.kind==='swallow').length<4){
-    const b=createBird('swallow');b.x=Math.random()<.5?-50:w+50;b.y=(birdLayer.clientHeight||window.innerHeight)*(.12+Math.random()*.52);b.heading=b.x<0?-.08:Math.PI+.08;b.speed=.038+Math.random()*.012;b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;b.tx=b.x<0?w*.78:w*.22;b.ty=(birdLayer.clientHeight||window.innerHeight)*(.18+Math.random()*.5);b.changeAt=now+6500+Math.random()*6000;lastBirdSpawn=now;
+  if(birdActors.length===0&&now-lastBirdSpawn>2500){
+    const b=createBird('swallow');b.x=Math.random()<.5?-65:w+65;b.y=(birdLayer.clientHeight||window.innerHeight)*(.16+Math.random()*.55);b.heading=b.x<0?0:Math.PI;b.speed=.040+Math.random()*.009;b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;b.tx=b.x<0?w+100:-100;b.ty=Math.max(55,Math.min((birdLayer.clientHeight||window.innerHeight)-55,b.y+(Math.random()-.5)*(birdLayer.clientHeight||window.innerHeight)*.28));b.changeAt=Number.POSITIVE_INFINITY;lastBirdSpawn=now;
     if(windToggle.checked&&now>nextSwallowCall&&Math.random()<.82){nextSwallowCall=now+18000+Math.random()*26000;setTimeout(chirpSwallow,900+Math.random()*2200);}
   }
   if(!falconActor&&now>nextFalconTime){
@@ -556,9 +557,9 @@ function birdTick(now){
   const dt=Math.min(32,now-(birdLastTime||now));birdLastTime=now;maybeSpawnBirds(now);
   for(let i=birdActors.length-1;i>=0;i--){
     const b=birdActors[i];b.age+=dt;
-    if(now>b.changeAt){b.tx=80+Math.random()*Math.max(1,w-160);b.ty=h*(.08+Math.random()*.67);b.changeAt=now+5200+Math.random()*6500;if(b.kind==='falcon'&&b.attack&&Math.random()<.2){b.ty=h*(.5+Math.random()*.2);b.changeAt=now+3000;}}
+    if(b.kind==='falcon'&&now>b.changeAt){b.tx=b.x<w/2?w+100:-100;b.ty=h*(.12+Math.random()*.24);b.changeAt=Number.POSITIVE_INFINITY;}
     const dx=b.tx-b.x,dy=b.ty-b.y;
-    if(Math.hypot(dx,dy)<90){b.tx=80+Math.random()*Math.max(1,w-160);b.ty=h*(.08+Math.random()*.67);b.changeAt=now+5200+Math.random()*6500;}
+    if(Math.hypot(dx,dy)<90&&b.kind==='falcon'){b.tx=b.x<w/2?w+100:-100;b.ty=h*(.12+Math.random()*.24);}
     const desired=Math.atan2(b.ty-b.y,b.tx-b.x);
     let turn=((desired-b.heading+Math.PI*3)%(Math.PI*2))-Math.PI;
     const maxTurn=(b.kind==='falcon'?.00019:.00016)*dt;
@@ -567,16 +568,16 @@ function birdTick(now){
     b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;
     b.x+=b.vx*dt;b.y+=b.vy*dt+Math.sin(now*.00042+b.phase)*.006*dt;
     const heightWave=(Math.sin(now*.00022+b.phase)+1)/2,scale=(b.kind==='falcon'?.82:.5)+heightWave*(b.kind==='falcon'?.24:.25);
-    const opacity=Math.max(0,Math.min(1,Math.min(b.age/2200,(b.life-b.age)/2800)));
+    const opacity=Math.min(1,b.age/900);
     b.el.style.opacity=String(opacity);
     b.el.style.transform='translate('+b.x+'px,'+b.y+'px) scale('+scale+') rotate('+(b.heading*180/Math.PI)+'deg)';
     if(b.kind==='falcon'&&b.attack&&b.y>h*.5){b.ty=h*.16;b.tx=w*.84;b.attack=false;b.changeAt=now+7000;}
-    if(b.age>b.life||b.x<-120||b.x>w+120||b.y<-120||b.y>h+120){b.el.remove();birdActors.splice(i,1);if(b===falconActor){falconActor=null;nextFalconTime=now+24000+Math.random()*48000;}}
+    if(b.x<-120||b.x>w+120||b.y<-120||b.y>h+120){b.el.remove();birdActors.splice(i,1);lastBirdSpawn=now;if(b===falconActor){falconActor=null;nextFalconTime=now+24000+Math.random()*48000;}}
   }
   requestAnimationFrame(birdTick);
 }
 requestAnimationFrame(birdTick);
-function applyMapEffects(){mapEffects.classList.toggle('map-effects-clouds-off',!cloudsToggle.checked);mapEffects.classList.toggle('map-effects-pulse-off',!pulseToggle.checked);try{localStorage.setItem('rubanovsk_effect_clouds',String(cloudsToggle.checked));localStorage.setItem('rubanovsk_effect_marker_pulse',String(pulseToggle.checked));localStorage.setItem('rubanovsk_effect_wind_sound',String(windToggle.checked));}catch(error){}if(windToggle.checked)startWindSound().catch(()=>{});else{if(windModulationTimer)clearTimeout(windModulationTimer);windModulationTimer=null;windCurrent=0;windTarget=0;updateCloudSpeed();if(windGain&&windAudioContext){const t=windAudioContext.currentTime;windGain.gain.cancelScheduledValues(t);windGain.gain.setTargetAtTime(.00001,t,2.5);}}}
+function applyMapEffects(){mapEffects.classList.toggle('map-effects-clouds-off',!cloudsToggle.checked);mapEffects.classList.toggle('map-effects-pulse-off',!pulseToggle.checked);try{localStorage.setItem('rubanovsk_effect_clouds',String(cloudsToggle.checked));localStorage.setItem('rubanovsk_effect_marker_pulse',String(pulseToggle.checked));localStorage.setItem('rubanovsk_effect_wind_sound',String(windToggle.checked));}catch(error){}if(windToggle.checked)startWindSound().then(()=>chirpSwallow()).catch(error=>console.warn('Не удалось запустить звук ветра:',error));else{if(windModulationTimer)clearTimeout(windModulationTimer);windModulationTimer=null;windCurrent=0;windTarget=0;updateCloudSpeed();if(windGain&&windAudioContext){const t=windAudioContext.currentTime;windGain.gain.cancelScheduledValues(t);windGain.gain.setTargetAtTime(.00001,t,2.5);}}}
 function applyCloudCount(){const count=Math.max(4,Math.min(12,Number.parseInt(cloudCountSlider.value,10)||8));cloudCountSlider.value=String(count);cloudCountValue.value=String(count);cloudCountValue.textContent=String(count);document.querySelector('.map-clouds').className='map-clouds cloud-count-'+count;try{localStorage.setItem('rubanovsk_cloud_count',String(count));}catch(error){}}
 try{const savedCloudCount=Number.parseInt(localStorage.getItem('rubanovsk_cloud_count'),10);if(Number.isFinite(savedCloudCount))cloudCountSlider.value=String(Math.max(4,Math.min(12,savedCloudCount)));}catch(error){}
 cloudCountSlider.addEventListener('input',applyCloudCount);applyCloudCount();

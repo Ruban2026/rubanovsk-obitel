@@ -547,15 +547,20 @@ function stopWindSound(){
 }
 function chirpSwallow(){if(!windToggle.checked||!windAudioContext||windAudioContext.state!=='running'||!windMasterGain)return;const now=windAudioContext.currentTime,bursts=1+Math.floor(Math.random()*3),flock= Math.random()<.38;for(let i=0;i<bursts;i++){const t=now+i*(.16+Math.random()*.3),notes=flock?3+Math.floor(Math.random()*4):1+Math.floor(Math.random()*3);for(let j=0;j<notes;j++){const at=t+j*(.055+Math.random()*.09),osc=windAudioContext.createOscillator(),gain=windAudioContext.createGain(),filter=windAudioContext.createBiquadFilter(),startFreq=(flock?1450:2300)+Math.random()*(flock?950:1500),endFreq=startFreq*(.55+Math.random()*.25);osc.type=Math.random()<.5?'sine':'triangle';osc.frequency.setValueAtTime(startFreq,at);osc.frequency.exponentialRampToValueAtTime(Math.max(500,endFreq),at+.1+Math.random()*.12);filter.type='bandpass';filter.frequency.value=startFreq*.95;filter.Q.value=1.2+Math.random()*2;gain.gain.setValueAtTime(.0001,at);gain.gain.linearRampToValueAtTime(.018+Math.random()*.022,at+.035);gain.gain.exponentialRampToValueAtTime(.0001,at+.16+Math.random()*.13);osc.connect(filter);filter.connect(gain);gain.connect(windMasterGain);osc.start(at);osc.stop(at+.32);}}}
 
-function createBird(kind){
+function createBird(kind,goosePalette=0){
   const ns='http://www.w3.org/2000/svg',el=document.createElementNS(ns,'svg');
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
   // A compact, straight-necked goose silhouette with wings rooted at the centre of the body.
   el.innerHTML='<path class="wing wing-top" d="M47 35 Q37 18 11 5 Q17 29 44 38 Z"/><path class="wing wing-bottom" d="M47 35 Q37 52 11 65 Q17 41 44 32 Z"/><path class="body" d="M8 35 Q20 27 42 31 L66 33 L77 35 L66 38 L42 39 Q20 43 8 35 Z"/><path class="body" d="M65 33 L73 32 L78 35 L73 38 L65 37 Z"/><circle class="body" cx="75" cy="34" r="2.2"/><path class="beak" d="M77 33.5 L84 35 L77 36.5 Z"/>';
   if(kind==='swallow')el.innerHTML='<path class="wing wing-top" d="M46 35 Q33 19 13 11 Q24 29 43 37 Z"/><path class="wing wing-bottom" d="M46 35 Q33 51 13 59 Q24 41 43 33 Z"/><path class="body" d="M19 35 L13 29 L25 32 L39 33 L55 33 L63 35 L55 38 L39 38 L25 39 Z"/><path class="body" d="M52 34 L59 33 L63 35 L59 37 L53 37 Z"/><circle class="body" cx="60" cy="34" r="1.2"/><path class="beak" d="M61 34.5 L66 35 L61 35.5 Z"/>';
   if(kind==='goose'){
-    const plumage=[['#8b8b80','#666b61','#4b463c'],['#a39b8a','#77796f','#594b3d'],['#777f7b','#555f5b','#403d36'],['#b0a894','#838071','#5a4d40'],['#92978f','#6d746c','#49463d']];
-    const colors=plumage[Math.floor(Math.random()*plumage.length)];
+    const plumage=[
+      [['#686d6b','#424847','#443c32'],['#747a77','#4a504e','#514538'],['#5d6362','#383f3e','#3f372e']],
+      [['#303536','#171c1d','#3f342b'],['#3b4141','#202627','#4b392d'],['#262b2c','#111617','#3b3028']],
+      [['#f1f0e9','#c8cbc6','#b66e43'],['#e5e6e1','#b9beb9','#a65f39'],['#faf9f4','#d6d8d2','#bf7547']]
+    ];
+    const group=plumage[Math.max(0,Math.min(2,goosePalette))];
+    const colors=group[Math.floor(Math.random()*group.length)];
     el.style.setProperty('--bird-body',colors[0]);el.style.setProperty('--bird-wing',colors[1]);el.style.setProperty('--bird-beak',colors[2]);
   }
   birdLayer.append(el);
@@ -570,23 +575,24 @@ let nextFlockAt=0,nextSwallowAt=0;
 function maybeSpawnBirds(now){
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const geese=birdActors.filter(b=>b.kind==='goose');
-  if(geese.length===0&&now>=nextFlockAt){
-    const count=Math.random()<.5?7:9,angle=(Math.random()*Math.PI*2),dx=Math.cos(angle),dy=Math.sin(angle);
+  // Several flocks may cross the map at once; each flock keeps its own plumage.
+  if(geese.length<27&&now>=nextFlockAt){
+    const count=Math.random()<.5?7:9,flockPalette=Math.floor(Math.random()*3),angle=(Math.random()*Math.PI*2),dx=Math.cos(angle),dy=Math.sin(angle);
     let cx,cy,tx,ty;
     if(Math.abs(dx)>=Math.abs(dy)){cx=dx>0?w*.04:w*.96;cy=h*(.2+Math.random()*.6);tx=dx>0?w*.96:w*.04;ty=Math.max(h*.08,Math.min(h*.92,cy+(tx-cx)*dy/(Math.abs(dx)<.01?(dx<0?-.01:.01):dx)));}
     else{cy=dy>0?h*.04:h*.96;cx=w*(.2+Math.random()*.6);ty=dy>0?h*.96:h*.04;tx=Math.max(w*.06,Math.min(w*.94,cx+(ty-cy)*dx/(Math.abs(dy)<.01?(dy<0?-.01:.01):dy)));}
-    const px=-dy,py=dx,spacing=17+Math.random()*3,spread=.48;
+    const px=-dy,py=dx,spacing=12+Math.random()*2,spread=.48;
     const flockSpeed=.036;
     for(let i=0;i<count;i++){
-      const row=Math.ceil(i/2),side=i===0?0:(i%2===1?-1:1),b=createBird('goose');
+      const row=Math.ceil(i/2),side=i===0?0:(i%2===1?-1:1),b=createBird('goose',flockPalette);
       const back=row*spacing,across=row*spacing*spread*side;
       b.x=cx-dx*back+px*across;b.y=cy-dy*back+py*across;
       b.heading=angle;b.speed=flockSpeed;b.vx=dx*flockSpeed;b.vy=dy*flockSpeed;
       b.tx=tx-dx*back+px*across;b.ty=ty-dy*back+py*across;
       b.changeAt=Infinity;b.phase=Math.random()*7;b.flapPhase=Math.random()*Math.PI*2;b.flapRate=.82;
-      b.el.style.width='30px';b.el.style.height='21px';
+      b.el.style.width='20px';b.el.style.height='14px';
     }
-    nextFlockAt=now+5000;
+    nextFlockAt=now+10000+Math.random()*7000;
   }
   if(now>=nextSwallowAt&&birdActors.filter(b=>b.kind==='swallow').length<2){
     const b=createBird('swallow'),edge=Math.floor(Math.random()*4);

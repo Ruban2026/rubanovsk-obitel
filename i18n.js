@@ -31,6 +31,8 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Настройки эффектов","Налаштування ефектів","Effect settings","Ustawienia efektów","Effekteinstellungen","Paramètres des effets"],
 ["Лёгкие облака","Легкі хмари","Soft clouds","Delikatne chmury","Zarte Wolken","Nuages légers"],
 ["Пульсация меток с проектами","Пульсація позначок із проєктами","Pulse markers with projects","Pulsowanie znaczników z projektami","Markierungen mit Projekten pulsieren","Pulsation des repères avec projets"],
+["Звук лёгкого ветерка","Звук легкого вітерцю","Soft breeze sound","Delikatny szum wiatru","Leises Windrauschen","Bruit léger du vent"],
+["Сила ветерка","Сила вітерцю","Breeze strength","Siła wiatru","Windstärke","Force du vent"],
 const codes = ['ru','uk','en','pl','de','fr'];
 const selectorOrder = ['uk','en','pl','de','fr','ru'];
 const dict = Object.fromEntries(codes.map(code=>[code,{}]));

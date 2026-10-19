@@ -63,8 +63,16 @@ const submitButton=document.getElementById('project-submit');
 const formStatus=document.getElementById('form-status');
 const imageInput=document.getElementById('project-image');
 const imagePreview=document.getElementById('image-preview');
-let adminSession=null;
-let isAdmin=false;
+function readStoredAdminSession(){
+  try{
+    const saved=JSON.parse(sessionStorage.getItem('rubanovsk_admin_session')||'null');
+    if(!saved||!saved.access_token||!saved.user||!saved.user.app_metadata||saved.user.app_metadata.role!=='admin')return null;
+    if(saved.expires_at&&Number(saved.expires_at)*1000<=Date.now()){sessionStorage.removeItem('rubanovsk_admin_session');return null;}
+    return saved;
+  }catch(_error){return null}
+}
+let adminSession=readStoredAdminSession();
+let isAdmin=!!adminSession;
 let projectsLoadSequence=0;
 let availableMarkers=[];
 if(place){
@@ -78,6 +86,12 @@ const adminLoginStatus=document.getElementById('admin-login-status');
 const adminLogout=document.getElementById('admin-logout');
 function openAdminModal(){adminModal.classList.add('open');document.getElementById('admin-email').focus()}
 function closeAdminModal(){adminModal.classList.remove('open')}
+if(adminSession){
+  adminLoginForm.style.display='none';
+  adminLogout.style.display='block';
+  adminLoginStatus.textContent='Вход восстановлен.';
+  document.getElementById('admin-status').textContent='Режим администратора включён: можно переносить и удалять проекты.';
+}
 document.getElementById('admin-open').addEventListener('click',openAdminModal);
 document.getElementById('admin-close').addEventListener('click',closeAdminModal);
 adminModal.addEventListener('click',e=>{if(e.target===adminModal)closeAdminModal()});
@@ -92,12 +106,12 @@ adminLoginForm.addEventListener('submit',async e=>{
       await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+result.access_token}});
       throw new Error('У этой учётной записи нет прав администратора.');
     }
-    adminSession=result;isAdmin=true;adminLoginStatus.textContent='Вход выполнен.';adminLoginForm.style.display='none';adminLogout.style.display='block';document.getElementById('admin-status').textContent='Режим администратора включён: можно удалять проекты.';closeAdminModal();await loadProjects();
+    adminSession=result;isAdmin=true;sessionStorage.setItem('rubanovsk_admin_session',JSON.stringify(result));adminLoginStatus.textContent='Вход выполнен.';adminLoginForm.style.display='none';adminLogout.style.display='block';document.getElementById('admin-status').textContent='Режим администратора включён: можно удалять проекты.';closeAdminModal();await loadProjects();
   }catch(error){adminLoginStatus.textContent=error.message}finally{button.disabled=false}
 });
 adminLogout.addEventListener('click',async()=>{
   if(adminSession&&adminSession.access_token)await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token}});
-  adminSession=null;isAdmin=false;adminLoginForm.reset();adminLoginForm.style.display='grid';adminLogout.style.display='none';adminLoginStatus.textContent='';document.getElementById('admin-status').textContent='Предложения публикуются в общей базе проектов.';closeAdminModal();await loadProjects();
+  adminSession=null;isAdmin=false;sessionStorage.removeItem('rubanovsk_admin_session');adminLoginForm.reset();adminLoginForm.style.display='grid';adminLogout.style.display='none';adminLoginStatus.textContent='';document.getElementById('admin-status').textContent='Предложения публикуются в общей базе проектов.';closeAdminModal();await loadProjects();
 });
 function ratingStorageKey(projectId){return 'rubanovsk_project_rating_'+projectId}
 function getVoterId(){
@@ -220,10 +234,12 @@ async function moveProject(project,newPlace){
   try{
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{
       method:'PATCH',
-      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=minimal'},
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=representation'},
       body:JSON.stringify({place:newPlace})
     });
     if(!response.ok)throw new Error('Не удалось перенести проект (HTTP '+response.status+'). '+await response.text());
+    const updatedRows=await response.json();
+    if(!Array.isArray(updatedRows)||updatedRows.length!==1)throw new Error('Supabase не обновил запись проекта. Вероятно, мешает политика RLS. Проверьте SQL-политику UPDATE для администраторов.');
     alert('Проект перенесён на метку «'+destination.title+'». Фотография и оценки сохранены.');
     await loadProjects();
   }catch(error){alert(error.message)}

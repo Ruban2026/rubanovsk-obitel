@@ -47,12 +47,12 @@ main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;
 .map-bird .body{fill:#263b3b;stroke:none}
 .map-bird .belly{fill:#d6d5c5;stroke:none}
 .map-bird .beak{fill:#263b3b;stroke:none}
-.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:48px 35px;animation:bird-flap .095s ease-in-out infinite alternate}
-.map-bird .wing-bottom{animation-name:bird-flap}
+.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:48px 35px;animation:none}
+.map-bird .wing-bottom{animation:none}
 .map-bird.falcon{width:56px;height:40px}
 .map-bird.falcon .body{fill:#68523b}
 .map-bird.falcon .belly{fill:#b9a789}
-.map-bird.falcon .wing{fill:#766044;animation-duration:.24s}
+.map-bird.falcon .wing{fill:#766044}
 @keyframes bird-flap{from{transform:scaleY(.18)}to{transform:scaleY(1.12)}}
 @media(prefers-reduced-motion:reduce){.map-bird .wing{animation-duration:.3s}}
 
@@ -525,59 +525,72 @@ let lastBirdSpawn=-5000,nextSwallowCall=0,nextFalconTime=0,falconActor=null;
 function readEffectPreference(key,defaultValue){try{const value=localStorage.getItem(key);return value===null?defaultValue:value==='true';}catch(error){return defaultValue;}}
 function smoothNoiseBuffer(ctx,seconds){const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*seconds),ctx.sampleRate),data=buffer.getChannelData(0);let low=0,mid=0;for(let i=0;i<data.length;i++){const white=Math.random()*2-1;low=low*.992+white*.08;mid=mid*.82+white*.18;data[i]=low*.8+mid*.2;}return buffer;}
 function makeWindAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!windAudioContext){windAudioContext=new AC();windSource=windAudioContext.createBufferSource();windSource.buffer=smoothNoiseBuffer(windAudioContext,7);windSource.loop=true;windFilter=windAudioContext.createBiquadFilter();windFilter.type='lowpass';windFilter.frequency.value=420;const body=windAudioContext.createBiquadFilter();body.type='peaking';body.frequency.value=260;body.Q.value=.7;body.gain.value=3;windGain=windAudioContext.createGain();windGain.gain.value=.00001;windMasterGain=windAudioContext.createGain();windMasterGain.gain.value=0;windSource.connect(windFilter);windFilter.connect(body);body.connect(windGain);windGain.connect(windMasterGain);windMasterGain.connect(windAudioContext.destination);windLfo=windAudioContext.createOscillator();windLfo.type='sine';windLfo.frequency.value=.075;windLfoGain=windAudioContext.createGain();windLfoGain.gain.value=.00001;windLfo.connect(windLfoGain);windLfoGain.connect(windGain.gain);windSource.start();windLfo.start();}}
-function setWindEnvelope(){if(!windToggle.checked||!windAudioContext||!windGain)return;const now=windAudioContext.currentTime,strength=windCurrent,peak=.10+strength*strength*.16,attack=.45+Math.random()*.8,hold=2+Math.random()*4,release=3+Math.random()*5;windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(Math.max(.00001,windGain.gain.value),now);windGain.gain.linearRampToValueAtTime(peak,now+attack);windGain.gain.setValueAtTime(peak,now+attack+hold);windGain.gain.linearRampToValueAtTime(.00001,now+attack+hold+release);windFilter.frequency.setTargetAtTime(260+strength*1450,now,1.5);if(windLfo){windLfo.frequency.setTargetAtTime(.045+strength*.12,now,.7);windLfoGain.gain.setTargetAtTime(peak*.25,now,.7);}}
+function setWindEnvelope(){if(!windToggle.checked||!windAudioContext||!windGain)return;const now=windAudioContext.currentTime,strength=.12+Math.pow(Math.random(),1.8)*.38,peak=.012+strength*.236,attack=5+Math.random()*8,hold=2+Math.random()*4,release=8+Math.random()*12;windCurrent=strength;windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(Math.max(.00001,windGain.gain.value),now);windGain.gain.linearRampToValueAtTime(peak,now+attack);windGain.gain.setValueAtTime(peak,now+attack+hold);windGain.gain.linearRampToValueAtTime(.00001,now+attack+hold+release);windFilter.frequency.setTargetAtTime(320+strength*850,now,3.5);if(windLfo){windLfo.frequency.setTargetAtTime(.025+strength*.06,now,2);windLfoGain.gain.setTargetAtTime(peak*.12,now,2);}}
 function updateCloudSpeed(){/* Fixed cloud durations prevent animation restarts and jitter during gusts. */}
-function scheduleWind(){if(windModulationTimer)clearTimeout(windModulationTimer);if(!windToggle.checked)return;const now=performance.now();if(now>=windNextChange){windTarget=Math.random()<.32?0:(.08+Math.pow(Math.random(),2.6)*.92);windNextChange=now+(windTarget===0?11000+Math.random()*21000:8000+Math.random()*17000);}const previous=windCurrent;windCurrent+=(windTarget-windCurrent)*(.08+Math.random()*.08);if(Math.abs(windCurrent-windTarget)<.035)windCurrent=windTarget;if(windCurrent>.17&&Math.abs(previous-windCurrent)>.025)setWindEnvelope();else if(windCurrent<=.17&&previous>.17&&windAudioContext&&windGain){const t=windAudioContext.currentTime;windGain.gain.cancelScheduledValues(t);windGain.gain.setTargetAtTime(.00001,t,3.2);}updateCloudSpeed();windModulationTimer=setTimeout(scheduleWind,850+Math.random()*1100);}
+function scheduleWind(){if(windModulationTimer)clearTimeout(windModulationTimer);windModulationTimer=null;if(!windToggle.checked||!windAudioContext||!windGain)return;const now=windAudioContext.currentTime;windCurrent=0;windTarget=0;windGain.gain.cancelScheduledValues(now);windGain.gain.setTargetAtTime(.00001,now,4+Math.random()*3);if(windLfoGain)windLfoGain.gain.setTargetAtTime(0,now,2);updateCloudSpeed();const pause=16000+Math.random()*32000;windModulationTimer=setTimeout(()=>{if(!windToggle.checked)return;if(Math.random()<.28){scheduleWind();return;}setWindEnvelope();const gustDuration=26000;windModulationTimer=setTimeout(scheduleWind,gustDuration);},pause);}
 async function startWindSound(){
   makeWindAudio();if(!windAudioContext||!windGain||!windMasterGain)return;
   if(windAudioContext.state!=='running')await windAudioContext.resume();
   if(!windToggle.checked){stopWindSound();return;}
   if(windAudioContext.state!=='running')throw new Error('Браузер не разрешил воспроизведение звука. Нажми переключатель звука ещё раз.');
   const now=windAudioContext.currentTime;
-  windCurrent=.24;windTarget=.24;windNextChange=performance.now()+3500;
+  windCurrent=0;windTarget=0;
   windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(.00001,now);
-  windFilter.frequency.setTargetAtTime(520,now,.8);
-  if(windLfo){windLfo.frequency.setTargetAtTime(.065,now,.7);windLfoGain.gain.setValueAtTime(0,now);}
-  windMasterGain.gain.cancelScheduledValues(now);windMasterGain.gain.setValueAtTime(0,now);windMasterGain.gain.linearRampToValueAtTime(1,now+.35);
-  setWindEnvelope();scheduleWind();
+  windFilter.frequency.setTargetAtTime(420,now,3);
+  if(windLfo){windLfo.frequency.setTargetAtTime(.04,now,2);windLfoGain.gain.setValueAtTime(0,now);}
+  windMasterGain.gain.cancelScheduledValues(now);windMasterGain.gain.setValueAtTime(0,now);windMasterGain.gain.linearRampToValueAtTime(1,now+1.8);
+  scheduleWind();
 }
 function stopWindSound(){
   if(windModulationTimer)clearTimeout(windModulationTimer);windModulationTimer=null;windCurrent=0;windTarget=0;
   if(windAudioContext&&windMasterGain){const now=windAudioContext.currentTime;windMasterGain.gain.cancelScheduledValues(now);windMasterGain.gain.setValueAtTime(0,now);if(windGain){windGain.gain.cancelScheduledValues(now);windGain.gain.setValueAtTime(.00001,now);}if(windLfoGain)windLfoGain.gain.setValueAtTime(0,now);}
 }
-function chirpSwallow(){if(!windAudioContext||windAudioContext.state!=='running')return;const now=windAudioContext.currentTime,count=2+Math.floor(Math.random()*3);for(let i=0;i<count;i++){const t=now+i*(.08+Math.random()*.06),osc=windAudioContext.createOscillator(),gain=windAudioContext.createGain(),filter=windAudioContext.createBiquadFilter();osc.type='sine';osc.frequency.setValueAtTime(2500+Math.random()*1000,t);osc.frequency.exponentialRampToValueAtTime(1550+Math.random()*800,t+.09);filter.type='bandpass';filter.frequency.value=2800;filter.Q.value=1.4;gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.10+Math.random()*.04,t+.02);gain.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(filter);filter.connect(gain);gain.connect(windMasterGain||windAudioContext.destination);osc.start(t);osc.stop(t+.14);}}
+function chirpSwallow(){if(!windToggle.checked||!windAudioContext||windAudioContext.state!=='running'||!windMasterGain)return;const now=windAudioContext.currentTime,bursts=1+Math.floor(Math.random()*3),flock= Math.random()<.38;for(let i=0;i<bursts;i++){const t=now+i*(.16+Math.random()*.3),notes=flock?3+Math.floor(Math.random()*4):1+Math.floor(Math.random()*3);for(let j=0;j<notes;j++){const at=t+j*(.055+Math.random()*.09),osc=windAudioContext.createOscillator(),gain=windAudioContext.createGain(),filter=windAudioContext.createBiquadFilter(),startFreq=(flock?1450:2300)+Math.random()*(flock?950:1500),endFreq=startFreq*(.55+Math.random()*.25);osc.type=Math.random()<.5?'sine':'triangle';osc.frequency.setValueAtTime(startFreq,at);osc.frequency.exponentialRampToValueAtTime(Math.max(500,endFreq),at+.1+Math.random()*.12);filter.type='bandpass';filter.frequency.value=startFreq*.95;filter.Q.value=1.2+Math.random()*2;gain.gain.setValueAtTime(.0001,at);gain.gain.linearRampToValueAtTime(.018+Math.random()*.022,at+.035);gain.gain.exponentialRampToValueAtTime(.0001,at+.16+Math.random()*.13);osc.connect(filter);filter.connect(gain);gain.connect(windMasterGain);osc.start(at);osc.stop(at+.32);}}}
 
 function createBird(kind){
   const ns='http://www.w3.org/2000/svg',el=document.createElementNS(ns,'svg');
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
-  // Compact wild-goose silhouette: curved neck, small head and broad, actively flapping wings.
-  el.innerHTML='<path class="wing wing-top" d="M43 34 C34 24 24 11 8 9 C13 23 22 34 39 39 C27 35 19 36 13 40 C24 45 35 43 47 40 Z"/><path class="wing wing-bottom" d="M43 36 C34 46 24 59 8 61 C13 47 22 36 39 31 C27 35 19 34 13 30 C24 25 35 27 47 30 Z"/><path class="body" d="M19 37 Q31 29 48 31 Q60 31 67 36 Q60 41 48 41 Q31 43 19 37 Z M20 37 L7 31 L13 37 L7 43 Z"/><path class="belly" d="M30 37 Q46 33 60 36 Q64 37 60 38 Q45 40 30 38 Z"/><path class="body" d="M55 35 C61 32 61 25 64 19 C66 14 70 12 75 14 L78 18 C71 17 69 21 68 27 C67 34 65 38 61 39 Z"/><circle class="body" cx="75" cy="15" r="4.1"/><path class="beak" d="M78 14 L90 17 L78 19 Z"/>';
+  // A compact, straight-necked goose silhouette with wings rooted at the centre of the body.
+  el.innerHTML='<path class="wing wing-top" d="M47 34 C39 23 30 13 16 10 C19 23 28 34 43 38 C31 34 24 35 18 39 C29 43 39 41 50 39 Z"/><path class="wing wing-bottom" d="M47 36 C39 47 30 57 16 60 C19 47 28 36 43 32 C31 36 24 35 18 31 C29 27 39 29 50 31 Z"/><path class="body" d="M13 36 Q29 29 48 32 Q61 32 70 36 Q60 41 47 40 Q29 43 13 36 Z M15 36 L4 32 L10 36 L4 40 Z"/><path class="belly" d="M27 37 Q45 33 61 36 Q65 37 61 38 Q44 40 27 38 Z"/><path class="body" d="M58 35 L63 27 L69 23 L76 23 L79 26 L70 28 L66 37 Z"/><circle class="body" cx="75" cy="24" r="3.7"/><path class="beak" d="M78 23 L89 25 L78 27 Z"/>';
+  if(kind==='swallow')el.innerHTML='<path class="wing wing-top" d="M48 35 Q34 15 12 7 Q22 27 40 37 Q25 31 9 32 Q25 43 48 39 Z"/><path class="wing wing-bottom" d="M48 35 Q34 55 12 63 Q22 43 40 33 Q25 39 9 38 Q25 27 48 31 Z"/><path class="body" d="M15 35 Q32 30 51 34 L73 36 L91 31 L80 38 L94 43 L70 40 Q45 44 15 35 Z"/><path class="body" d="M55 35 L64 29 L73 29 L78 32 L69 34 L64 38 Z"/><circle class="body" cx="73" cy="30" r="2.5"/><path class="beak" d="M75 29 L83 30 L75 31 Z"/>';
   birdLayer.append(el);
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
-  const initialAngle=Math.random()*Math.PI*2,speed=kind==='falcon'?.052:.038;const b={el,kind,x:Math.random()*w,y:h*(.12+Math.random()*.58),vx:Math.cos(initialAngle)*speed,vy:Math.sin(initialAngle)*speed,heading:initialAngle,speed,tx:Math.random()*w,ty:h*(.1+Math.random()*.65),changeAt:performance.now()+4500+Math.random()*6500,phase:Math.random()*7,age:0,life:kind==='falcon'?30000+Math.random()*18000:36000+Math.random()*42000,attack:kind==='falcon'&&Math.random()<.4};
+  const now=performance.now(),angle=Math.random()*Math.PI*2,speed=kind==='goose'?.035:.045;
+  const b={el,kind,x:Math.random()*w,y:Math.random()*h,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,heading:angle,speed,tx:Math.random()*w,ty:Math.random()*h,changeAt:now+3000+Math.random()*5000,phase:Math.random()*7,age:0,life:kind==='goose'?45000+Math.random()*30000:18000+Math.random()*24000,flapPhase:Math.random()*Math.PI*2,flapRate:kind==='goose'?.7+Math.random()*.25:.9+Math.random()*.9,flapping:true};
+  if(kind==='swallow'){b.flapUntil=now+900+Math.random()*1800;b.glideUntil=b.flapUntil+900+Math.random()*2400;}
   birdActors.push(b);return b;
 }
 
+let nextFlockAt=0,nextSwallowAt=0;
 function maybeSpawnBirds(now){
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
-  // A large migrating flock flies in a stable V; the next flock waits until every goose leaves the map.
-  if(birdActors.length===0&&now-lastBirdSpawn>3200){
-    const count=15+Math.floor(Math.random()*5),fromLeft=Math.random()<.5;
-    const baseY=h*(.2+Math.random()*.43),spacingX=Math.min(39,Math.max(25,w*.027)),spacingY=Math.min(29,Math.max(19,h*.042));
+  const geese=birdActors.filter(b=>b.kind==='goose');
+  if(geese.length===0&&now>=nextFlockAt){
+    const count=5+Math.floor(Math.random()*5),angle=(Math.random()*Math.PI*2),dx=Math.cos(angle),dy=Math.sin(angle);
+    let cx,cy,tx,ty;
+    if(Math.abs(dx)>=Math.abs(dy)){cx=dx>0?-100:w+100;cy=h*(.18+Math.random()*.64);tx=dx>0?w+130:-130;ty=Math.max(-120,Math.min(h+120,cy+(tx-cx)*dy/dx));}
+    else{cy=dy>0?-100:h+100;cx=w*(.18+Math.random()*.64);ty=dy>0?h+130:-130;tx=Math.max(-120,Math.min(w+120,cx+(ty-cy)*dx/dy));}
+    const px=-dy,py=dx,spacing=23+Math.random()*9;
     for(let i=0;i<count;i++){
-      const b=createBird('goose');
-      const row=Math.ceil(i/2),side=i===0?0:(i%2===1?-1:1);
-      const dx=row*spacingX,dy=side*row*spacingY;
-      b.x=fromLeft?-75-dx:w+75+dx;
-      b.y=Math.max(35,Math.min(h-35,baseY+dy));
-      b.heading=fromLeft?0:Math.PI;b.speed=.045+Math.random()*.003;
-      b.vx=Math.cos(b.heading)*b.speed;b.vy=0;
-      b.tx=fromLeft?w+150:-150;b.ty=b.y;
-      b.changeAt=Number.POSITIVE_INFINITY;b.phase=Math.random()*7;b.formationY=b.y;
+      const row=Math.ceil(i/2),side=i===0?0:(i%2===1?-1:1),b=createBird('goose');
+      b.x=cx-dx*row*spacing+px*side*row*spacing*.72;b.y=cy-dy*row*spacing+py*side*row*spacing*.72;
+      b.heading=angle;b.speed=.032+Math.random()*.008;b.vx=dx*b.speed;b.vy=dy*b.speed;
+      b.tx=tx-dx*row*spacing+px*side*row*spacing*.72;b.ty=ty-dy*row*spacing+py*side*row*spacing*.72;
+      b.changeAt=Infinity;b.phase=Math.random()*7;b.flapPhase=Math.random()*Math.PI*2;b.el.style.width='42px';b.el.style.height='30px';
     }
-    lastBirdSpawn=now;
-    if(windToggle.checked&&now>nextSwallowCall){nextSwallowCall=now+18000+Math.random()*26000;setTimeout(chirpSwallow,900+Math.random()*2200);}
+    nextFlockAt=now+5000;
   }
+  if(now>=nextSwallowAt&&birdActors.filter(b=>b.kind==='swallow').length<2){
+    const b=createBird('swallow'),edge=Math.floor(Math.random()*4);
+    if(edge===0){b.x=-55;b.y=h*Math.random();b.tx=w+80;b.ty=h*Math.random();}
+    else if(edge===1){b.x=w+55;b.y=h*Math.random();b.tx=-80;b.ty=h*Math.random();}
+    else if(edge===2){b.x=w*Math.random();b.y=-55;b.tx=w*Math.random();b.ty=h+80;}
+    else{b.x=w*Math.random();b.y=h+55;b.tx=w*Math.random();b.ty=-80;}
+    b.heading=Math.atan2(b.ty-b.y,b.tx-b.x);b.speed=.05+Math.random()*.02;b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;
+    b.changeAt=now+1500+Math.random()*2800;b.el.style.width='28px';b.el.style.height='20px';
+    nextSwallowAt=now+6500+Math.random()*11000;
+  }
+  if(windToggle.checked&&now>nextSwallowCall){nextSwallowCall=now+6500+Math.random()*12000;setTimeout(()=>{if(windToggle.checked)chirpSwallow();},800+Math.random()*3000);}
 }
 
 let birdLastTime=0;
@@ -586,18 +599,25 @@ function birdTick(now){
   const dt=Math.min(32,now-(birdLastTime||now));birdLastTime=now;maybeSpawnBirds(now);
   for(let i=birdActors.length-1;i>=0;i--){
     const b=birdActors[i];b.age+=dt;
+    if(b.kind==='swallow'&&now>b.changeAt){b.tx=Math.random()*w;b.ty=Math.random()*h;b.changeAt=now+1800+Math.random()*4200;}
     const desired=Math.atan2(b.ty-b.y,b.tx-b.x);
     let turn=((desired-b.heading+Math.PI*3)%(Math.PI*2))-Math.PI;
-    const maxTurn=.00006*dt;
+    const maxTurn=(b.kind==='goose'?.000045:.00011)*dt;
     turn=Math.max(-maxTurn,Math.min(maxTurn,turn));b.heading+=turn;
-    b.speed+=(.046-b.speed)*Math.min(1,dt*.00025);
+    if(b.kind==='swallow'){
+      if(now>=b.glideUntil){b.flapping=true;b.flapUntil=now+550+Math.random()*1200;b.glideUntil=b.flapUntil+1000+Math.random()*2600;}
+      if(now>=b.flapUntil&&b.flapping){b.flapping=false;b.glideUntil=now+1000+Math.random()*2600;}
+      b.speed+=( (b.flapping?.078:.043)-b.speed)*Math.min(1,dt*(b.flapping?.0012:.00065));
+    }else{b.flapPhase+=dt*.004*b.flapRate;b.speed+=(.04-b.speed)*Math.min(1,dt*.00012);}
     b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;
-    b.x+=b.vx*dt;b.y+=b.vy*dt+Math.sin(now*.00032+b.phase)*.0012*dt;
-    const heightWave=(Math.sin(now*.00022+b.phase)+1)/2,scale=.48+heightWave*.14;
-    const opacity=Math.min(1,b.age/650);
+    b.x+=b.vx*dt;b.y+=b.vy*dt+Math.sin(now*.00022+b.phase)*.00065*dt;
+    const opacity=Math.min(1,b.age/700);
     b.el.style.opacity=String(opacity);
-    b.el.style.transform='translate('+b.x+'px,'+b.y+'px) scale('+scale+') rotate('+(b.heading*180/Math.PI)+'deg)';
-    if(b.x<-125||b.x>w+125||b.y<-125||b.y>h+125){b.el.remove();birdActors.splice(i,1);lastBirdSpawn=now;}
+    const orientation=Math.atan2(b.vy,Math.abs(b.vx))*180/Math.PI,mirror=b.vx<0?-1:1;
+    b.el.style.transform='translate('+b.x+'px,'+b.y+'px) rotate('+orientation+'deg) scaleX('+mirror+')';
+    if(b.kind==='goose'){const wing=Math.sin(b.flapPhase);b.el.querySelector('.wing-top').style.transform='rotate('+(-22+wing*24)+'deg)';b.el.querySelector('.wing-bottom').style.transform='rotate('+(22-wing*24)+'deg)';}
+    else{const wing=b.el.querySelectorAll('.wing');wing.forEach((el,j)=>{el.style.transform='rotate('+(b.flapping?(j===0?-20:20)*Math.sin(now*.018+b.flapPhase):0)+'deg)';});}
+    if(b.x<-150||b.x>w+150||b.y<-150||b.y>h+150||b.age>b.life){b.el.remove();birdActors.splice(i,1);}
   }
   requestAnimationFrame(birdTick);
 }

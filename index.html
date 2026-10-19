@@ -44,10 +44,10 @@ main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;
 .cloud-count-option output{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .map-birds{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
 .map-bird{position:absolute;left:0;top:0;width:44px;height:32px;overflow:visible;will-change:transform,opacity}
-.map-bird .body{fill:#263b3b;stroke:none}
+.map-bird .body{fill:var(--bird-body,#263b3b);stroke:none}
 .map-bird .belly{fill:#d6d5c5;stroke:none}
-.map-bird .beak{fill:#263b3b;stroke:none}
-.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:48px 35px;animation:none}
+.map-bird .beak{fill:var(--bird-beak,#554638);stroke:none}
+.map-bird .wing{fill:var(--bird-wing,#59645e);stroke:none;transform-box:view-box;transform-origin:48px 35px;animation:none}
 .map-bird .wing-bottom{animation:none}
 .map-bird.falcon{width:56px;height:40px}
 .map-bird.falcon .body{fill:#68523b}
@@ -553,6 +553,11 @@ function createBird(kind){
   // A compact, straight-necked goose silhouette with wings rooted at the centre of the body.
   el.innerHTML='<path class="wing wing-top" d="M47 35 Q37 18 11 5 Q17 29 44 38 Z"/><path class="wing wing-bottom" d="M47 35 Q37 52 11 65 Q17 41 44 32 Z"/><path class="body" d="M8 35 Q20 27 42 31 L66 33 L77 35 L66 38 L42 39 Q20 43 8 35 Z"/><path class="body" d="M65 33 L73 32 L78 35 L73 38 L65 37 Z"/><circle class="body" cx="75" cy="34" r="2.2"/><path class="beak" d="M77 33.5 L84 35 L77 36.5 Z"/>';
   if(kind==='swallow')el.innerHTML='<path class="wing wing-top" d="M46 35 Q33 19 13 11 Q24 29 43 37 Z"/><path class="wing wing-bottom" d="M46 35 Q33 51 13 59 Q24 41 43 33 Z"/><path class="body" d="M19 35 L13 29 L25 32 L39 33 L55 33 L63 35 L55 38 L39 38 L25 39 Z"/><path class="body" d="M52 34 L59 33 L63 35 L59 37 L53 37 Z"/><circle class="body" cx="60" cy="34" r="1.2"/><path class="beak" d="M61 34.5 L66 35 L61 35.5 Z"/>';
+  if(kind==='goose'){
+    const plumage=[['#8b8b80','#666b61','#4b463c'],['#a39b8a','#77796f','#594b3d'],['#777f7b','#555f5b','#403d36'],['#b0a894','#838071','#5a4d40'],['#92978f','#6d746c','#49463d']];
+    const colors=plumage[Math.floor(Math.random()*plumage.length)];
+    el.style.setProperty('--bird-body',colors[0]);el.style.setProperty('--bird-wing',colors[1]);el.style.setProperty('--bird-beak',colors[2]);
+  }
   birdLayer.append(el);
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const now=performance.now(),angle=Math.random()*Math.PI*2,speed=kind==='goose'?.035:.045;
@@ -579,7 +584,7 @@ function maybeSpawnBirds(now){
       b.heading=angle;b.speed=flockSpeed;b.vx=dx*flockSpeed;b.vy=dy*flockSpeed;
       b.tx=tx-dx*back+px*across;b.ty=ty-dy*back+py*across;
       b.changeAt=Infinity;b.phase=Math.random()*7;b.flapPhase=Math.random()*Math.PI*2;b.flapRate=.82;
-      b.el.style.width='30px';b.el.style.height='21px';
+      b.el.style.width='15px';b.el.style.height='10.5px';
     }
     nextFlockAt=now+5000;
   }
@@ -618,7 +623,7 @@ function birdTick(now){
     b.el.style.opacity=String(opacity);
     const orientation=b.heading*180/Math.PI;
     b.el.style.transform='translate('+b.x+'px,'+b.y+'px) rotate('+orientation+'deg)';
-    if(b.kind==='goose'){const wing=Math.sin(b.flapPhase);b.el.querySelector('.wing-top').style.transform='rotate('+(-34+wing*38)+'deg)';b.el.querySelector('.wing-bottom').style.transform='rotate('+(34-wing*38)+'deg)';}
+    if(b.kind==='goose'){const wing=Math.sin(b.flapPhase);b.el.querySelector('.wing-top').style.transform='rotate('+(-10+wing*13)+'deg)';b.el.querySelector('.wing-bottom').style.transform='rotate('+(10-wing*13)+'deg)';}
     else{const wing=b.el.querySelectorAll('.wing');wing.forEach((el,j)=>{el.style.transform='rotate('+(b.flapping?(j===0?-20:20)*Math.sin(now*.018+b.flapPhase):0)+'deg)';});}
     if(b.x<-150||b.x>w+150||b.y<-150||b.y>h+150||b.age>b.life){b.el.remove();birdActors.splice(i,1);}
   }

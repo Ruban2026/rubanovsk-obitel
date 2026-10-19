@@ -581,11 +581,13 @@ function maybeSpawnBirds(now){
     let cx,cy,tx,ty;
     if(Math.abs(dx)>=Math.abs(dy)){cx=dx>0?w*.04:w*.96;cy=h*(.2+Math.random()*.6);tx=dx>0?w*.96:w*.04;ty=Math.max(h*.08,Math.min(h*.92,cy+(tx-cx)*dy/(Math.abs(dx)<.01?(dx<0?-.01:.01):dx)));}
     else{cy=dy>0?h*.04:h*.96;cx=w*(.2+Math.random()*.6);ty=dy>0?h*.96:h*.04;tx=Math.max(w*.06,Math.min(w*.94,cx+(ty-cy)*dx/(Math.abs(dy)<.01?(dy<0?-.01:.01):dy)));}
-    const px=-dy,py=dx,spacing=12+Math.random()*2,spread=.48;
-    const flockSpeed=.036;
+    const px=-dy,py=dx,spacing=16+Math.random()*2,spread=.8;
+    const flockSpeed=.036,hasStraggler=Math.random()<.28,stragglerIndex=count-1;
     for(let i=0;i<count;i++){
       const row=Math.ceil(i/2),side=i===0?0:(i%2===1?-1:1),b=createBird('goose',flockPalette);
-      const back=row*spacing,across=row*spacing*spread*side;
+      // Keep a clear gap between neighboring silhouettes; occasionally let one goose lag slightly behind.
+      const lag=hasStraggler&&i===stragglerIndex?spacing*1.15:0;
+      const back=row*spacing+lag,across=row*spacing*spread*side;
       b.x=cx-dx*back+px*across;b.y=cy-dy*back+py*across;
       b.heading=angle;b.speed=flockSpeed;b.vx=dx*flockSpeed;b.vy=dy*flockSpeed;
       b.tx=tx-dx*back+px*across;b.ty=ty-dy*back+py*across;

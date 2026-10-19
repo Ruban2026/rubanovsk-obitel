@@ -15,10 +15,11 @@ create table if not exists public.project_translations (
 alter table public.project_translations enable row level security;
 
 -- The table is accessed only by the server-side Pages Function.
--- Explicitly grant API access to service_role because automatic exposure of
--- new tables may be disabled in this Supabase project.
+-- Explicitly revoke client roles in case project-level default privileges
+-- would otherwise expose newly created tables through the Data API.
+revoke all on public.project_translations from anon, authenticated, public;
 grant select, insert, update, delete on public.project_translations to service_role;
 
--- No anon/authenticated policies or grants are intentionally created.
+-- No anon/authenticated policies are created.
 -- The service-role key bypasses RLS. Deleting a project removes its cached
 -- translations automatically through ON DELETE CASCADE.

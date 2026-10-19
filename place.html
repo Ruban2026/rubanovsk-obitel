@@ -134,6 +134,7 @@ function makeProjectCard(project,index,ratingRows){
   if(project.image_url){const image=document.createElement('img');image.className='project-image';image.src=project.image_url;image.alt='Фотография проекта: '+project.title;image.loading='lazy';middle.append(image)}
   else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
   const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
+  card.dataset.projectId=project.id;card._project=project;card._projectHeading=heading;card._projectDescription=description;
   const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString(({ru:'ru-RU',uk:'uk-UA',en:'en-GB',pl:'pl-PL',de:'de-DE',fr:'fr-FR'})[window.siteLanguage]||'ru-RU'):'';details.append(date);
   if(isAdmin){const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='10px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));details.append(remove)}
   card.append(top,middle,details);return card;
@@ -153,6 +154,33 @@ async function submitRating(project,rating,stars,vote,ratingRows){
     await loadProjects();
   }catch(error){caption.textContent=error.message;stars.querySelectorAll('button').forEach(button=>button.disabled=false)}
 }
+const supportedProjectLanguages=['ru','uk','en','pl','de','fr'];
+let translationRefreshToken=0;
+async function refreshProjectTranslations(){
+  const language=window.siteLanguage||'ru';
+  if(!supportedProjectLanguages.includes(language))return;
+  const token=++translationRefreshToken;
+  const cards=[...projectList.querySelectorAll('.project')];
+  await Promise.all(cards.map(async card=>{
+    const project=card._project;
+    if(!project)return;
+    const heading=card._projectHeading;
+    const description=card._projectDescription;
+    heading.textContent=project.title;
+    description.textContent=project.description;
+    try{
+      const response=await fetch('/api/translate-project',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({projectId:project.id,language})});
+      if(!response.ok)throw new Error('Translation service unavailable');
+      const translated=await response.json();
+      if(token!==translationRefreshToken||language!==(window.siteLanguage||'ru')||!card.isConnected)return;
+      if(typeof translated.title==='string')heading.textContent=translated.title;
+      if(typeof translated.description==='string')description.textContent=translated.description;
+    }catch(error){
+      // Keep the original user-submitted text if translation is not configured or temporarily unavailable.
+    }
+  }));
+}
+document.addEventListener('rubanovsk:languagechange',()=>{refreshProjectTranslations()});
 async function loadProjects(){
   if(!place){return}
   try{
@@ -167,6 +195,7 @@ async function loadProjects(){
     projectList.replaceChildren();projectCount.textContent=projects.length+' '+(projects.length===1?'проект':projects.length>1&&projects.length<5?'проекта':'проектов');
     if(!projects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
     projects.forEach((project,index)=>projectList.append(makeProjectCard(project,index,ratings)));
+    await refreshProjectTranslations();
   }catch(error){projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
 }
 imageInput.addEventListener('change',()=>{

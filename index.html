@@ -13,7 +13,7 @@ header{background:var(--forest);color:white;padding:18px max(22px,calc((100% - 1
 nav{display:flex;gap:22px;flex-wrap:wrap}nav a{color:#e7eee8;text-decoration:none;font-size:.93rem}nav a:hover{text-decoration:underline}
 main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;max-width:780px}.eyebrow{color:var(--leaf);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.13em}.hero h1{font-size:clamp(1.9rem,4vw,3.7rem);line-height:1.08;letter-spacing:-.045em;margin:12px 0 18px;color:var(--forest);white-space:nowrap;max-width:100%}.hero p{font-size:1.12rem;color:var(--muted);max-width:650px;margin:0}.hero .hero-slogan{white-space:nowrap;max-width:none}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:30px 0 14px}.section-head h2{font-size:clamp(1.45rem,3vw,2rem);margin:0;color:var(--forest);letter-spacing:-.025em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:.94rem}
-.map-shell{background:#fff;border:1px solid var(--line);padding:10px;border-radius:20px;box-shadow:0 14px 40px #1b3a2b0d}#map{width:100vw;margin-left:calc(50% - 50vw)}#map .section-head{max-width:1224px;margin:30px auto 14px;padding:0 22px}#map .map-shell{padding:0;border-left:0;border-right:0;border-radius:0;box-shadow:none}#map .map-stage{border-radius:0}#map .map-hint{padding:12px 22px}.map-stage{position:relative;overflow:hidden;border-radius:13px;background:#dfe5d5}.map-stage img{display:block;width:100%;height:auto}.marker{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid white;border-radius:50%;background:var(--forest);color:#fff;font-weight:800;font-size:.88rem;box-shadow:0 3px 12px #10281f66;cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s}.marker:hover,.marker:focus-visible{transform:translate(-50%,-50%) scale(1.12);background:#c36b43;outline:3px solid #ffffffa8;outline-offset:2px}.map-hint{padding:10px 6px 2px;color:var(--muted);font-size:.87rem;display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;background:var(--leaf);border-radius:50%;display:inline-block;flex:none}
+.map-shell{background:#fff;border:1px solid var(--line);padding:10px;border-radius:20px;box-shadow:0 14px 40px #1b3a2b0d}#map{width:100vw;margin-left:calc(50% - 50vw)}#map .section-head{max-width:1224px;margin:30px auto 14px;padding:0 22px}#map .map-shell{padding:0;border-left:0;border-right:0;border-radius:0;box-shadow:none}#map .map-stage{border-radius:0}#map .map-hint{padding:12px 22px}.map-stage{position:relative;overflow:hidden;border-radius:13px;background:#dfe5d5}.map-stage img{display:block;width:100%;height:auto}.marker{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid white;border-radius:50%;background:var(--forest);color:#fff;font-weight:800;font-size:.88rem;box-shadow:0 3px 12px #10281f66;cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s;z-index:2}.marker:hover,.marker:focus-visible,.marker.selected{transform:translate(-50%,-50%) scale(1.12);background:#c36b43;outline:3px solid #ffffffa8;outline-offset:2px}.marker::after{content:attr(data-title);position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);background:#173f35;color:#fff;padding:6px 10px;border-radius:8px;font-size:.82rem;font-weight:700;line-height:1.25;white-space:nowrap;max-width:min(260px,70vw);overflow:hidden;text-overflow:ellipsis;pointer-events:none;opacity:0;visibility:hidden;box-shadow:0 5px 18px #10281f44;transition:opacity .12s,transform .12s;z-index:20}.marker:hover::after,.marker:focus-visible::after,.marker.selected::after{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}#map-markers{position:absolute;inset:0;pointer-events:none}#map-markers .marker{pointer-events:auto;touch-action:none}.marker-admin-tools{padding:14px 22px;background:#f6f4ed;border-top:1px solid var(--line)}.marker-admin-tools>strong{color:var(--forest)}.marker-admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.marker-admin-actions button:disabled{opacity:.45;cursor:not-allowed}.marker-admin-tools .notice{margin-bottom:0!important}.map-hint{padding:10px 6px 2px;color:var(--muted);font-size:.87rem;display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;background:var(--leaf);border-radius:50%;display:inline-block;flex:none}
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px}.card h3{margin:0 0 8px;color:var(--forest);font-size:1.2rem}.card p{margin:0;color:var(--muted)}.pill{display:inline-flex;background:#eaf1e9;color:var(--forest);border-radius:99px;padding:5px 10px;font-size:.78rem;font-weight:750;margin-bottom:12px}
 form{display:grid;gap:12px;margin-top:18px}label{font-size:.9rem;font-weight:700}input,textarea,select{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}textarea{min-height:105px;resize:vertical}input:focus,textarea:focus,select:focus{outline:3px solid #477b5933;border-color:var(--leaf)}button.primary{background:var(--forest);color:white;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer}button.primary:hover{background:#245444}.notice{font-size:.83rem;color:var(--muted);margin-top:10px!important}.idea-list{display:grid;gap:12px;margin-top:16px}.idea{border:1px solid var(--line);border-radius:12px;padding:14px}.idea strong{display:block;color:var(--forest)}.idea p{font-size:.92rem;margin:4px 0 10px}.vote{border:1px solid var(--line);border-radius:9px;padding:6px 10px;background:white;color:var(--forest);cursor:pointer;font:inherit;font-weight:700}.vote:disabled{opacity:.6;cursor:default}
 footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted);font-size:.86rem}.modal-backdrop{position:fixed;inset:0;background:#0b211bcc;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal-backdrop.open{display:flex}.modal{background:white;border-radius:18px;padding:26px;max-width:460px;width:100%;box-shadow:0 20px 80px #0004}.modal-top{display:flex;align-items:start;justify-content:space-between;gap:20px}.modal h3{font-size:1.45rem;margin:0;color:var(--forest)}.modal p{color:var(--muted)}.close{border:0;background:#edf1ec;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.2rem;flex:none}
@@ -26,11 +26,8 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <section class="hero"><div class="eyebrow">Наше место · наше будущее</div><h1>Рубановский монастырь начинается с каждого</h1><p class="hero-slogan">Создадим Рай на земле вместе!</p></section>
 <section id="map" aria-label="Карта территории">
 <div class="map-shell"><div class="map-stage"><img src="RubanovskPlane_3x.WebP" alt="Аэрофотография территории Рубановского с прудом, зелёной зоной, дорогами и садами" loading="eager">
-<button class="marker" style="left:34%;top:57%" data-place="pond" data-title="Пруд" data-description="Водоём — один из заметных природных объектов территории. Здесь можно собирать предложения по бережному использованию и сохранению прибрежной зоны." aria-label="Информация: пруд">1</button>
-<button class="marker" style="left:49%;top:48%" data-place="green-zone" data-title="Зелёная зона" data-description="Участок с деревьями и садами. Жители могут предложить идеи по уходу за зелёными насаждениями и улучшению проходов." aria-label="Информация: зелёная зона">2</button>
-<button class="marker" style="left:68%;top:56%" data-place="roads" data-title="Существующие дороги" data-description="Дорожная сеть связывает разные части территории. Здесь можно обсуждать удобство прохода, доступность и содержание дорог." aria-label="Информация: дороги">3</button>
-<button class="marker" style="left:53%;top:30%" data-place="gardens" data-title="Сады и открытые участки" data-description="Зона садов и открытых участков. Добавляйте конкретные предложения, если хотите обсудить развитие или уход за этой территорией." aria-label="Информация: сады и открытые участки">4</button>
-</div><div class="map-hint"><span class="dot"></span> Метки показывают примерные тематические точки для обсуждения. Их положение и описания можно уточнить вместе с жителями.</div></div></section>
+<div id="map-markers" aria-label="Метки карты"></div>
+</div><div id="marker-admin-tools" class="marker-admin-tools" style="display:none" aria-live="polite"><strong>Управление метками</strong><div class="marker-admin-actions"><button class="primary" id="marker-add" type="button">＋ Добавить метку</button><button class="vote" id="marker-delete" type="button" disabled>Удалить выбранную</button></div><p id="marker-status" class="notice">Выбери метку, чтобы переместить или удалить её.</p></div><div class="map-hint"><span class="dot"></span> Наведи курсор на метку, чтобы увидеть название. В режиме администратора метки можно добавлять и перемещать.</div></div></section>
 <section id="ideas" style="display:none;padding-top:12px"><div class="section-head"><div><h2>Предложить свою идею ...</h2><p>Собираем предложения о том, что важно для Рубановского.</p></div></div>
 <div class="panel-grid"><div class="card"><span class="pill">Добавить предложение</span><h3>Что хотелось бы улучшить?</h3><p>Опишите идею и укажите, к какой части территории она относится.</p>
 <form id="idea-form"><div><label for="idea-title">Короткое название</label><input id="idea-title" name="title" required maxlength="90" placeholder="Например, обустроить подход к пруду"></div><div><label for="idea-place">Место на карте</label><select id="idea-place" name="place"><option>Пруд</option><option>Зелёная зона</option><option>Дороги</option><option>Сады и открытые участки</option><option>Другое место</option></select></div><div><label for="idea-description">Описание идеи</label><textarea id="idea-description" name="description" required maxlength="1000" placeholder="Что предлагаете и почему это важно?"></textarea></div><div><label for="idea-image">Фотография или рисунок (до 3 МБ)</label><input id="idea-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><p class="notice">Можно прикрепить JPG, PNG или WebP. Изображение будет видно всем посетителям.</p><img id="image-preview" alt="Предварительный просмотр изображения" style="display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px"></div><button class="primary" type="submit">Опубликовать предложение</button></form><p class="notice">Демонстрационный режим: предложения сохраняются только в этом браузере и пока не видны другим посетителям.</p></div>
@@ -41,9 +38,135 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal"><div class="modal-top"><h3 id="modal-title"></h3><button class="close" id="modal-close" aria-label="Закрыть">×</button></div><p id="modal-description"></p><button class="primary" id="modal-idea">Предложить идею об этом месте</button></div></div>
 <div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-top"><h3 id="admin-modal-title">Вход администратора</h3><button class="close" id="admin-close" aria-label="Закрыть">×</button></div><p>Войдите в административную учётную запись, чтобы модерировать предложения.</p><form id="admin-login-form"><div><label for="admin-email">Электронная почта</label><input id="admin-email" type="email" autocomplete="username" required></div><div><label for="admin-password">Пароль</label><input id="admin-password" type="password" autocomplete="current-password" required></div><button class="primary" type="submit">Войти</button><p class="notice" id="admin-login-status" role="status"></p></form><button class="primary" id="admin-logout" type="button" style="display:none">Выйти из режима администратора</button></div></div>
 <script>
-document.querySelectorAll('.marker').forEach(marker=>marker.addEventListener('click',()=>{
-  window.location.href='place.html?place='+encodeURIComponent(marker.dataset.place);
-}));
+const mapStage=document.querySelector('.map-stage');
+const markerLayer=document.getElementById('map-markers');
+const markerAdminTools=document.getElementById('marker-admin-tools');
+const markerAddButton=document.getElementById('marker-add');
+const markerDeleteButton=document.getElementById('marker-delete');
+const markerStatus=document.getElementById('marker-status');
+const defaultMapMarkers=[
+  {id:'fallback-pond',place:'pond',title:'Пруд',description:'Водоём — один из заметных природных объектов территории. Здесь можно собирать предложения по бережному использованию и сохранению прибрежной зоны.',x:34,y:57},
+  {id:'fallback-green-zone',place:'green-zone',title:'Зелёная зона',description:'Участок с деревьями и садами. Жители могут предложить идеи по уходу за зелёными насаждениями и улучшению проходов.',x:49,y:48},
+  {id:'fallback-roads',place:'roads',title:'Существующие дороги',description:'Дорожная сеть связывает разные части территории. Здесь можно обсуждать удобство прохода, доступность и содержание дорог.',x:68,y:56},
+  {id:'fallback-gardens',place:'gardens',title:'Сады и открытые участки',description:'Зона садов и открытых участков. Добавляйте конкретные предложения, если хотите обсудить развитие или уход за этой территорией.',x:53,y:30}
+];
+let mapMarkers=[];
+let selectedMarkerId=null;
+let mapDataReady=false;
+let addingMarker=false;
+let activeDrag=null;
+const knownPlaceKeys=new Set(['pond','green-zone','roads','gardens']);
+function markerAuthHeaders(){return {apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession&&adminSession.access_token?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'};}
+function updateMarkerAdminUI(){
+  markerAdminTools.style.display=isAdmin?'block':'none';
+  markerDeleteButton.disabled=!isAdmin||!mapDataReady||!mapMarkers.some(marker=>marker.id===selectedMarkerId&&!String(marker.id).startsWith('fallback-'));
+  markerAddButton.disabled=!isAdmin||!mapDataReady;
+  if(!isAdmin){addingMarker=false;mapStage.style.cursor='';return;}
+  if(!mapDataReady){markerStatus.textContent='Таблица меток ещё не подключена. Сначала выполни SQL-настройку, которую я дам отдельно.';return;}
+  if(addingMarker){markerStatus.textContent='Нажми на нужное место карты, чтобы поставить новую метку.';mapStage.style.cursor='crosshair';}
+  else{mapStage.style.cursor='';if(!markerStatus.dataset.customMessage)markerStatus.textContent='Нажми метку для выбора. Перетаскивай её мышкой, чтобы изменить положение.';}
+}
+function renderMapMarkers(){
+  markerLayer.replaceChildren();
+  mapMarkers.forEach((item,index)=>{
+    const marker=document.createElement('button');
+    marker.type='button';marker.className='marker';
+    marker.style.left=Number(item.x)+'%';marker.style.top=Number(item.y)+'%';
+    marker.textContent=String(index+1);marker.dataset.title=item.title||'Метка';
+    marker.dataset.place=item.place||'';marker.dataset.description=item.description||'';
+    marker.setAttribute('aria-label','Метка: '+(item.title||'Без названия'));
+    marker.title=item.title||'Метка';
+    if(item.id===selectedMarkerId)marker.classList.add('selected');
+    marker.addEventListener('click',()=>{
+      if(marker.dataset.justDragged==='true'){delete marker.dataset.justDragged;return;}
+      if(isAdmin){selectedMarkerId=item.id;markerStatus.dataset.customMessage='';renderMapMarkers();updateMarkerAdminUI();return;}
+      if(knownPlaceKeys.has(item.place)){window.location.href='place.html?place='+encodeURIComponent(item.place);return;}
+      document.getElementById('modal-title').textContent=item.title||'Метка';
+      document.getElementById('modal-description').textContent=item.description||'';
+      document.getElementById('modal').classList.add('open');
+      document.getElementById('modal-idea').onclick=()=>{document.getElementById('modal').classList.remove('open');document.getElementById('ideas').style.display='block';const placeSelect=document.getElementById('idea-place');let option=[...placeSelect.options].find(o=>o.value===item.title||o.textContent===item.title);if(!option){option=document.createElement('option');option.value=item.title;option.textContent=item.title;placeSelect.append(option);}placeSelect.value=option.value;document.getElementById('ideas').scrollIntoView({behavior:'smooth'});};
+    });
+    marker.addEventListener('pointerdown',event=>{
+      if(!isAdmin||!mapDataReady||addingMarker)return;
+      event.preventDefault();selectedMarkerId=item.id;markerStatus.dataset.customMessage='';
+      activeDrag={id:item.id,pointerId:event.pointerId,marker,startX:event.clientX,startY:event.clientY,moved:false};
+      marker.setPointerCapture(event.pointerId);marker.classList.add('selected');updateMarkerAdminUI();
+    });
+    marker.addEventListener('pointermove',event=>{
+      if(!activeDrag||activeDrag.id!==item.id||activeDrag.pointerId!==event.pointerId)return;
+      const rect=mapStage.getBoundingClientRect();
+      const x=Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100));
+      const y=Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100));
+      if(Math.abs(event.clientX-activeDrag.startX)+Math.abs(event.clientY-activeDrag.startY)>3)activeDrag.moved=true;
+      item.x=Number(x.toFixed(3));item.y=Number(y.toFixed(3));
+      marker.style.left=item.x+'%';marker.style.top=item.y+'%';
+    });
+    const finishDrag=async event=>{
+      if(!activeDrag||activeDrag.id!==item.id||activeDrag.pointerId!==event.pointerId)return;
+      const moved=activeDrag.moved;activeDrag=null;
+      if(moved){marker.dataset.justDragged='true';await saveMarkerPosition(item);}
+    };
+    marker.addEventListener('pointerup',finishDrag);
+    marker.addEventListener('pointercancel',finishDrag);
+    markerLayer.append(marker);
+  });
+  updateMarkerAdminUI();
+}
+async function loadMapMarkers(){
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=id,place,title,description,x,y&order=created_at.asc',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession&&adminSession.access_token?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}});
+    if(!response.ok)throw new Error('HTTP '+response.status);
+    mapMarkers=await response.json();mapDataReady=true;markerStatus.dataset.customMessage='';
+    selectedMarkerId=null;renderMapMarkers();
+    if(!mapMarkers.length){markerStatus.textContent='На карте пока нет меток. Нажми «Добавить метку», чтобы создать первую.';}
+  }catch(error){
+    mapDataReady=false;mapMarkers=defaultMapMarkers.map(item=>({...item}));selectedMarkerId=null;
+    markerStatus.dataset.customMessage='true';renderMapMarkers();
+    markerStatus.textContent='Не удалось подключить таблицу меток. После SQL-настройки управление станет доступно.';
+  }
+}
+async function saveMarkerPosition(item){
+  if(String(item.id).startsWith('fallback-')){markerStatus.textContent='Перемещение пока не сохранено: сначала подключи таблицу меток в Supabase.';return;}
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'PATCH',headers:{...markerAuthHeaders(),Prefer:'return=minimal'},body:JSON.stringify({x:item.x,y:item.y})});
+    if(!response.ok)throw new Error(await response.text());
+    markerStatus.dataset.customMessage='true';markerStatus.textContent='Положение метки «'+item.title+'» сохранено.';
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await loadMapMarkers();}
+}
+markerAddButton.addEventListener('click',()=>{
+  if(!isAdmin||!mapDataReady)return;
+  addingMarker=true;markerStatus.dataset.customMessage='';updateMarkerAdminUI();
+});
+mapStage.addEventListener('click',async event=>{
+  if(!addingMarker||!isAdmin||!mapDataReady||event.target.closest('.marker'))return;
+  const title=prompt('Название новой метки (например, Причал):');
+  if(title===null){addingMarker=false;updateMarkerAdminUI();return;}
+  if(!title.trim()){alert('Название метки не может быть пустым.');return;}
+  const description=prompt('Краткое описание метки (необязательно):')||'';
+  const rect=mapStage.getBoundingClientRect();
+  const x=Number(Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100)).toFixed(3));
+  const y=Number(Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100)).toFixed(3));
+  const place='custom-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers',{method:'POST',headers:{...markerAuthHeaders(),Prefer:'return=representation'},body:JSON.stringify({place,title:title.trim(),description,x,y})});
+    if(!response.ok)throw new Error(await response.text());
+    const rows=await response.json();if(rows[0])mapMarkers.push(rows[0]);
+    addingMarker=false;selectedMarkerId=rows[0]?.id||null;renderMapMarkers();
+    markerStatus.dataset.customMessage='true';markerStatus.textContent='Метка «'+title.trim()+'» добавлена и сохранена.';
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось добавить метку: '+error.message;alert('Не удалось сохранить метку. Проверь, что SQL-настройка выполнена и вход администратора активен.');}
+  finally{addingMarker=false;updateMarkerAdminUI();}
+});
+markerDeleteButton.addEventListener('click',async()=>{
+  const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);
+  if(!isAdmin||!mapDataReady||!item||String(item.id).startsWith('fallback-'))return;
+  if(!confirm('Удалить метку «'+item.title+'»? Это действие нельзя отменить.'))return;
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'DELETE',headers:{...markerAuthHeaders(),Prefer:'return=minimal'}});
+    if(!response.ok)throw new Error(await response.text());
+    mapMarkers=mapMarkers.filter(marker=>marker.id!==item.id);selectedMarkerId=null;renderMapMarkers();
+    markerStatus.dataset.customMessage='true';markerStatus.textContent='Метка удалена.';
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось удалить метку: '+error.message;}
+});
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
 let adminSession=null;
 let isAdmin=false;
@@ -76,13 +199,14 @@ adminLoginForm.addEventListener('submit',async e=>{
     }
     adminSession=result;
     isAdmin=true;
-    adminLoginStatus.textContent='Вход выполнен. Кнопки удаления доступны только администратору.';
+    adminLoginStatus.textContent='Вход выполнен. Доступно управление метками карты и предложениями.';
     adminLoginForm.style.display='none';
     adminLogout.style.display='block';
     const ideasSection=document.getElementById('ideas');
     ideasSection.style.display='block';
     closeAdminModal();
     await loadIdeas();
+    await loadMapMarkers();
     ideasSection.scrollIntoView({behavior:'smooth'});
   }catch(error){adminLoginStatus.textContent=error.message}
   finally{submit.disabled=false}
@@ -92,6 +216,7 @@ adminLogout.addEventListener('click',async()=>{
     await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token}});
   }
   adminSession=null;isAdmin=false;
+  await loadMapMarkers();
   adminLoginForm.reset();adminLoginForm.style.display='grid';adminLogout.style.display='none';adminLoginStatus.textContent='';
   await loadIdeas();
   closeAdminModal();
@@ -267,6 +392,7 @@ ideaForm.addEventListener('submit',async event=>{
     submitButton.textContent='Опубликовать предложение';
   }
 });
+loadMapMarkers();
 </script>
 <script src="i18n.js"></script>
 </body></html>

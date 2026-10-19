@@ -82,7 +82,7 @@ function renderMapMarkers(){
     marker.addEventListener('click',()=>{
       if(marker.dataset.justDragged==='true'){delete marker.dataset.justDragged;return;}
       if(isAdmin){selectedMarkerId=item.id;markerStatus.dataset.customMessage='';renderMapMarkers();updateMarkerAdminUI();return;}
-      if(knownPlaceKeys.has(item.place)){window.location.href='place.html?place='+encodeURIComponent(item.place);return;}
+      if(item.place){window.location.href='place.html?place='+encodeURIComponent(item.place);return;}
       document.getElementById('modal-title').textContent=item.title||'Метка';
       document.getElementById('modal-description').textContent=item.description||'';
       document.getElementById('modal').classList.add('open');

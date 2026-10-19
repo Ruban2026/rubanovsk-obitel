@@ -47,14 +47,14 @@ main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;
 .map-bird .body{fill:#263b3b;stroke:none}
 .map-bird .belly{fill:#d6d5c5;stroke:none}
 .map-bird .beak{fill:#263b3b;stroke:none}
-.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:47px 35px;animation:bird-flap 1.35s ease-in-out infinite alternate}
+.map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:48px 35px;animation:bird-flap .095s ease-in-out infinite alternate}
 .map-bird .wing-bottom{animation-name:bird-flap}
 .map-bird.falcon{width:56px;height:40px}
 .map-bird.falcon .body{fill:#68523b}
 .map-bird.falcon .belly{fill:#b9a789}
-.map-bird.falcon .wing{fill:#766044;animation-duration:1.9s}
-@keyframes bird-flap{from{transform:scaleY(.62)}to{transform:scaleY(1.04)}}
-@media(prefers-reduced-motion:reduce){.map-bird .wing{animation-duration:2.2s}}
+.map-bird.falcon .wing{fill:#766044;animation-duration:.24s}
+@keyframes bird-flap{from{transform:scaleY(.18)}to{transform:scaleY(1.12)}}
+@media(prefers-reduced-motion:reduce){.map-bird .wing{animation-duration:.3s}}
 
 
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px}.card h3{margin:0 0 8px;color:var(--forest);font-size:1.2rem}.card p{margin:0;color:var(--muted)}.pill{display:inline-flex;background:#eaf1e9;color:var(--forest);border-radius:99px;padding:5px 10px;font-size:.78rem;font-weight:750;margin-bottom:12px}
@@ -532,7 +532,7 @@ function chirpSwallow(){if(!windAudioContext||windAudioContext.state!=='running'
 function createBird(kind){
   const ns='http://www.w3.org/2000/svg',el=document.createElementNS(ns,'svg');
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
-  el.innerHTML='<path class="wing wing-top" d="M47 33 C42 26 34 15 23 10 C24 22 31 31 45 37 Z"/><path class="wing wing-bottom" d="M47 37 C42 44 34 55 23 60 C24 48 31 39 45 33 Z"/><path class="body" d="M10 35 L22 31 Q34 29 48 31 L66 31 Q73 31 77 35 Q73 39 66 39 L48 39 Q34 41 22 39 Z M10 35 L1 30 L5 35 L1 40 Z"/><path class="belly" d="M28 34 Q46 32 65 34 Q69 35 65 36 Q46 38 28 36 Z"/><path class="beak" d="M73 32 L88 35 L73 38 Z"/>';
+  el.innerHTML='<path class="wing wing-top" d="M48 34 C39 27 29 12 8 3 C13 20 25 32 44 38 Z"/><path class="wing wing-bottom" d="M48 36 C39 43 29 58 8 67 C13 50 25 38 44 32 Z"/><path class="body" d="M17 35 L28 31 Q40 29 52 31 L65 31 Q73 31 78 35 Q73 39 65 39 L52 39 Q40 41 28 39 Z M17 35 L7 26 L10 34 L2 35 L10 36 L7 44 Z"/><path class="belly" d="M31 34 Q47 32 64 34 Q68 35 64 36 Q47 38 31 36 Z"/><circle class="body" cx="69" cy="32.5" r="5.3"/><path class="beak" d="M73 31 L88 35 L73 37 Z"/>';
   birdLayer.append(el);
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const initialAngle=Math.random()*Math.PI*2,speed=kind==='falcon'?.052:.038;const b={el,kind,x:Math.random()*w,y:h*(.12+Math.random()*.58),vx:Math.cos(initialAngle)*speed,vy:Math.sin(initialAngle)*speed,heading:initialAngle,speed,tx:Math.random()*w,ty:h*(.1+Math.random()*.65),changeAt:performance.now()+4500+Math.random()*6500,phase:Math.random()*7,age:0,life:kind==='falcon'?30000+Math.random()*18000:36000+Math.random()*42000,attack:kind==='falcon'&&Math.random()<.4};
@@ -540,14 +540,23 @@ function createBird(kind){
 }
 
 function maybeSpawnBirds(now){
-  const w=birdLayer.clientWidth||window.innerWidth;
-  if(birdActors.length===0&&now-lastBirdSpawn>2500){
-    const b=createBird('swallow');b.x=Math.random()<.5?-65:w+65;b.y=(birdLayer.clientHeight||window.innerHeight)*(.16+Math.random()*.55);b.heading=b.x<0?0:Math.PI;b.speed=.040+Math.random()*.009;b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;b.tx=b.x<0?w+100:-100;b.ty=Math.max(55,Math.min((birdLayer.clientHeight||window.innerHeight)-55,b.y+(Math.random()-.5)*(birdLayer.clientHeight||window.innerHeight)*.28));b.changeAt=Number.POSITIVE_INFINITY;lastBirdSpawn=now;
+  const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
+  // A small flock crosses the map together; the next flock waits until every bird exits.
+  if(birdActors.length===0&&now-lastBirdSpawn>3200){
+    const count=4+Math.floor(Math.random()*3),fromLeft=Math.random()<.5;
+    const baseY=h*(.18+Math.random()*.48);
+    for(let i=0;i<count;i++){
+      const b=createBird('swallow');
+      b.x=fromLeft?-70-i*20:w+70+i*20;
+      b.y=Math.max(45,Math.min(h-45,baseY+(i-(count-1)/2)*Math.min(32,h*.055)));
+      b.heading=fromLeft?0:Math.PI;b.speed=.038+Math.random()*.008;
+      b.vx=Math.cos(b.heading)*b.speed;b.vy=0;
+      b.tx=fromLeft?w+100:-100;
+      b.ty=Math.max(45,Math.min(h-45,b.y+(Math.random()-.5)*h*.16));
+      b.changeAt=Number.POSITIVE_INFINITY;b.phase=Math.random()*7;
+    }
+    lastBirdSpawn=now;
     if(windToggle.checked&&now>nextSwallowCall&&Math.random()<.82){nextSwallowCall=now+18000+Math.random()*26000;setTimeout(chirpSwallow,900+Math.random()*2200);}
-  }
-  if(!falconActor&&now>nextFalconTime){
-    if(Math.random()<.009){falconActor=createBird('falcon');falconActor.x=Math.random()<.5?-70:w+70;falconActor.y=(birdLayer.clientHeight||window.innerHeight)*(.12+Math.random()*.24);falconActor.heading=falconActor.x<0?0:Math.PI;falconActor.speed=.052;falconActor.vx=Math.cos(falconActor.heading)*falconActor.speed;falconActor.vy=Math.sin(falconActor.heading)*falconActor.speed;falconActor.tx=w*.5;falconActor.ty=(birdLayer.clientHeight||window.innerHeight)*.18;falconActor.attack=Math.random()<.4;}
-    else nextFalconTime=now+9000;
   }
 }
 
@@ -557,22 +566,18 @@ function birdTick(now){
   const dt=Math.min(32,now-(birdLastTime||now));birdLastTime=now;maybeSpawnBirds(now);
   for(let i=birdActors.length-1;i>=0;i--){
     const b=birdActors[i];b.age+=dt;
-    if(b.kind==='falcon'&&now>b.changeAt){b.tx=b.x<w/2?w+100:-100;b.ty=h*(.12+Math.random()*.24);b.changeAt=Number.POSITIVE_INFINITY;}
-    const dx=b.tx-b.x,dy=b.ty-b.y;
-    if(Math.hypot(dx,dy)<90&&b.kind==='falcon'){b.tx=b.x<w/2?w+100:-100;b.ty=h*(.12+Math.random()*.24);}
     const desired=Math.atan2(b.ty-b.y,b.tx-b.x);
     let turn=((desired-b.heading+Math.PI*3)%(Math.PI*2))-Math.PI;
-    const maxTurn=(b.kind==='falcon'?.00019:.00016)*dt;
+    const maxTurn=.00012*dt;
     turn=Math.max(-maxTurn,Math.min(maxTurn,turn));b.heading+=turn;
-    b.speed+=( (b.kind==='falcon'?.052:.04)-b.speed)*Math.min(1,dt*.0004);
+    b.speed+=(.043-b.speed)*Math.min(1,dt*.0004);
     b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;
-    b.x+=b.vx*dt;b.y+=b.vy*dt+Math.sin(now*.00042+b.phase)*.006*dt;
-    const heightWave=(Math.sin(now*.00022+b.phase)+1)/2,scale=(b.kind==='falcon'?.82:.5)+heightWave*(b.kind==='falcon'?.24:.25);
-    const opacity=Math.min(1,b.age/900);
+    b.x+=b.vx*dt;b.y+=b.vy*dt+Math.sin(now*.00042+b.phase)*.0035*dt;
+    const heightWave=(Math.sin(now*.00022+b.phase)+1)/2,scale=.48+heightWave*.14;
+    const opacity=Math.min(1,b.age/650);
     b.el.style.opacity=String(opacity);
     b.el.style.transform='translate('+b.x+'px,'+b.y+'px) scale('+scale+') rotate('+(b.heading*180/Math.PI)+'deg)';
-    if(b.kind==='falcon'&&b.attack&&b.y>h*.5){b.ty=h*.16;b.tx=w*.84;b.attack=false;b.changeAt=now+7000;}
-    if(b.x<-120||b.x>w+120||b.y<-120||b.y>h+120){b.el.remove();birdActors.splice(i,1);lastBirdSpawn=now;if(b===falconActor){falconActor=null;nextFalconTime=now+24000+Math.random()*48000;}}
+    if(b.x<-125||b.x>w+125||b.y<-125||b.y>h+125){b.el.remove();birdActors.splice(i,1);lastBirdSpawn=now;}
   }
   requestAnimationFrame(birdTick);
 }

@@ -193,26 +193,7 @@ async function saveMarkerPosition(item){
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'PATCH',headers:{...markerAuthHeaders(),Prefer:'return=minimal'},body:JSON.stringify({x:item.x,y:item.y})});
     if(!response.ok)throw new Error(await response.text());
     markerStatus.dataset.customMessage='true';markerStatus.textContent='Положение метки «'+item.title+'» сохранено.';
-  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await // Keep the floating side panel inside the visible vertical bounds of the map image.
-const sidePanels=document.getElementById('map-side-panels');
-const mapStage=document.querySelector('.map-stage');
-function keepSidePanelsOnMap(){
-  if(!sidePanels||!mapStage)return;
-  const mapRect=mapStage.getBoundingClientRect();
-  const panelHeight=sidePanels.offsetHeight;
-  const inset=14;
-  const minTop=mapRect.top+inset+panelHeight/2;
-  const maxTop=mapRect.bottom-inset-panelHeight/2;
-  let center=window.innerHeight/2;
-  if(maxTop>=minTop)center=Math.max(minTop,Math.min(maxTop,center));
-  else center=Math.max(inset+panelHeight/2,Math.min(window.innerHeight-inset-panelHeight/2,center));
-  sidePanels.style.top=center+'px';
-}
-window.addEventListener('scroll',keepSidePanelsOnMap,{passive:true});
-window.addEventListener('resize',keepSidePanelsOnMap);
-if('ResizeObserver' in window&&sidePanels){new ResizeObserver(keepSidePanelsOnMap).observe(sidePanels);}
-keepSidePanelsOnMap();
-loadMapMarkers();}
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await loadMapMarkers();}
 }
 markerProjectsButton.addEventListener('click',()=>{
   const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);
@@ -654,6 +635,25 @@ cloudsToggle.addEventListener('change',applyMapEffects);pulseToggle.addEventList
 handleWindToggle();
 const resumeDefaultAudio=()=>{if(windToggle.checked&&windAudioContext&&windAudioContext.state!=='running')startWindSound().catch(error=>console.warn('Звук ждёт взаимодействия с сайтом:',error));};
 window.addEventListener('pointerdown',resumeDefaultAudio,{once:true});window.addEventListener('keydown',resumeDefaultAudio,{once:true});
+// Keep the floating side panel inside the vertical bounds of the map image.
+const sidePanels=document.getElementById('map-side-panels');
+const mapStage=document.querySelector('.map-stage');
+function keepSidePanelsOnMap(){
+  if(!sidePanels||!mapStage)return;
+  const mapRect=mapStage.getBoundingClientRect();
+  const panelHeight=sidePanels.offsetHeight;
+  const inset=14;
+  const minTop=mapRect.top+inset+panelHeight/2;
+  const maxTop=mapRect.bottom-inset-panelHeight/2;
+  let center=window.innerHeight/2;
+  if(maxTop>=minTop)center=Math.max(minTop,Math.min(maxTop,center));
+  else center=Math.max(inset+panelHeight/2,Math.min(window.innerHeight-inset-panelHeight/2,center));
+  sidePanels.style.top=center+'px';
+}
+window.addEventListener('scroll',keepSidePanelsOnMap,{passive:true});
+window.addEventListener('resize',keepSidePanelsOnMap);
+if('ResizeObserver' in window&&sidePanels)new ResizeObserver(keepSidePanelsOnMap).observe(sidePanels);
+keepSidePanelsOnMap();
 loadMapMarkers();
 </script>
 <script src="i18n.js"></script>

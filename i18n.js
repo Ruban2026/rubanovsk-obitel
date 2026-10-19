@@ -28,6 +28,9 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Терракотовая метка","Теракотова позначка","Terracotta marker","Terakotowy znacznik","Terrakottafarbene Markierung","Repère couleur terre cuite"],
 ["У этого места уже есть опубликованные проекты. Метка мягко пульсирует, чтобы её было легче заметить.","Для цього місця вже є опубліковані проєкти. Позначка м’яко пульсує, щоб її було легше помітити.","This location has published projects. The marker gently pulses to make it easier to spot.","To miejsce ma już opublikowane projekty. Znacznik delikatnie pulsuje, aby łatwiej go było zauważyć.","Für diesen Ort gibt es bereits veröffentlichte Projekte. Die Markierung pulsiert sanft, damit sie leichter zu erkennen ist.","Cet endroit a déjà des projets publiés. Le repère pulse doucement pour être plus facile à repérer."],
 ["Цвет показывает наличие проектов, а не оценку качества места.","Колір показує наявність проєктів, а не оцінку якості місця.","The color indicates whether projects exist, not how good the location is.","Kolor wskazuje, czy istnieją projekty, a nie ocenę jakości miejsca.","Die Farbe zeigt an, ob Projekte vorhanden sind, nicht die Qualität des Ortes.","La couleur indique la présence de projets, et non la qualité du lieu."],
+["Настройки эффектов","Налаштування ефектів","Effect settings","Ustawienia efektów","Effekteinstellungen","Paramètres des effets"],
+["Лёгкие облака","Легкі хмари","Soft clouds","Delikatne chmury","Zarte Wolken","Nuages légers"],
+["Пульсация меток с проектами","Пульсація позначок із проєктами","Pulse markers with projects","Pulsowanie znaczników z projektami","Markierungen mit Projekten pulsieren","Pulsation des repères avec projets"],
 const codes = ['ru','uk','en','pl','de','fr'];
 const selectorOrder = ['uk','en','pl','de','fr','ru'];
 const dict = Object.fromEntries(codes.map(code=>[code,{}]));

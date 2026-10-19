@@ -178,13 +178,32 @@ markerEditButton.addEventListener('click',async()=>{
 markerDeleteButton.addEventListener('click',async()=>{
   const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);
   if(!isAdmin||!mapDataReady||!item||String(item.id).startsWith('fallback-'))return;
-  if(!confirm('Удалить метку «'+item.title+'»? Это действие нельзя отменить.'))return;
+  markerDeleteButton.disabled=true;
+  markerStatus.dataset.customMessage='true';
+  markerStatus.textContent='Проверяем, есть ли у метки проекты…';
   try{
+    const projectsResponse=await fetch(SUPABASE_URL+'/rest/v1/projects?select=id&place=eq.'+encodeURIComponent(item.place),{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession&&adminSession.access_token?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}
+    });
+    if(!projectsResponse.ok)throw new Error('Не удалось проверить связанные проекты (HTTP '+projectsResponse.status+'). '+await projectsResponse.text());
+    const projects=await projectsResponse.json();
+    if(projects.length){
+      const message='Нельзя удалить метку «'+item.title+'»: с ней связано проектов — '+projects.length+'. Сначала перенесите каждый проект на другую метку или удалите его вручную.';
+      markerStatus.textContent=message;
+      alert(message);
+      return;
+    }
+    if(!confirm('У метки «'+item.title+'» нет связанных проектов. Удалить метку?'))return;
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'DELETE',headers:{...markerAuthHeaders(),Prefer:'return=minimal'}});
-    if(!response.ok)throw new Error(await response.text());
+    if(!response.ok){
+      const detail=await response.text();
+      if(detail.includes('MAP_MARKER_HAS_PROJECTS')||detail.includes('projects are still attached'))throw new Error('Удаление запрещено: к этой метке привязан проект. Обновите список и перенесите или удалите проект.');
+      throw new Error(detail);
+    }
     mapMarkers=mapMarkers.filter(marker=>marker.id!==item.id);selectedMarkerId=null;renderMapMarkers();
     markerStatus.dataset.customMessage='true';markerStatus.textContent='Метка удалена.';
   }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось удалить метку: '+error.message;}
+  finally{updateMarkerAdminUI();}
 });
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
 let adminSession=null;

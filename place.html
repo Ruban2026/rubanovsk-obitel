@@ -53,7 +53,7 @@ const places={
 };
 const params=new URLSearchParams(location.search);
 const placeSlug=params.get('place');
-const place=places[placeSlug];
+let place=places[placeSlug]||null;
 const title=document.getElementById('place-title');
 const placeDescription=document.getElementById('place-description');
 const projectList=document.getElementById('project-list');
@@ -66,14 +66,8 @@ const imagePreview=document.getElementById('image-preview');
 let adminSession=null;
 let isAdmin=false;
 let projectsLoadSequence=0;
-if(!place){
-  title.textContent='Место не найдено';
-  placeDescription.textContent='Не удалось определить место на карте. Вернитесь на главную и выберите одну из меток.';
-  form.style.display='none';
-  document.getElementById('new-project').style.display='none';
-  projectList.innerHTML='<div class="empty"><strong>Неизвестное место</strong><a href="index.html">Вернуться к карте</a></div>';
-  projectCount.textContent='';
-}else{
+let availableMarkers=[];
+if(place){
   document.title='Проекты: '+place.name+' — Рубановск';
   title.textContent=place.name;
   placeDescription.textContent=place.description;
@@ -136,7 +130,17 @@ function makeProjectCard(project,index,ratingRows){
   else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
   const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
   const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString(({ru:'ru-RU',uk:'uk-UA',en:'en-GB',pl:'pl-PL',de:'de-DE',fr:'fr-FR'})[window.siteLanguage]||'ru-RU'):'';details.append(date);
-  if(isAdmin){const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='10px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));details.append(remove)}
+  if(isAdmin){
+    const adminActions=document.createElement('div');adminActions.style.display='grid';adminActions.style.gap='8px';adminActions.style.marginTop='12px';
+    const transferRow=document.createElement('div');transferRow.style.display='flex';transferRow.style.flexWrap='wrap';transferRow.style.gap='8px';transferRow.style.alignItems='center';
+    const transferSelect=document.createElement('select');transferSelect.setAttribute('aria-label','Перенести проект на другую метку');transferSelect.style.flex='1';transferSelect.style.minWidth='220px';transferSelect.style.padding='10px';transferSelect.style.border='1px solid #cfd9d0';transferSelect.style.borderRadius='10px';transferSelect.style.font='inherit';
+    const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='Перенести на другую метку…';transferSelect.append(placeholder);
+    availableMarkers.filter(marker=>marker.place!==project.place).forEach(marker=>{const option=document.createElement('option');option.value=marker.place;option.textContent=marker.title;transferSelect.append(option)});
+    const transferButton=document.createElement('button');transferButton.type='button';transferButton.className='primary';transferButton.textContent='Перенести проект';transferButton.addEventListener('click',()=>moveProject(project,transferSelect.value));
+    transferRow.append(transferSelect,transferButton);
+    const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='2px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));
+    adminActions.append(transferRow,remove);details.append(adminActions);
+  }
   card.append(top,middle,details);return card;
 }
 async function submitRating(project,rating,stars,vote,ratingRows){
@@ -208,6 +212,22 @@ async function uploadProjectImage(file){
   if(!response.ok)throw new Error('Не удалось загрузить фотографию (HTTP '+response.status+'). '+await response.text());
   return SUPABASE_URL+'/storage/v1/object/public/idea-images/'+path;
 }
+async function moveProject(project,newPlace){
+  if(!isAdmin||!adminSession||!newPlace||newPlace===project.place)return;
+  const destination=availableMarkers.find(marker=>marker.place===newPlace);
+  if(!destination)return alert('Не удалось найти выбранную метку. Обновите страницу и попробуйте снова.');
+  if(!confirm('Перенести проект «'+project.title+'» на метку «'+destination.title+'»? Фотография и оценки проекта сохранятся.'))return;
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{
+      method:'PATCH',
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=minimal'},
+      body:JSON.stringify({place:newPlace})
+    });
+    if(!response.ok)throw new Error('Не удалось перенести проект (HTTP '+response.status+'). '+await response.text());
+    alert('Проект перенесён на метку «'+destination.title+'». Фотография и оценки сохранены.');
+    await loadProjects();
+  }catch(error){alert(error.message)}
+}
 async function deleteProject(project){
   if(!isAdmin||!adminSession||!confirm('Удалить проект «'+project.title+'» вместе с фотографией? Это действие нельзя отменить.'))return;
   try{
@@ -244,7 +264,48 @@ form.addEventListener('submit',async event=>{
   }finally{submitButton.disabled=false}
 });
 document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});
-loadProjects();
+async function initializePlacePage(){
+  if(!placeSlug){
+    showUnknownPlace('Не удалось определить место на карте. Вернитесь на главную и выберите метку.');
+    return;
+  }
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=place,title,description&place=eq.'+encodeURIComponent(placeSlug)+'&limit=1',{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}
+    });
+    if(response.ok){
+      const rows=await response.json();
+      if(rows[0])place={name:rows[0].title,description:rows[0].description||''};
+    }
+  }catch(_error){}
+  if(!place){
+    showUnknownPlace('Эта метка не найдена или была удалена. Вернитесь на карту и выберите существующую метку.');
+    return;
+  }
+  document.title='Проекты: '+place.name+' — Рубановск';
+  title.textContent=place.name;
+  placeDescription.textContent=place.description||'Здесь собраны проекты, относящиеся к выбранному месту на карте.';
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=place,title&order=created_at.asc',{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}
+    });
+    if(response.ok)availableMarkers=await response.json();
+  }catch(_error){}
+  await loadProjects();
+}
+function showUnknownPlace(message){
+  place=null;
+  title.textContent='Место не найдено';
+  placeDescription.textContent=message;
+  form.style.display='none';
+  document.getElementById('new-project').style.display='none';
+  projectList.replaceChildren();
+  const empty=document.createElement('div');empty.className='empty';
+  const strong=document.createElement('strong');strong.textContent='Неизвестное место';
+  const link=document.createElement('a');link.href='index.html';link.textContent='Вернуться к карте';
+  empty.append(strong,link);projectList.append(empty);projectCount.textContent='';
+}
+initializePlacePage();
 </script>
 <script src="i18n.js"></script>
 </body>

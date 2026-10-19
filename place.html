@@ -153,6 +153,34 @@ async function submitRating(project,rating,stars,vote,ratingRows){
     await loadProjects();
   }catch(error){caption.textContent=error.message;stars.querySelectorAll('button').forEach(button=>button.disabled=false)}
 }
+async function loadProjectTranslations(projects, language){
+  const translations=new Map();
+  if(!projects.length||!language||language==='ru')return translations;
+  const projectIds=projects.map(project=>project.id).filter(Boolean);
+  if(!projectIds.length)return translations;
+  const query='project_id=in.('+projectIds.join(',')+')&language=eq.'+encodeURIComponent(language);
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/project_translations?select=project_id,language,title,description&'+query,{
+      headers:{
+        apikey:SUPABASE_PUBLISHABLE_KEY,
+        Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)
+      }
+    });
+    if(!response.ok){
+      console.warn('Не удалось загрузить переводы проектов (HTTP '+response.status+'); показываем оригинальные тексты.');
+      return translations;
+    }
+    const rows=await response.json();
+    rows.forEach(row=>{
+      if(row&&row.project_id&&typeof row.title==='string'&&typeof row.description==='string'){
+        translations.set(row.project_id,row);
+      }
+    });
+  }catch(error){
+    console.warn('Не удалось загрузить переводы проектов; показываем оригинальные тексты.',error);
+  }
+  return translations;
+}
 async function loadProjects(){
   if(!place){return}
   try{
@@ -161,12 +189,17 @@ async function loadProjects(){
     });
     if(!response.ok){const detail=await response.text();throw new Error(response.status===404||response.status===400?'Таблица проектов ещё не создана в Supabase. Следующим шагом настроим её.':'Не удалось загрузить проекты (HTTP '+response.status+'). '+detail)}
     const projects=await response.json();
+    const projectTranslations=await loadProjectTranslations(projects,window.siteLanguage||'ru');
     let ratings=[];
     const ratingResponse=await fetch(SUPABASE_URL+'/rest/v1/project_ratings?select=project_id,rating,voter_id',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
     if(ratingResponse.ok)ratings=await ratingResponse.json();
     projectList.replaceChildren();projectCount.textContent=projects.length+' '+(projects.length===1?'проект':projects.length>1&&projects.length<5?'проекта':'проектов');
     if(!projects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
-    projects.forEach((project,index)=>projectList.append(makeProjectCard(project,index,ratings)));
+    projects.forEach((project,index)=>{
+      const translation=projectTranslations.get(project.id);
+      const localizedProject=translation?{...project,title:translation.title,description:translation.description}:project;
+      projectList.append(makeProjectCard(localizedProject,index,ratings));
+    });
   }catch(error){projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
 }
 imageInput.addEventListener('change',()=>{
@@ -219,6 +252,7 @@ form.addEventListener('submit',async event=>{
     if(imageUrl){const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';if(imageUrl.startsWith(prefix)){const path=imageUrl.slice(prefix.length);if(path.startsWith('projects/'))fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})}).catch(()=>{})}}
   }finally{submitButton.disabled=false}
 });
+document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});
 loadProjects();
 </script>
 <script src="i18n.js"></script>

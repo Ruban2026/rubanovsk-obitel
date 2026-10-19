@@ -147,27 +147,7 @@ async function saveMarkerPosition(item){
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'PATCH',headers:{...markerAuthHeaders(),Prefer:'return=minimal'},body:JSON.stringify({x:item.x,y:item.y})});
     if(!response.ok)throw new Error(await response.text());
     markerStatus.dataset.customMessage='true';markerStatus.textContent='Положение метки «'+item.title+'» сохранено.';
-  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await const mapEffects=document.getElementById('map');
-const cloudsToggle=document.getElementById('effect-clouds');
-const pulseToggle=document.getElementById('effect-marker-pulse');
-function readEffectPreference(key,defaultValue){
-  try{const value=localStorage.getItem(key);return value===null?defaultValue:value==='true';}
-  catch(error){return defaultValue;}
-}
-function applyMapEffects(){
-  mapEffects.classList.toggle('map-effects-clouds-off',!cloudsToggle.checked);
-  mapEffects.classList.toggle('map-effects-pulse-off',!pulseToggle.checked);
-  try{
-    localStorage.setItem('rubanovsk_effect_clouds',String(cloudsToggle.checked));
-    localStorage.setItem('rubanovsk_effect_marker_pulse',String(pulseToggle.checked));
-  }catch(error){}
-}
-cloudsToggle.checked=readEffectPreference('rubanovsk_effect_clouds',true);
-pulseToggle.checked=readEffectPreference('rubanovsk_effect_marker_pulse',true);
-cloudsToggle.addEventListener('change',applyMapEffects);
-pulseToggle.addEventListener('change',applyMapEffects);
-applyMapEffects();
-loadMapMarkers();}
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await loadMapMarkers();}
 }
 markerProjectsButton.addEventListener('click',()=>{
   const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);
@@ -486,6 +466,26 @@ ideaForm.addEventListener('submit',async event=>{
   }
 });
 if(adminSession){loadIdeas();document.getElementById('ideas').style.display='block';adminLoginForm.style.display='none';adminLogout.style.display='block';}
+const mapEffects=document.getElementById('map');
+const cloudsToggle=document.getElementById('effect-clouds');
+const pulseToggle=document.getElementById('effect-marker-pulse');
+function readEffectPreference(key,defaultValue){
+  try{const value=localStorage.getItem(key);return value===null?defaultValue:value==='true';}
+  catch(error){return defaultValue;}
+}
+function applyMapEffects(){
+  mapEffects.classList.toggle('map-effects-clouds-off',!cloudsToggle.checked);
+  mapEffects.classList.toggle('map-effects-pulse-off',!pulseToggle.checked);
+  try{
+    localStorage.setItem('rubanovsk_effect_clouds',String(cloudsToggle.checked));
+    localStorage.setItem('rubanovsk_effect_marker_pulse',String(pulseToggle.checked));
+  }catch(error){}
+}
+cloudsToggle.checked=readEffectPreference('rubanovsk_effect_clouds',true);
+pulseToggle.checked=readEffectPreference('rubanovsk_effect_marker_pulse',true);
+cloudsToggle.addEventListener('change',applyMapEffects);
+pulseToggle.addEventListener('change',applyMapEffects);
+applyMapEffects();
 loadMapMarkers();
 </script>
 <script src="i18n.js"></script>

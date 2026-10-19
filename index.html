@@ -637,7 +637,7 @@ const resumeDefaultAudio=()=>{if(windToggle.checked&&windAudioContext&&windAudio
 window.addEventListener('pointerdown',resumeDefaultAudio,{once:true});window.addEventListener('keydown',resumeDefaultAudio,{once:true});
 // Keep the floating side panel inside the vertical bounds of the map image.
 const sidePanels=document.getElementById('map-side-panels');
-const mapStage=document.querySelector('.map-stage');
+
 function keepSidePanelsOnMap(){
   if(!sidePanels||!mapStage)return;
   const mapRect=mapStage.getBoundingClientRect();

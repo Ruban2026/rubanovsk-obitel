@@ -16,7 +16,7 @@ create table if not exists public.map_markers (
 create or replace function public.prevent_map_marker_delete_with_projects()
 returns trigger
 language plpgsql
-as $
+as $function$
 begin
   if exists (
     select 1
@@ -29,7 +29,7 @@ begin
 
   return old;
 end;
-$;
+$function$;
 
 drop trigger if exists prevent_map_marker_delete_with_projects on public.map_markers;
 create trigger prevent_map_marker_delete_with_projects

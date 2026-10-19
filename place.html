@@ -65,6 +65,7 @@ const imageInput=document.getElementById('project-image');
 const imagePreview=document.getElementById('image-preview');
 let adminSession=null;
 let isAdmin=false;
+let projectsLoadSequence=0;
 if(!place){
   title.textContent='Место не найдено';
   placeDescription.textContent='Не удалось определить место на карте. Вернитесь на главную и выберите одну из меток.';
@@ -154,6 +155,7 @@ async function submitRating(project,rating,stars,vote,ratingRows){
   }catch(error){caption.textContent=error.message;stars.querySelectorAll('button').forEach(button=>button.disabled=false)}
 }
 async function loadProjects(){
+  const requestId=++projectsLoadSequence;
   if(!place){return}
   try{
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects?select=id,place,title,description,image_url,created_at&place=eq.'+encodeURIComponent(placeSlug)+'&order=created_at.asc',{
@@ -161,12 +163,35 @@ async function loadProjects(){
     });
     if(!response.ok){const detail=await response.text();throw new Error(response.status===404||response.status===400?'Таблица проектов ещё не создана в Supabase. Следующим шагом настроим её.':'Не удалось загрузить проекты (HTTP '+response.status+'). '+detail)}
     const projects=await response.json();
+    const requestId=projectsLoadSequence;
+    const language=String(window.siteLanguage||localStorage.getItem('rubanovsk_language')||'ru').toLowerCase();
+    const translationsByProject={};
+    if(language!=='ru'&&projects.length){
+      const ids=projects.map(project=>project.id).filter(id=>/^[0-9a-f-]{36}$/i.test(String(id)));
+      if(ids.length){
+        try{
+          const translationUrl=SUPABASE_URL+'/rest/v1/project_translations?select=project_id,title,description&language=eq.'+encodeURIComponent(language)+'&project_id=in.('+ids.map(encodeURIComponent).join(',')+')';
+          const translationResponse=await fetch(translationUrl,{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
+          if(translationResponse.ok){
+            const translationRows=await translationResponse.json();
+            translationRows.forEach(row=>{translationsByProject[row.project_id]=row});
+          }
+        }catch(_translationError){
+          // Translations are optional: keep the original project text if loading fails.
+        }
+      }
+    }
+    const displayProjects=projects.map(project=>{
+      const translation=translationsByProject[project.id];
+      return translation?{...project,title:translation.title||project.title,description:translation.description||project.description}:project;
+    });
     let ratings=[];
     const ratingResponse=await fetch(SUPABASE_URL+'/rest/v1/project_ratings?select=project_id,rating,voter_id',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
     if(ratingResponse.ok)ratings=await ratingResponse.json();
-    projectList.replaceChildren();projectCount.textContent=projects.length+' '+(projects.length===1?'проект':projects.length>1&&projects.length<5?'проекта':'проектов');
-    if(!projects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
-    projects.forEach((project,index)=>projectList.append(makeProjectCard(project,index,ratings)));
+    if(requestId!==projectsLoadSequence)return;
+    projectList.replaceChildren();projectCount.textContent=displayProjects.length+' '+(displayProjects.length===1?'проект':displayProjects.length>1&&displayProjects.length<5?'проекта':'проектов');
+    if(!displayProjects.length){const empty=document.createElement('div');empty.className='empty';const strong=document.createElement('strong');strong.textContent='Пока проектов нет';const p=document.createElement('span');p.textContent='Можно стать первым и предложить проект для этого места.';empty.append(strong,p);projectList.append(empty);return}
+    displayProjects.forEach((project,index)=>projectList.append(makeProjectCard(project,index,ratings)));
   }catch(error){projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
 }
 imageInput.addEventListener('change',()=>{
@@ -219,6 +244,7 @@ form.addEventListener('submit',async event=>{
     if(imageUrl){const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';if(imageUrl.startsWith(prefix)){const path=imageUrl.slice(prefix.length);if(path.startsWith('projects/'))fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})}).catch(()=>{})}}
   }finally{submitButton.disabled=false}
 });
+document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});
 loadProjects();
 </script>
 <script src="i18n.js"></script>

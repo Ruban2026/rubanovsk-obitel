@@ -11,6 +11,32 @@ create table if not exists public.map_markers (
   created_at timestamptz not null default now()
 );
 
+-- Не позволяем удалить метку, пока к ней привязаны проекты.
+-- Проекты и их фотографии не удаляются автоматически.
+create or replace function public.prevent_map_marker_delete_with_projects()
+returns trigger
+language plpgsql
+as $
+begin
+  if exists (
+    select 1
+    from public.projects
+    where place = old.place
+  ) then
+    raise exception 'MAP_MARKER_HAS_PROJECTS: projects are still attached to this marker'
+      using errcode = '23503';
+  end if;
+
+  return old;
+end;
+$;
+
+drop trigger if exists prevent_map_marker_delete_with_projects on public.map_markers;
+create trigger prevent_map_marker_delete_with_projects
+before delete on public.map_markers
+for each row
+execute function public.prevent_map_marker_delete_with_projects();
+
 alter table public.map_markers enable row level security;
 
 grant select on public.map_markers to anon, authenticated;

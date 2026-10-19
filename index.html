@@ -46,6 +46,7 @@ main{max-width:1180px;margin:auto;padding:0 22px 64px}.hero{padding:54px 0 30px;
 .map-bird{position:absolute;left:0;top:0;width:44px;height:32px;overflow:visible;will-change:transform,opacity}
 .map-bird .body{fill:#263b3b;stroke:none}
 .map-bird .belly{fill:#d6d5c5;stroke:none}
+.map-bird .beak{fill:#263b3b;stroke:none}
 .map-bird .wing{fill:#304e4b;stroke:none;transform-box:view-box;transform-origin:43px 35px;animation:bird-flap 1.35s ease-in-out infinite alternate}
 .map-bird .wing-bottom{animation-name:bird-flap}
 .map-bird.falcon{width:56px;height:40px}
@@ -517,7 +518,7 @@ const windToggle=document.getElementById('effect-wind-sound');
 
 let windAudioContext=null,windGain=null,windSource=null,windFilter=null,windLfo=null,windLfoGain=null,windModulationTimer=null,windCurrent=0,windTarget=0,windNextChange=0;
 const birdLayer=document.getElementById('map-birds'),birdActors=[];
-let lastBirdSpawn=0,nextSwallowCall=0,nextFalconTime=0,falconActor=null;
+let lastBirdSpawn=-5000,nextSwallowCall=0,nextFalconTime=0,falconActor=null;
 function readEffectPreference(key,defaultValue){try{const value=localStorage.getItem(key);return value===null?defaultValue:value==='true';}catch(error){return defaultValue;}}
 function smoothNoiseBuffer(ctx,seconds){const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*seconds),ctx.sampleRate),data=buffer.getChannelData(0);let low=0,mid=0;for(let i=0;i<data.length;i++){const white=Math.random()*2-1;low=low*.992+white*.08;mid=mid*.82+white*.18;data[i]=low*.8+mid*.2;}return buffer;}
 function makeWindAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!windAudioContext){windAudioContext=new AC();windSource=windAudioContext.createBufferSource();windSource.buffer=smoothNoiseBuffer(windAudioContext,7);windSource.loop=true;windFilter=windAudioContext.createBiquadFilter();windFilter.type='lowpass';windFilter.frequency.value=420;const body=windAudioContext.createBiquadFilter();body.type='peaking';body.frequency.value=260;body.Q.value=.7;body.gain.value=3;windGain=windAudioContext.createGain();windGain.gain.value=.00001;windSource.connect(windFilter);windFilter.connect(body);body.connect(windGain);windGain.connect(windAudioContext.destination);windLfo=windAudioContext.createOscillator();windLfo.type='sine';windLfo.frequency.value=.075;windLfoGain=windAudioContext.createGain();windLfoGain.gain.value=.00001;windLfo.connect(windLfoGain);windLfoGain.connect(windGain.gain);windSource.start();windLfo.start();}}
@@ -530,7 +531,7 @@ function chirpSwallow(){if(!windAudioContext||windAudioContext.state!=='running'
 function createBird(kind){
   const ns='http://www.w3.org/2000/svg',el=document.createElementNS(ns,'svg');
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
-  el.innerHTML='<path class="wing wing-top" d="M43 35 C33 30 27 17 7 5 C11 23 20 34 43 40 Z"/><path class="wing wing-bottom" d="M43 35 C33 40 27 53 7 65 C11 47 20 36 43 30 Z"/><path class="body" d="M10 35 L22 31 Q34 29 48 31 L66 31 Q73 31 77 35 Q73 39 66 39 L48 39 Q34 41 22 39 Z M10 35 L1 30 L5 35 L1 40 Z"/><path class="belly" d="M28 34 Q46 32 65 34 Q69 35 65 36 Q46 38 28 36 Z"/>';
+  el.innerHTML='<path class="wing wing-top" d="M43 35 C33 30 27 17 7 5 C11 23 20 34 43 40 Z"/><path class="wing wing-bottom" d="M43 35 C33 40 27 53 7 65 C11 47 20 36 43 30 Z"/><path class="body" d="M10 35 L22 31 Q34 29 48 31 L66 31 Q73 31 77 35 Q73 39 66 39 L48 39 Q34 41 22 39 Z M10 35 L1 30 L5 35 L1 40 Z"/><path class="belly" d="M28 34 Q46 32 65 34 Q69 35 65 36 Q46 38 28 36 Z"/><path class="beak" d="M73 32 L88 35 L73 38 Z"/>';
   birdLayer.append(el);
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const initialAngle=Math.random()*Math.PI*2,speed=kind==='falcon'?.052:.038;const b={el,kind,x:Math.random()*w,y:h*(.12+Math.random()*.58),vx:Math.cos(initialAngle)*speed,vy:Math.sin(initialAngle)*speed,heading:initialAngle,speed,tx:Math.random()*w,ty:h*(.1+Math.random()*.65),changeAt:performance.now()+4500+Math.random()*6500,phase:Math.random()*7,age:0,life:kind==='falcon'?30000+Math.random()*18000:36000+Math.random()*42000,attack:kind==='falcon'&&Math.random()<.4};

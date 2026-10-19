@@ -573,8 +573,8 @@ function maybeSpawnBirds(now){
   if(geese.length===0&&now>=nextFlockAt){
     const count=Math.random()<.5?7:9,angle=(Math.random()*Math.PI*2),dx=Math.cos(angle),dy=Math.sin(angle);
     let cx,cy,tx,ty;
-    if(Math.abs(dx)>=Math.abs(dy)){cx=dx>0?-100:w+100;cy=h*(.18+Math.random()*.64);tx=dx>0?w+130:-130;ty=Math.max(-120,Math.min(h+120,cy+(tx-cx)*dy/dx));}
-    else{cy=dy>0?-100:h+100;cx=w*(.18+Math.random()*.64);ty=dy>0?h+130:-130;tx=Math.max(-120,Math.min(w+120,cx+(ty-cy)*dx/dy));}
+    if(Math.abs(dx)>=Math.abs(dy)){cx=dx>0?w*.04:w*.96;cy=h*(.2+Math.random()*.6);tx=dx>0?w*.96:w*.04;ty=Math.max(h*.08,Math.min(h*.92,cy+(tx-cx)*dy/(Math.abs(dx)<.01?(dx<0?-.01:.01):dx)));}
+    else{cy=dy>0?h*.04:h*.96;cx=w*(.2+Math.random()*.6);ty=dy>0?h*.96:h*.04;tx=Math.max(w*.06,Math.min(w*.94,cx+(ty-cy)*dx/(Math.abs(dy)<.01?(dy<0?-.01:.01):dy)));}
     const px=-dy,py=dx,spacing=17+Math.random()*3,spread=.48;
     const flockSpeed=.036;
     for(let i=0;i<count;i++){
@@ -584,7 +584,7 @@ function maybeSpawnBirds(now){
       b.heading=angle;b.speed=flockSpeed;b.vx=dx*flockSpeed;b.vy=dy*flockSpeed;
       b.tx=tx-dx*back+px*across;b.ty=ty-dy*back+py*across;
       b.changeAt=Infinity;b.phase=Math.random()*7;b.flapPhase=Math.random()*Math.PI*2;b.flapRate=.82;
-      b.el.style.width='22px';b.el.style.height='15.4px';
+      b.el.style.width='30px';b.el.style.height='21px';
     }
     nextFlockAt=now+5000;
   }

@@ -177,7 +177,7 @@ async function loadMapMarkers(){
   try{
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=id,place,title,description,x,y&order=created_at.asc',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession&&adminSession.access_token?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY)}});
     if(!response.ok)throw new Error('HTTP '+response.status);
-    mapMarkers=await response.json();mapDataReady=true;markerStatus.dataset.customMessage='';
+    const savedMarkers=await response.json();mapMarkers=savedMarkers.length?savedMarkers:defaultMapMarkers.map(item=>({...item}));mapDataReady=true;markerStatus.dataset.customMessage='';
     try{
       const projectsResponse=await fetch(SUPABASE_URL+'/rest/v1/projects?select=place',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
       if(projectsResponse.ok){

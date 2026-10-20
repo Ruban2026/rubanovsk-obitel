@@ -194,8 +194,7 @@ async function saveMarkerPosition(item){
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'PATCH',headers:{...markerAuthHeaders(),Prefer:'return=minimal'},body:JSON.stringify({x:item.x,y:item.y})});
     if(!response.ok)throw new Error(await response.text());
     markerStatus.dataset.customMessage='true';markerStatus.textContent='Положение метки «'+item.title+'» сохранено.';
-  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await document.addEventListener('rubanovsk:languagechange',()=>renderMapMarkers());
-loadMapMarkers();}
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await loadMapMarkers();}
 }
 markerProjectsButton.addEventListener('click',()=>{
   const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);
@@ -669,6 +668,7 @@ window.addEventListener('scroll',keepSidePanelsOnMap,{passive:true});
 window.addEventListener('resize',keepSidePanelsOnMap);
 if('ResizeObserver' in window&&sidePanels)new ResizeObserver(keepSidePanelsOnMap).observe(sidePanels);
 keepSidePanelsOnMap();
+document.addEventListener('rubanovsk:languagechange',()=>renderMapMarkers());
 loadMapMarkers();
 </script>
 <script src="i18n.js"></script>

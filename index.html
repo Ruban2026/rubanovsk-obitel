@@ -233,6 +233,15 @@ markerAddButton.addEventListener('click',()=>{
   if(!isAdmin||!mapDataReady)return;
   addingMarker=true;markerStatus.dataset.customMessage='';updateMarkerAdminUI();
 });
+// In admin mode, clicking any mouse button on empty map space clears the selected marker.
+mapStage.addEventListener('pointerdown',event=>{
+  if(!isAdmin||addingMarker||event.target.closest('.marker'))return;
+  if(selectedMarkerId===null)return;
+  selectedMarkerId=null;
+  markerStatus.dataset.customMessage='';
+  renderMapMarkers();
+  updateMarkerAdminUI();
+});
 mapStage.addEventListener('click',async event=>{
   if(!addingMarker||!isAdmin||!mapDataReady||event.target.closest('.marker'))return;
   const title=prompt('Название новой метки (например, Причал):');

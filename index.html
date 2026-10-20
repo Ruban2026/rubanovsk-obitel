@@ -123,17 +123,18 @@ function renderMapMarkers(){
     const marker=document.createElement('button');
     marker.type='button';marker.className='marker';
     marker.style.left=Number(item.x)+'%';marker.style.top=Number(item.y)+'%';
-    marker.dataset.title=item.title||'Метка';
+    const markerTitle=window.RubanovskI18n?window.RubanovskI18n.translate(item.title||'Метка'):(item.title||'Метка');
+    marker.dataset.title=markerTitle;
     if(item.hasProjects)marker.classList.add('has-projects');
     marker.dataset.place=item.place||'';marker.dataset.description=item.description||'';
-    marker.setAttribute('aria-label','Метка: '+(item.title||'Без названия'));
+    marker.setAttribute('aria-label',(window.RubanovskI18n?window.RubanovskI18n.translate('Метка'):'Метка')+': '+(window.RubanovskI18n?window.RubanovskI18n.translate(item.title||'Без названия'):(item.title||'Без названия')));
     if(item.id===selectedMarkerId)marker.classList.add('selected');
     marker.addEventListener('click',()=>{
       if(marker.dataset.justDragged==='true'){delete marker.dataset.justDragged;return;}
       if(isAdmin){selectedMarkerId=item.id;markerStatus.dataset.customMessage='';renderMapMarkers();updateMarkerAdminUI();return;}
       if(item.place){window.location.href='place.html?place='+encodeURIComponent(item.place);return;}
-      document.getElementById('modal-title').textContent=item.title||'Метка';
-      document.getElementById('modal-description').textContent=item.description||'';
+      document.getElementById('modal-title').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.title||'Метка'):(item.title||'Метка');
+      document.getElementById('modal-description').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.description||''):(item.description||'');
       document.getElementById('modal').classList.add('open');
       document.getElementById('modal-idea').onclick=()=>{document.getElementById('modal').classList.remove('open');document.getElementById('ideas').style.display='block';const placeSelect=document.getElementById('idea-place');let option=[...placeSelect.options].find(o=>o.value===item.title||o.textContent===item.title);if(!option){option=document.createElement('option');option.value=item.title;option.textContent=item.title;placeSelect.append(option);}placeSelect.value=option.value;document.getElementById('ideas').scrollIntoView({behavior:'smooth'});};
     });
@@ -193,7 +194,8 @@ async function saveMarkerPosition(item){
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?id=eq.'+encodeURIComponent(item.id),{method:'PATCH',headers:{...markerAuthHeaders(),Prefer:'return=minimal'},body:JSON.stringify({x:item.x,y:item.y})});
     if(!response.ok)throw new Error(await response.text());
     markerStatus.dataset.customMessage='true';markerStatus.textContent='Положение метки «'+item.title+'» сохранено.';
-  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await loadMapMarkers();}
+  }catch(error){markerStatus.dataset.customMessage='true';markerStatus.textContent='Не удалось сохранить положение: '+error.message;await document.addEventListener('rubanovsk:languagechange',()=>renderMapMarkers());
+loadMapMarkers();}
 }
 markerProjectsButton.addEventListener('click',()=>{
   const item=mapMarkers.find(marker=>marker.id===selectedMarkerId);

@@ -77,6 +77,31 @@ let adminSession=readStoredAdminSession();
 let isAdmin=!!adminSession;
 let projectsLoadSequence=0;
 let availableMarkers=[];
+let currentMapMarkerId=null;
+let currentMarkerTranslations={};
+function renderPlaceMarkerTranslation(){
+  if(!place)return;
+  const language=window.RubanovskI18n?window.RubanovskI18n.language:'ru';
+  const translation=currentMarkerTranslations[language];
+  const translatedName=translation&&translation.title&&translation.title.trim()?translation.title:place.name;
+  const translatedDescription=translation&&translation.description&&translation.description.trim()?translation.description:place.description;
+  title.textContent=translatedName||'Проекты территории';
+  placeDescription.textContent=translatedDescription||'Здесь собраны проекты, относящиеся к выбранному месту на карте.';
+  document.title='Проекты: '+(translatedName||place.name)+' — Рубановск';
+}
+async function loadPlaceMarkerTranslations(){
+  currentMarkerTranslations={};
+  if(!currentMapMarkerId)return;
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_marker_translations?select=language,title,description&marker_id=eq.'+encodeURIComponent(currentMapMarkerId),{
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}
+    });
+    if(!response.ok)throw new Error('HTTP '+response.status);
+    const rows=await response.json();
+    rows.forEach(row=>{currentMarkerTranslations[row.language]={title:row.title||'',description:row.description||''};});
+  }catch(error){console.warn('Не удалось загрузить перевод метки:',error.message);}
+  renderPlaceMarkerTranslation();
+}
 if(place){
   document.title='Проекты: '+place.name+' — Рубановск';
   title.textContent=place.name;
@@ -451,28 +476,30 @@ form.addEventListener('submit',async event=>{
     if(uploadedUrls.length)deleteProjectImagesFromStorage(uploadedUrls,adminSession?adminSession.access_token:null).catch(()=>{});
   }finally{submitButton.disabled=false}
 });
-document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});
+document.addEventListener('rubanovsk:languagechange',()=>{renderPlaceMarkerTranslation();loadProjects()});
 async function initializePlacePage(){
   if(!placeSlug){
     showUnknownPlace('Не удалось определить место на карте. Вернитесь на главную и выберите метку.');
     return;
   }
   try{
-    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=place,title,description&place=eq.'+encodeURIComponent(placeSlug)+'&limit=1',{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=id,place,title,description&place=eq.'+encodeURIComponent(placeSlug)+'&limit=1',{
       headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}
     });
     if(response.ok){
       const rows=await response.json();
-      if(rows[0])place={name:rows[0].title,description:rows[0].description||''};
+      if(rows[0]){
+        currentMapMarkerId=rows[0].id;
+        place={name:rows[0].title,description:rows[0].description||''};
+      }
     }
   }catch(_error){}
   if(!place){
     showUnknownPlace('Эта метка не найдена или была удалена. Вернитесь на карту и выберите существующую метку.');
     return;
   }
-  document.title='Проекты: '+place.name+' — Рубановск';
-  title.textContent=place.name;
-  placeDescription.textContent=place.description||'Здесь собраны проекты, относящиеся к выбранному месту на карте.';
+  await loadPlaceMarkerTranslations();
+  renderPlaceMarkerTranslation();
   try{
     const response=await fetch(SUPABASE_URL+'/rest/v1/map_markers?select=place,title&order=created_at.asc',{
       headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}

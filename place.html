@@ -16,7 +16,7 @@ details.new-project{background:white;border:1px solid var(--line);border-radius:
 details.new-project>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;color:var(--forest);font-weight:800;font-size:1.05rem}
 details.new-project>summary::-webkit-details-marker{display:none}details.new-project>summary:after{content:"＋";font-size:1.35rem;line-height:1;color:var(--leaf)}details.new-project[open]>summary:after{content:"−"}
 .form-inner{padding:0 20px 22px;border-top:1px solid var(--line)}.form-inner>p{color:var(--muted);font-size:.92rem;margin:15px 0}
-form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;font-size:.9rem;font-weight:750;margin-bottom:5px}input,textarea{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}textarea{min-height:115px;resize:vertical}input:focus,textarea:focus{outline:3px solid #477b5933;border-color:var(--leaf)}button.primary{background:var(--forest);color:white;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;width:fit-content}button.primary:hover{background:#245444}button:disabled{opacity:.6;cursor:wait}.notice{font-size:.84rem;color:var(--muted)}.preview{display:none;max-width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:10px}
+form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;font-size:.9rem;font-weight:750;margin-bottom:5px}input,textarea{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}textarea{min-height:115px;resize:vertical}input:focus,textarea:focus{outline:3px solid #477b5933;border-color:var(--leaf)}button.primary{background:var(--forest);color:white;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;width:fit-content}button.primary:hover{background:#245444}button:disabled{opacity:.6;cursor:wait}.notice{font-size:.84rem;color:var(--muted)}.preview-gallery{display:none;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:10px}.preview-gallery img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:9px;background:#f2f2ec}.project-media{grid-area:image;min-width:0}.project-image{display:block;width:100%;max-height:280px;aspect-ratio:4/3;object-fit:cover;border-radius:11px;background:#f2f2ec;cursor:zoom-in}.project-thumbnails{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:7px;margin-top:8px}.project-thumb{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;background:#f2f2ec;cursor:pointer;min-width:0}.project-thumb[aria-pressed="true"]{border-color:var(--leaf)}.project-thumb img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.lightbox{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;padding:24px;background:#071510ed}.lightbox.open{display:flex}.lightbox-content{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(1100px,100%);max-height:100%;width:100%}.lightbox-image{display:block;max-width:100%;max-height:calc(100vh - 120px);object-fit:contain;border-radius:8px}.lightbox-caption{color:white;text-align:center;font-size:.92rem}.lightbox-close,.lightbox-nav{position:absolute;border:0;border-radius:50%;background:#ffffffeb;color:var(--forest);width:42px;height:42px;font-size:1.4rem;cursor:pointer}.lightbox-close{right:0;top:0}.lightbox-nav{top:50%;transform:translateY(-50%)}.lightbox-prev{left:0}.lightbox-next{right:0}
 .projects-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:0 0 14px}.projects-heading h2{margin:0;color:var(--forest);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.025em}.projects-heading p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
 .project-list{display:grid;gap:14px}.project{display:grid;grid-template-columns:minmax(200px,.9fr) minmax(260px,1.5fr);grid-template-areas:"top top" "image description";gap:14px 22px;align-items:start;background:white;border:1px solid var(--line);border-radius:16px;padding:19px}.project-top{grid-area:top;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}.project-name{display:flex;gap:12px;align-items:center;min-width:0}.number{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:50%;background:#eaf1e9;color:var(--forest);font-weight:850}.project h3{margin:0;color:var(--forest);font-size:1.12rem;line-height:1.35;overflow-wrap:anywhere}.project-vote{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none}.stars{display:flex;gap:2px;white-space:nowrap}.star-button{border:0;background:transparent;color:#c7cec7;padding:0 2px;font-size:1.55rem;line-height:1.1;cursor:pointer}.star-button.active,.star-button.chosen{color:#e5a521}.star-button:disabled{cursor:default;opacity:1}.rating-caption{font-size:.78rem;color:var(--muted);text-align:right}.project-media{grid-area:image;min-width:0}.project-image{width:100%;max-height:280px;aspect-ratio:4/3;object-fit:cover;border-radius:11px;background:#f2f2ec}.project-description-wrap{grid-area:description;min-width:0}.project-description{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.project-date{font-size:.8rem;color:var(--muted);margin-top:12px}.empty{background:white;border:1px dashed #c8d5ca;border-radius:15px;padding:26px;color:var(--muted)}.empty strong{display:block;color:var(--forest);font-size:1.05rem;margin-bottom:5px}
 .admin{margin-top:35px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:.86rem}.text-button{background:transparent;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}
@@ -34,13 +34,14 @@ form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;f
 <form id="project-form">
 <div><label for="project-title">Название проекта</label><input id="project-title" name="title" required maxlength="120" placeholder="Например, обустроить прогулочную дорожку"></div>
 <div><label for="project-description">Описание проекта</label><textarea id="project-description" name="description" required maxlength="3000" placeholder="Что предлагается сделать, для чего это нужно и как это может выглядеть?"></textarea></div>
-<div><label for="project-image">Фотография проекта (JPG, PNG или WebP, до 3 МБ)</label><input id="project-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><img id="image-preview" class="preview" alt="Предварительный просмотр фотографии"></div>
+<div><label for="project-image">Фотографии проекта (до 5 штук, JPG, PNG или WebP)</label><input id="project-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" multiple><p class="notice">До 5 фотографий на проект. Каждая будет автоматически уменьшена до 2 МБ, общий объём — до 10 МБ.</p><div id="image-preview" class="preview-gallery" aria-label="Предпросмотр выбранных фотографий"></div></div>
 <button class="primary" id="project-submit" type="submit">Опубликовать проект</button><p class="notice" id="form-status" role="status">Заполните поля и нажмите «Опубликовать проект».</p>
 </form></div>
 </details>
 <section aria-labelledby="projects-title"><div class="projects-heading"><div><h2 id="projects-title">Проекты этого места</h2><p id="project-count">Загружаем список…</p></div></div><div id="project-list" class="project-list" aria-live="polite"><div class="empty">Загружаем проекты…</div></div></section>
 <div class="admin"><span id="admin-status">Предложения публикуются в общей базе проектов.</span><button class="text-button" id="admin-open" type="button">Вход администратора</button></div>
 </main>
+<div class="lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографий"><div class="lightbox-content"><button class="lightbox-close" id="lightbox-close" type="button" aria-label="Закрыть">×</button><button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="Предыдущая фотография">‹</button><img class="lightbox-image" id="lightbox-image" alt=""><button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Следующая фотография">›</button><div class="lightbox-caption" id="lightbox-caption"></div></div></div>
 <div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-top"><h2 id="admin-modal-title">Вход администратора</h2><button class="close" id="admin-close" aria-label="Закрыть">×</button></div><form id="admin-login-form"><div><label for="admin-email">Электронная почта</label><input id="admin-email" type="email" autocomplete="username" required></div><div><label for="admin-password">Пароль</label><input id="admin-password" type="password" autocomplete="current-password" required></div><button class="primary" type="submit">Войти</button><p class="notice" id="admin-login-status" role="status"></p></form><button class="primary" id="admin-logout" type="button" style="display:none;margin-top:16px">Выйти из режима администратора</button></div></div>
 <script>
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
@@ -119,6 +120,33 @@ function getVoterId(){
   if(!id){id=crypto.randomUUID();localStorage.setItem('rubanovsk_voter_id',id)}
   return id;
 }
+function normalizeProjectImages(value){
+  if(Array.isArray(value))return value.filter(url=>typeof url==='string'&&url.trim());
+  if(typeof value!=='string'||!value.trim())return [];
+  try{const parsed=JSON.parse(value);if(Array.isArray(parsed))return parsed.filter(url=>typeof url==='string'&&url.trim())}catch(_error){}
+  return [value];
+}
+const lightbox=document.getElementById('image-lightbox');
+const lightboxImage=document.getElementById('lightbox-image');
+const lightboxCaption=document.getElementById('lightbox-caption');
+const lightboxPrev=document.getElementById('lightbox-prev');
+const lightboxNext=document.getElementById('lightbox-next');
+let lightboxImages=[],lightboxIndex=0,lightboxTitle='';
+function renderLightbox(){
+  if(!lightboxImages.length)return;
+  lightboxImage.src=lightboxImages[lightboxIndex];lightboxImage.alt=lightboxTitle+' — фотография '+(lightboxIndex+1);
+  lightboxCaption.textContent=lightboxTitle+' · '+(lightboxIndex+1)+' из '+lightboxImages.length;
+  lightboxPrev.style.display=lightboxImages.length>1?'block':'none';lightboxNext.style.display=lightboxImages.length>1?'block':'none';
+}
+function openImageViewer(images,index,titleText){
+  lightboxImages=images;lightboxIndex=index;lightboxTitle=titleText;renderLightbox();lightbox.classList.add('open');document.getElementById('lightbox-close').focus();
+}
+function closeImageViewer(){lightbox.classList.remove('open');lightboxImage.removeAttribute('src');}
+lightboxPrev.addEventListener('click',()=>{lightboxIndex=(lightboxIndex-1+lightboxImages.length)%lightboxImages.length;renderLightbox()});
+lightboxNext.addEventListener('click',()=>{lightboxIndex=(lightboxIndex+1)%lightboxImages.length;renderLightbox()});
+document.getElementById('lightbox-close').addEventListener('click',closeImageViewer);
+lightbox.addEventListener('click',event=>{if(event.target===lightbox)closeImageViewer()});
+document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')closeImageViewer();if(event.key==='ArrowLeft'&&lightboxImages.length>1){lightboxIndex=(lightboxIndex-1+lightboxImages.length)%lightboxImages.length;renderLightbox()}if(event.key==='ArrowRight'&&lightboxImages.length>1){lightboxIndex=(lightboxIndex+1)%lightboxImages.length;renderLightbox()}});
 function makeProjectCard(project,index,ratingRows){
   const card=document.createElement('article');card.className='project';
   const top=document.createElement('div');top.className='project-top';
@@ -140,8 +168,15 @@ function makeProjectCard(project,index,ratingRows){
   const caption=document.createElement('span');caption.className='rating-caption';caption.textContent=rows.length?('Средняя оценка '+average.toFixed(1).replace('.',',')+' · '+rows.length+' '+(rows.length===1?'голос':rows.length<5?'голоса':'голосов')):'Пока нет оценок';
   vote.append(stars,caption);top.append(name,vote);
   const middle=document.createElement('div');middle.className='project-media';
-  if(project.image_url){const image=document.createElement('img');image.className='project-image';image.src=project.image_url;image.alt='Фотография проекта: '+project.title;image.loading='lazy';middle.append(image)}
-  else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
+  const projectImages=normalizeProjectImages(project.image_url);
+  if(projectImages.length){
+    const mainImage=document.createElement('img');mainImage.className='project-image';mainImage.src=projectImages[0];mainImage.alt='Фотография проекта: '+project.title;mainImage.loading='lazy';mainImage.tabIndex=0;mainImage.setAttribute('role','button');mainImage.setAttribute('aria-label','Открыть фотографию крупно');mainImage.addEventListener('click',()=>openImageViewer(projectImages,0,project.title));mainImage.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openImageViewer(projectImages,0,project.title)}});middle.append(mainImage);
+    if(projectImages.length>1){
+      const thumbnails=document.createElement('div');thumbnails.className='project-thumbnails';thumbnails.setAttribute('aria-label','Другие фотографии проекта');
+      projectImages.forEach((url,imageIndex)=>{const thumb=document.createElement('button');thumb.type='button';thumb.className='project-thumb';thumb.setAttribute('aria-pressed',String(imageIndex===0));thumb.setAttribute('aria-label','Показать фотографию '+(imageIndex+1));const thumbImage=document.createElement('img');thumbImage.src=url;thumbImage.alt='';thumbImage.loading='lazy';thumb.append(thumbImage);thumb.addEventListener('click',()=>{mainImage.src=url;mainImage.alt='Фотография проекта: '+project.title+' ('+(imageIndex+1)+' из '+projectImages.length+')';thumbnails.querySelectorAll('.project-thumb').forEach((button,idx)=>button.setAttribute('aria-pressed',String(idx===imageIndex)));mainImage.onclick=()=>openImageViewer(projectImages,imageIndex,project.title);mainImage.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openImageViewer(projectImages,imageIndex,project.title)}}});thumbnails.append(thumb)});
+      middle.append(thumbnails);
+    }
+  }else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
   const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
   const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString(({ru:'ru-RU',uk:'uk-UA',en:'en-GB',pl:'pl-PL',de:'de-DE',fr:'fr-FR'})[window.siteLanguage]||'ru-RU'):'';details.append(date);
   if(isAdmin){
@@ -211,20 +246,50 @@ async function loadProjects(){
     displayProjects.forEach((project,index)=>projectList.append(makeProjectCard(project,index,ratings)));
   }catch(error){if(requestId!==projectsLoadSequence)return;projectList.replaceChildren();const message=document.createElement('div');message.className='empty';const strong=document.createElement('strong');strong.textContent='Не удалось загрузить список проектов';const p=document.createElement('p');p.textContent=error.message;message.append(strong,p);projectList.append(message);projectCount.textContent='';}
 }
+let previewObjectUrls=[];
+function clearImagePreview(){previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];imagePreview.replaceChildren();imagePreview.style.display='none'}
 imageInput.addEventListener('change',()=>{
-  const file=imageInput.files&&imageInput.files[0];if(!file){imagePreview.removeAttribute('src');imagePreview.style.display='none';return}
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>3*1024*1024){alert('Выберите JPG, PNG или WebP размером не более 3 МБ.');imageInput.value='';imagePreview.removeAttribute('src');imagePreview.style.display='none';return}
-  imagePreview.src=URL.createObjectURL(file);imagePreview.style.display='block';
+  clearImagePreview();
+  const files=Array.from(imageInput.files||[]);
+  if(!files.length)return;
+  if(files.length>5){alert('Можно выбрать не более 5 фотографий на один проект.');imageInput.value='';return}
+  const invalid=files.find(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>15*1024*1024);
+  if(invalid){alert('Выберите до 5 фотографий в формате JPG, PNG или WebP. Исходный файл должен быть меньше 15 МБ.');imageInput.value='';return}
+  files.forEach((file,index)=>{const url=URL.createObjectURL(file);previewObjectUrls.push(url);const img=document.createElement('img');img.src=url;img.alt='Предпросмотр фотографии '+(index+1);imagePreview.append(img)});
+  imagePreview.style.display='grid';
 });
-async function uploadProjectImage(file){
-  if(!file)return null;
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Формат изображения должен быть JPG, PNG или WebP.');
-  if(file.size>3*1024*1024)throw new Error('Размер изображения не должен превышать 3 МБ.');
-  const extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
-  const path='projects/'+placeSlug+'/'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)+'.'+extension;
-  const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images/'+path,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':file.type,'x-upsert':'false'},body:file});
+async function compressProjectImage(file){
+  let bitmap;
+  try{bitmap=await createImageBitmap(file)}catch(_error){throw new Error('Не удалось прочитать файл «'+file.name+'». Выберите другую фотографию.')}
+  try{
+    let scale=Math.min(1,1600/Math.max(bitmap.width,bitmap.height));
+    for(const dimensionScale of [1,0.85,0.7]){
+      const width=Math.max(1,Math.round(bitmap.width*scale*dimensionScale));
+      const height=Math.max(1,Math.round(bitmap.height*scale*dimensionScale));
+      const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+      const context=canvas.getContext('2d');if(!context)throw new Error('Браузер не смог обработать фотографию.');
+      context.drawImage(bitmap,0,0,width,height);
+      for(const quality of [0.82,0.72,0.62,0.52]){
+        const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
+        if(blob&&blob.size<=2*1024*1024)return blob;
+      }
+    }
+    throw new Error('Не удалось уменьшить фотографию до 2 МБ. Попробуйте другой файл.');
+  }finally{bitmap.close&&bitmap.close()}
+}
+async function uploadProjectImage(blob,index){
+  if(!blob)return null;
+  const path='projects/'+placeSlug+'/'+Date.now().toString(36)+'-'+index+'-'+Math.random().toString(36).slice(2,12)+'.webp';
+  const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images/'+path,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'image/webp','x-upsert':'false'},body:blob});
   if(!response.ok)throw new Error('Не удалось загрузить фотографию (HTTP '+response.status+'). '+await response.text());
   return SUPABASE_URL+'/storage/v1/object/public/idea-images/'+path;
+}
+async function deleteProjectImagesFromStorage(urls,token){
+  const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';
+  const paths=urls.filter(url=>typeof url==='string'&&url.startsWith(prefix)).map(url=>url.slice(prefix.length).split('/').map(part=>decodeURIComponent(part)).join('/')).filter(path=>path.startsWith('projects/'));
+  if(!paths.length)return;
+  const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(token||SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:paths})});
+  if(!response.ok&&response.status!==404)throw new Error('Не удалось удалить фотографии из хранилища (HTTP '+response.status+').');
 }
 async function moveProject(project,newPlace){
   if(!isAdmin||!adminSession||!newPlace||newPlace===project.place)return;
@@ -248,16 +313,8 @@ async function deleteProject(project){
   if(!isAdmin||!adminSession||!confirm('Удалить проект «'+project.title+'» вместе с фотографией? Это действие нельзя отменить.'))return;
   try{
     const headers={apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token};
-    if(project.image_url){
-      const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';
-      if(project.image_url.startsWith(prefix)){
-        const path=project.image_url.slice(prefix.length).split('/').map(part=>decodeURIComponent(part)).join('/');
-        if(path.startsWith('projects/')){
-          const imageResponse=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})});
-          if(!imageResponse.ok&&imageResponse.status!==404)throw new Error('Фотография не удалена (HTTP '+imageResponse.status+'). Проект пока оставлен в базе.');
-        }
-      }
-    }
+    const projectImages=normalizeProjectImages(project.image_url);
+    if(projectImages.length)await deleteProjectImagesFromStorage(projectImages,adminSession.access_token);
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{method:'DELETE',headers:{...headers,Prefer:'return=minimal'}});
     if(!response.ok)throw new Error('Не удалось удалить проект (HTTP '+response.status+').');
     await loadProjects();alert('Проект удалён.');
@@ -266,17 +323,25 @@ async function deleteProject(project){
 form.addEventListener('submit',async event=>{
   event.preventDefault();if(!place){formStatus.textContent='Сначала выберите место на карте.';return}
   const data={place:placeSlug,title:form.elements.title.value.trim(),description:form.elements.description.value.trim()};
-  const file=imageInput.files&&imageInput.files[0];if(!data.title||!data.description)return;
-  submitButton.disabled=true;formStatus.textContent=file?'Загружаем фотографию…':'Сохраняем проект…';
-  let imageUrl=null;
+  const files=Array.from(imageInput.files||[]);if(!data.title||!data.description)return;
+  if(files.length>5){formStatus.textContent='Можно прикрепить не более 5 фотографий.';return}
+  submitButton.disabled=true;const uploadedUrls=[];formStatus.textContent=files.length?'Обрабатываем и загружаем фотографии…':'Сохраняем проект…';
   try{
-    imageUrl=await uploadProjectImage(file);data.image_url=imageUrl;
+    let totalBytes=0;
+    for(let index=0;index<files.length;index++){
+      formStatus.textContent='Обрабатываем фотографию '+(index+1)+' из '+files.length+'…';
+      const compressed=await compressProjectImage(files[index]);totalBytes+=compressed.size;
+      if(totalBytes>10*1024*1024)throw new Error('Общий объём фотографий после сжатия превышает 10 МБ.');
+      const url=await uploadProjectImage(compressed,index+1);uploadedUrls.push(url);
+    }
+    data.image_url=uploadedUrls.length?JSON.stringify(uploadedUrls):null;
+    formStatus.textContent='Сохраняем проект…';
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(data)});
     if(!response.ok)throw new Error('Не удалось сохранить проект (HTTP '+response.status+'). '+await response.text());
-    form.reset();imagePreview.removeAttribute('src');imagePreview.style.display='none';formStatus.textContent='Проект опубликован и добавлен в общий список.';await loadProjects();document.getElementById('new-project').open=false;
+    form.reset();clearImagePreview();formStatus.textContent='Проект опубликован и добавлен в общий список.';await loadProjects();document.getElementById('new-project').open=false;
   }catch(error){
     formStatus.textContent='Ошибка: '+error.message;
-    if(imageUrl){const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';if(imageUrl.startsWith(prefix)){const path=imageUrl.slice(prefix.length);if(path.startsWith('projects/'))fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})}).catch(()=>{})}}
+    if(uploadedUrls.length)deleteProjectImagesFromStorage(uploadedUrls,adminSession?adminSession.access_token:null).catch(()=>{});
   }finally{submitButton.disabled=false}
 });
 document.addEventListener('rubanovsk:languagechange',()=>{loadProjects()});

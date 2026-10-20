@@ -47,7 +47,11 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Место содержит новые опубликованные проекты.","Місце містить нові опубліковані проєкти.","This location contains newly published projects.","To miejsce zawiera nowe opublikowane projekty.","An diesem Ort gibt es neu veröffentlichte Projekte.","Ce lieu contient de nouveaux projets publiés."],
 ["Звуки природы","Звуки природи","Nature sounds","Dźwięki natury","Naturgeräusche","Sons de la nature"],
 ["Птицы","Птахи","Birds","Ptaki","Vögel","Oiseaux"],
-["Без названия","Без назви","Untitled","Bez nazwy","Ohne Namen","Sans nom"]
+["Без названия","Без назви","Untitled","Bez nazwy","Ohne Namen","Sans nom"],
+["Фотографии проекта (до 5 штук, JPG, PNG или WebP)","Фотографії проєкту (до 5 штук, JPG, PNG або WebP)","Project photos (up to 5, JPG, PNG, or WebP)","Zdjęcia projektu (maks. 5, JPG, PNG lub WebP)","Projektfotos (bis zu 5, JPG, PNG oder WebP)","Photos du projet (jusqu’à 5, JPG, PNG ou WebP)"],
+["Выбрать фотографии","Вибрати фотографії","Choose photos","Wybierz zdjęcia","Fotos auswählen","Choisir des photos"],
+["Можно выбрать до 5 изображений","Можна вибрати до 5 зображень","You can select up to 5 images","Można wybrać maksymalnie 5 zdjęć","Sie können bis zu 5 Bilder auswählen","Vous pouvez sélectionner jusqu’à 5 images"],
+["До 5 фотографий на проект. Каждая будет автоматически уменьшена до 2 МБ, общий объём — до 10 МБ.","До 5 фотографій на проєкт. Кожну буде автоматично зменшено до 2 МБ, загальний обсяг — до 10 МБ.","Up to 5 photos per project. Each is automatically reduced to 2 MB, with a total limit of 10 MB.","Do 5 zdjęć na projekt. Każde zostanie automatycznie zmniejszone do 2 MB, łączny limit to 10 MB.","Bis zu 5 Fotos pro Projekt. Jedes wird automatisch auf 2 MB verkleinert, insgesamt höchstens 10 MB.","Jusqu’à 5 photos par projet. Chacune sera automatiquement réduite à 2 Mo, pour un total maximal de 10 Mo."]
 ];
 const codes = ['ru','uk','en','pl','de','fr'];
 const selectorOrder = ['uk','en','pl','de','fr','ru'];

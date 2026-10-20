@@ -187,8 +187,9 @@ function makeProjectCard(project,index,ratingRows){
     availableMarkers.filter(marker=>marker.place!==project.place).forEach(marker=>{const option=document.createElement('option');option.value=marker.place;option.textContent=marker.title;transferSelect.append(option)});
     const transferButton=document.createElement('button');transferButton.type='button';transferButton.className='primary';transferButton.textContent='Перенести проект';transferButton.addEventListener('click',()=>moveProject(project,transferSelect.value));
     transferRow.append(transferSelect,transferButton);
+    const edit=document.createElement('button');edit.type='button';edit.className='primary';edit.style.marginTop='2px';edit.textContent='Изменить название и описание';edit.addEventListener('click',()=>editProject(project));
     const remove=document.createElement('button');remove.type='button';remove.className='primary';remove.style.marginTop='2px';remove.textContent='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));
-    adminActions.append(transferRow,remove);details.append(adminActions);
+    adminActions.append(transferRow,edit,remove);details.append(adminActions);
   }
   card.append(top,middle,details);return card;
 }
@@ -235,7 +236,8 @@ async function loadProjects(){
     }
     const displayProjects=projects.map(project=>{
       const translation=translationsByProject[project.id];
-      return translation?{...project,title:translation.title||project.title,description:translation.description||project.description}:project;
+      const base={...project,sourceTitle:project.title,sourceDescription:project.description};
+      return translation?{...base,title:translation.title||project.title,description:translation.description||project.description}:base;
     });
     let ratings=[];
     const ratingResponse=await fetch(SUPABASE_URL+'/rest/v1/project_ratings?select=project_id,rating,voter_id',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
@@ -290,6 +292,22 @@ async function deleteProjectImagesFromStorage(urls,token){
   if(!paths.length)return;
   const response=await fetch(SUPABASE_URL+'/storage/v1/object/idea-images',{method:'DELETE',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(token||SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json'},body:JSON.stringify({prefixes:paths})});
   if(!response.ok&&response.status!==404)throw new Error('Не удалось удалить фотографии из хранилища (HTTP '+response.status+').');
+}
+async function editProject(project){
+  if(!isAdmin||!adminSession)return;
+  const title=prompt('Новое название проекта:',project.sourceTitle||project.title||'');
+  if(title===null)return;
+  if(!title.trim()){alert('Название проекта не может быть пустым.');return;}
+  const description=prompt('Новое описание проекта:',project.sourceDescription||project.description||'');
+  if(description===null)return;
+  try{
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{method:'PATCH',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({title:title.trim(),description:description.trim()})});
+    if(!response.ok)throw new Error('Не удалось изменить проект (HTTP '+response.status+'). '+await response.text());
+    const updated=await response.json();
+    if(!Array.isArray(updated)||updated.length!==1)throw new Error('Supabase не обновил запись. Проверьте политику RLS UPDATE для администраторов.');
+    await loadProjects();
+    alert('Название и описание проекта сохранены.');
+  }catch(error){alert(error.message)}
 }
 async function moveProject(project,newPlace){
   if(!isAdmin||!adminSession||!newPlace||newPlace===project.place)return;

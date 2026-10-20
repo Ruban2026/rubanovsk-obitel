@@ -62,6 +62,30 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Не удалось изменить статус проекта","Не вдалося змінити статус проєкту","Could not change project status","Nie udało się zmienić statusu projektu","Projektstatus konnte nicht geändert werden","Impossible de modifier le statut du projet"],
 ["Сначала нужно добавить поле статуса в Supabase. Выполните SQL-настройку, которую я подготовил.","Спочатку потрібно додати поле статусу в Supabase. Виконайте підготовлене SQL-налаштування.","First, add the status field in Supabase by running the prepared SQL setup.","Najpierw dodaj pole statusu w Supabase, uruchamiając przygotowaną konfigurację SQL.","Fügen Sie zuerst das Statusfeld in Supabase hinzu, indem Sie die vorbereitete SQL-Konfiguration ausführen.","Ajoutez d’abord le champ de statut dans Supabase en exécutant le SQL préparé."],
 ["Supabase не обновил запись. Проверьте права администратора на изменение проектов.","Supabase не оновив запис. Перевірте права адміністратора на зміну проєктів.","Supabase did not update the record. Check administrator permissions to edit projects.","Supabase nie zaktualizował rekordu. Sprawdź uprawnienia administratora do edycji projektów.","Supabase hat den Datensatz nicht aktualisiert. Prüfen Sie die Administratorrechte zum Bearbeiten von Projekten.","Supabase n’a pas mis à jour l’enregistrement. Vérifiez les droits administrateur pour modifier les projets."]
+,
+["Перевод проекта","Переклад проєкту","Project translation","Tłumaczenie projektu","Projektübersetzung","Traduction du projet"],
+["Оригинал — русский язык","Оригінал — російська мова","Original — Russian","Oryginał — język rosyjski","Original — Russisch","Original — russe"],
+["Язык перевода","Мова перекладу","Translation language","Język tłumaczenia","Übersetzungssprache","Langue de traduction"],
+["Переведённое название","Перекладена назва","Translated title","Przetłumaczony tytuł","Übersetzter Titel","Titre traduit"],
+["Переведённое описание","Перекладений опис","Translated description","Przetłumaczony opis","Übersetzte Beschreibung","Description traduite"],
+["Вставьте перевод названия","Вставте переклад назви","Paste the translated title","Wklej przetłumaczony tytuł","Übersetzten Titel einfügen","Collez le titre traduit"],
+["Вставьте перевод описания","Вставте переклад опису","Paste the translated description","Wklej przetłumaczony opis","Übersetzte Beschreibung einfügen","Collez la description traduite"],
+["Сохранить перевод","Зберегти переклад","Save translation","Zapisz tłumaczenie","Übersetzung speichern","Enregistrer la traduction"],
+["Очистить поля","Очистити поля","Clear fields","Wyczyść pola","Felder leeren","Effacer les champs"],
+["Закрыть","Закрити","Close","Zamknij","Schließen","Fermer"],
+["Перевести проект","Перекласти проєкт","Translate project","Przetłumacz projekt","Projekt übersetzen","Traduire le projet"],
+["Добавить или изменить переводы проекта","Додати або змінити переклади проєкту","Add or edit project translations","Dodaj lub edytuj tłumaczenia projektu","Projektübersetzungen hinzufügen oder bearbeiten","Ajouter ou modifier les traductions du projet"],
+["Загружаем перевод…","Завантажуємо переклад…","Loading translation…","Wczytywanie tłumaczenia…","Übersetzung wird geladen …","Chargement de la traduction…"],
+["Перевод сохранён","Переклад збережено","Translation saved","Tłumaczenie zapisane","Übersetzung gespeichert","Traduction enregistrée"],
+["Пока не переведено","Ще не перекладено","Not translated yet","Jeszcze nie przetłumaczono","Noch nicht übersetzt","Pas encore traduit"],
+["Можно проверить текст, исправить и сохранить снова.","Можна перевірити текст, виправити й зберегти знову.","You can review the text, edit it, and save again.","Możesz sprawdzić tekst, poprawić go i zapisać ponownie.","Sie können den Text prüfen, bearbeiten und erneut speichern.","Vous pouvez vérifier le texte, le modifier et l’enregistrer à nouveau."],
+["Для этого языка ещё нет сохранённого перевода.","Для цієї мови ще немає збереженого перекладу.","No translation has been saved for this language yet.","Dla tego języka nie zapisano jeszcze tłumaczenia.","Für diese Sprache wurde noch keine Übersetzung gespeichert.","Aucune traduction n’a encore été enregistrée pour cette langue."],
+["Поля очищены. Сохранение ещё не выполнено.","Поля очищено. Збереження ще не виконано.","Fields cleared. Changes have not been saved.","Pola wyczyszczone. Zmiany nie zostały zapisane.","Felder geleert. Änderungen wurden noch nicht gespeichert.","Champs effacés. Les modifications ne sont pas enregistrées."],
+["Заполните и название, и описание. Если перевод ещё не готов, можно закрыть окно и вернуться позже.","Заповніть назву й опис. Якщо переклад ще не готовий, можна закрити вікно й повернутися пізніше.","Fill in both the title and description. If the translation is not ready, close this window and return later.","Wypełnij tytuł i opis. Jeśli tłumaczenie nie jest gotowe, zamknij okno i wróć później.","Füllen Sie Titel und Beschreibung aus. Wenn die Übersetzung noch nicht fertig ist, schließen Sie das Fenster und kehren Sie später zurück.","Remplissez le titre et la description. Si la traduction n’est pas prête, fermez cette fenêtre et revenez plus tard."],
+["Сохраняем перевод…","Зберігаємо переклад…","Saving translation…","Zapisywanie tłumaczenia…","Übersetzung wird gespeichert …","Enregistrement de la traduction…"],
+["Не удалось загрузить перевод","Не вдалося завантажити переклад","Could not load translation","Nie udało się wczytać tłumaczenia","Übersetzung konnte nicht geladen werden","Impossible de charger la traduction"],
+["Не удалось сохранить перевод","Не вдалося зберегти переклад","Could not save translation","Nie udało się zapisać tłumaczenia","Übersetzung konnte nicht gespeichert werden","Impossible d’enregistrer la traduction"],
+["Перевод сохранён для языка:","Переклад збережено для мови:","Translation saved for language:","Zapisano tłumaczenie dla języka:","Übersetzung gespeichert für:","Traduction enregistrée pour la langue :"]
 ];
 const codes = ['ru','uk','en','pl','de','fr'];
 const selectorOrder = ['uk','en','pl','de','fr','ru'];

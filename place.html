@@ -44,6 +44,7 @@ form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;f
 <div class="lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографий"><div class="lightbox-content"><button class="lightbox-close" id="lightbox-close" type="button" aria-label="Закрыть">×</button><button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="Предыдущая фотография">‹</button><img class="lightbox-image" id="lightbox-image" alt=""><button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Следующая фотография">›</button><div class="lightbox-caption" id="lightbox-caption"></div></div></div>
 <div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-top"><h2 id="admin-modal-title">Вход администратора</h2><button class="close" id="admin-close" aria-label="Закрыть">×</button></div><form id="admin-login-form"><div><label for="admin-email">Электронная почта</label><input id="admin-email" type="email" autocomplete="username" required></div><div><label for="admin-password">Пароль</label><input id="admin-password" type="password" autocomplete="current-password" required></div><button class="primary" type="submit">Войти</button><p class="notice" id="admin-login-status" role="status"></p></form><button class="primary" id="admin-logout" type="button" style="display:none;margin-top:16px">Выйти из режима администратора</button></div></div>
 <div class="modal-backdrop translation-modal-backdrop" id="translation-modal" role="dialog" aria-modal="true" aria-labelledby="translation-modal-title"><div class="modal translation-modal"><div class="modal-top"><div><h2 id="translation-modal-title">Перевод проекта</h2><p class="notice" id="translation-project-label"></p></div><button class="close" id="translation-close" type="button" aria-label="Закрыть">×</button></div><div class="translation-form"><div class="translation-source"><strong>Оригинал — русский язык</strong><div id="translation-source-title"></div><p id="translation-source-description" style="margin:8px 0 0;white-space:pre-wrap"></p></div><div class="translation-language-row"><div><label for="translation-language">Язык перевода</label><select id="translation-language"><option value="uk">Українська</option><option value="en">English</option><option value="pl">Polski</option><option value="de">Deutsch</option><option value="fr">Français</option></select></div><span class="notice" id="translation-completion"></span></div><div><label for="translation-title">Переведённое название</label><input id="translation-title" maxlength="120" placeholder="Вставьте перевод названия"></div><div><label for="translation-description">Переведённое описание</label><textarea id="translation-description" maxlength="3000" placeholder="Вставьте перевод описания"></textarea></div><div class="translation-actions"><button class="primary" id="translation-save" type="button">Сохранить перевод</button><button class="project-admin-button project-admin-edit" id="translation-clear" type="button">Очистить поля</button><button class="text-button" id="translation-cancel" type="button">Закрыть</button></div><p class="translation-status" id="translation-status" role="status"></p><p class="notice">Выберите язык, вставьте перевод из Google Translate и сохраните. Каждый язык хранится отдельно; русский оригинал не изменяется.</p></div></div></div>
+<div class="modal-backdrop translation-modal-backdrop" id="admin-photos-modal" role="dialog" aria-modal="true" aria-labelledby="admin-photos-title"><div class="modal translation-modal"><div class="modal-top"><div><h2 id="admin-photos-title">Добавить фотографии</h2><p class="notice" id="admin-photos-project"></p></div><button class="close" id="admin-photos-close" type="button" aria-label="Закрыть">×</button></div><div class="translation-form"><p class="notice" id="admin-photos-count"></p><div><label for="admin-photos-input">Новые фотографии (JPG, PNG или WebP)</label><div class="file-picker-row"><input class="file-input-hidden" id="admin-photos-input" type="file" accept="image/jpeg,image/png,image/webp" multiple><label class="file-picker-button" for="admin-photos-input">Выбрать фотографии</label><span class="file-picker-hint" id="admin-photos-hint">Выберите изображения</span></div><p class="notice">Каждая фотография будет предварительно сжата до 2 МБ, как при создании проекта. Максимум 5 фотографий на проект.</p><div id="admin-photos-preview" class="preview-gallery" aria-label="Предпросмотр новых фотографий"></div></div><div class="translation-actions"><button class="primary" id="admin-photos-save" type="button">Загрузить и сохранить</button><button class="text-button" id="admin-photos-cancel" type="button">Отмена</button></div><p class="translation-status" id="admin-photos-status" role="status"></p></div></div></div>
 <script>
 const SUPABASE_URL='https://ykbicdkgplqwbvzgozzc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_XAvzw0pNOdp4SaCsjcR1LA__hFodgTT';
@@ -65,6 +66,15 @@ const submitButton=document.getElementById('project-submit');
 const formStatus=document.getElementById('form-status');
 const imageInput=document.getElementById('project-image');
 const imagePreview=document.getElementById('image-preview');
+const adminPhotosModal=document.getElementById('admin-photos-modal');
+const adminPhotosInput=document.getElementById('admin-photos-input');
+const adminPhotosPreview=document.getElementById('admin-photos-preview');
+const adminPhotosStatus=document.getElementById('admin-photos-status');
+const adminPhotosSave=document.getElementById('admin-photos-save');
+const adminPhotosCount=document.getElementById('admin-photos-count');
+const adminPhotosHint=document.getElementById('admin-photos-hint');
+let adminPhotoProject=null;
+let adminPhotoPreviewUrls=[];
 function readStoredAdminSession(){
   try{
     const saved=JSON.parse(sessionStorage.getItem('rubanovsk_admin_session')||'null');
@@ -226,9 +236,10 @@ function makeProjectCard(project,index,ratingRows){
     const actionButtons=document.createElement('div');actionButtons.className='project-admin-actions';
     const edit=document.createElement('button');edit.type='button';edit.className='project-admin-button project-admin-edit';edit.textContent='✎ Изменить';edit.setAttribute('aria-label','Изменить название и описание проекта');edit.title='Изменить название и описание';edit.addEventListener('click',()=>editProject(project));
     const translateEdit=document.createElement('button');translateEdit.type='button';translateEdit.className='project-admin-button project-admin-edit';translateEdit.textContent='Перевести проект';translateEdit.setAttribute('aria-label','Добавить или изменить переводы проекта');translateEdit.title='Добавить или изменить переводы проекта';translateEdit.addEventListener('click',()=>openProjectTranslationEditor(project));
+    const addPhotos=document.createElement('button');addPhotos.type='button';addPhotos.className='project-admin-button project-admin-edit';addPhotos.textContent='＋ Добавить фото ('+projectImages.length+'/5)';addPhotos.setAttribute('aria-label','Добавить фотографии к проекту');addPhotos.title=projectImages.length>=5?'У проекта уже максимальное количество фотографий':'Добавить фотографии к существующему проекту';addPhotos.disabled=projectImages.length>=5;addPhotos.addEventListener('click',()=>openAdminPhotoEditor(project));
     const statusEdit=document.createElement('button');statusEdit.type='button';statusEdit.className='project-admin-button project-admin-status';statusEdit.textContent='Изменить статус проекта';statusEdit.setAttribute('aria-label','Изменить статус проекта');statusEdit.title='Изменить статус проекта';statusEdit.addEventListener('click',()=>updateProjectStatus(project));
     const remove=document.createElement('button');remove.type='button';remove.className='project-admin-button project-admin-delete';remove.textContent='⌫ Удалить';remove.setAttribute('aria-label','Удалить проект');remove.title='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));
-    actionButtons.append(edit,translateEdit,statusEdit,remove);adminActions.append(transferRow,actionButtons);details.append(adminActions);
+    actionButtons.append(edit,translateEdit,addPhotos,statusEdit,remove);adminActions.append(transferRow,actionButtons);details.append(adminActions);
   }
   card.append(top,middle,details);return card;
 }
@@ -330,6 +341,104 @@ async function uploadProjectImage(blob,index){
   if(!response.ok)throw new Error('Не удалось загрузить фотографию (HTTP '+response.status+'). '+await response.text());
   return SUPABASE_URL+'/storage/v1/object/public/idea-images/'+path;
 }
+function clearAdminPhotoPreview(){
+  adminPhotoPreviewUrls.forEach(url=>URL.revokeObjectURL(url));
+  adminPhotoPreviewUrls=[];
+  adminPhotosPreview.replaceChildren();
+  adminPhotosPreview.style.display='none';
+}
+function openAdminPhotoEditor(project){
+  if(!isAdmin||!adminSession||!project)return;
+  const existing=normalizeProjectImages(project.image_url);
+  if(existing.length>=5){alert('У проекта уже есть 5 фотографий. Сначала освободите место.');return;}
+  adminPhotoProject=project;
+  adminPhotosInput.value='';
+  clearAdminPhotoPreview();
+  adminPhotosCount.textContent='Сейчас у проекта '+existing.length+' из 5 фотографий. Можно добавить ещё '+(5-existing.length)+'.';
+  adminPhotosHint.textContent='Можно выбрать до '+(5-existing.length)+' фото';
+  adminPhotosStatus.textContent='Выберите фотографии для предварительного просмотра и загрузки.';
+  adminPhotosSave.disabled=false;
+  adminPhotosModal.classList.add('open');
+  adminPhotosInput.focus();
+}
+function closeAdminPhotoEditor(){
+  adminPhotosModal.classList.remove('open');
+  clearAdminPhotoPreview();
+  adminPhotosInput.value='';
+  adminPhotoProject=null;
+}
+adminPhotosInput.addEventListener('change',()=>{
+  clearAdminPhotoPreview();
+  if(!adminPhotoProject)return;
+  const existingCount=normalizeProjectImages(adminPhotoProject.image_url).length;
+  const remaining=Math.max(0,5-existingCount);
+  const files=Array.from(adminPhotosInput.files||[]);
+  if(!files.length)return;
+  if(files.length>remaining){
+    alert('Для этого проекта осталось место только для '+remaining+' фотографий.');
+    adminPhotosInput.value='';
+    adminPhotosHint.textContent='Можно выбрать до '+remaining+' фото';
+    return;
+  }
+  const invalid=files.find(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>15*1024*1024);
+  if(invalid){
+    alert('Выберите фотографии в формате JPG, PNG или WebP. Каждый исходный файл должен быть меньше 15 МБ.');
+    adminPhotosInput.value='';
+    return;
+  }
+  files.forEach((file,index)=>{
+    const url=URL.createObjectURL(file);adminPhotoPreviewUrls.push(url);
+    const img=document.createElement('img');img.src=url;img.alt='Предпросмотр новой фотографии '+(index+1);adminPhotosPreview.append(img);
+  });
+  adminPhotosPreview.style.display='grid';
+  adminPhotosHint.textContent='Выбрано фотографий: '+files.length;
+  adminPhotosStatus.textContent='Предпросмотр готов. Нажмите «Загрузить и сохранить».';
+});
+document.getElementById('admin-photos-close').addEventListener('click',closeAdminPhotoEditor);
+document.getElementById('admin-photos-cancel').addEventListener('click',closeAdminPhotoEditor);
+adminPhotosModal.addEventListener('click',event=>{if(event.target===adminPhotosModal)closeAdminPhotoEditor()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&adminPhotosModal.classList.contains('open'))closeAdminPhotoEditor()});
+adminPhotosSave.addEventListener('click',async()=>{
+  if(!isAdmin||!adminSession||!adminPhotoProject)return;
+  const project=adminPhotoProject;
+  const existingUrls=normalizeProjectImages(project.image_url);
+  const files=Array.from(adminPhotosInput.files||[]);
+  if(existingUrls.length>=5){adminPhotosStatus.textContent='У проекта уже есть 5 фотографий. Обновите список проектов и попробуйте снова.';return;}
+  if(!files.length){adminPhotosStatus.textContent='Сначала выберите хотя бы одну фотографию.';return;}
+  if(existingUrls.length+files.length>5){adminPhotosStatus.textContent='Можно добавить только '+(5-existingUrls.length)+' фотографий.';return;}
+  adminPhotosSave.disabled=true;
+  const uploadedUrls=[];
+  try{
+    for(let index=0;index<files.length;index++){
+      adminPhotosStatus.textContent='Сжимаем фотографию '+(index+1)+' из '+files.length+'…';
+      const compressed=await compressProjectImage(files[index]);
+      adminPhotosStatus.textContent='Загружаем фотографию '+(index+1)+' из '+files.length+'…';
+      const url=await uploadProjectImage(compressed,'admin-'+(index+1));
+      if(!url)throw new Error('Не удалось получить ссылку на загруженную фотографию.');
+      uploadedUrls.push(url);
+    }
+    const combinedUrls=existingUrls.concat(uploadedUrls);
+    if(combinedUrls.length>5)throw new Error('Превышено допустимое количество фотографий. Существующие фотографии не изменены.');
+    adminPhotosStatus.textContent='Сохраняем фотографии в проекте…';
+    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{
+      method:'PATCH',
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=representation'},
+      body:JSON.stringify({image_url:JSON.stringify(combinedUrls)})
+    });
+    if(!response.ok)throw new Error('Не удалось сохранить фотографии проекта (HTTP '+response.status+'). '+await response.text());
+    const updated=await response.json();
+    if(!Array.isArray(updated)||updated.length!==1)throw new Error('Supabase не подтвердил изменение проекта. Проверьте права администратора на изменение проектов.');
+    project.image_url=JSON.stringify(combinedUrls);
+    adminPhotosStatus.textContent='Фотографии успешно добавлены. Всего теперь '+combinedUrls.length+' из 5.';
+    await loadProjects();
+  }catch(error){
+    adminPhotosStatus.textContent='Ошибка: '+error.message;
+    if(uploadedUrls.length)deleteProjectImagesFromStorage(uploadedUrls,adminSession?adminSession.access_token:null).catch(()=>{});
+  }finally{
+    adminPhotosSave.disabled=false;
+  }
+});
+
 async function deleteProjectImagesFromStorage(urls,token){
   const prefix=SUPABASE_URL+'/storage/v1/object/public/idea-images/';
   const paths=urls.filter(url=>typeof url==='string'&&url.startsWith(prefix)).map(url=>url.slice(prefix.length).split('/').map(part=>decodeURIComponent(part)).join('/')).filter(path=>path.startsWith('projects/'));

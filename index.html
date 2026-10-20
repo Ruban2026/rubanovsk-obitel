@@ -100,6 +100,7 @@ const defaultMapMarkers=[
 ];
 let mapMarkers=[];
 let selectedMarkerId=null;
+let openedMarkerId=null;
 let mapDataReady=false;
 let addingMarker=false;
 let activeDrag=null;
@@ -134,6 +135,7 @@ function renderMapMarkers(){
       if(marker.dataset.justDragged==='true'){delete marker.dataset.justDragged;return;}
       if(isAdmin){selectedMarkerId=item.id;markerStatus.dataset.customMessage='';renderMapMarkers();updateMarkerAdminUI();return;}
       if(item.place){window.location.href='place.html?place='+encodeURIComponent(item.place);return;}
+      openedMarkerId=item.id;
       document.getElementById('modal-title').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.title||'Метка'):(item.title||'Метка');
       document.getElementById('modal-description').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.description||''):(item.description||'');
       document.getElementById('modal').classList.add('open');
@@ -669,7 +671,14 @@ window.addEventListener('scroll',keepSidePanelsOnMap,{passive:true});
 window.addEventListener('resize',keepSidePanelsOnMap);
 if('ResizeObserver' in window&&sidePanels)new ResizeObserver(keepSidePanelsOnMap).observe(sidePanels);
 keepSidePanelsOnMap();
-document.addEventListener('rubanovsk:languagechange',()=>renderMapMarkers());
+document.addEventListener('rubanovsk:languagechange',()=>{
+  renderMapMarkers();
+  if(!document.getElementById('modal').classList.contains('open')||!openedMarkerId)return;
+  const item=mapMarkers.find(marker=>String(marker.id)===String(openedMarkerId));
+  if(!item)return;
+  document.getElementById('modal-title').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.title||'Метка'):(item.title||'Метка');
+  document.getElementById('modal-description').textContent=window.RubanovskI18n?window.RubanovskI18n.translate(item.description||''):(item.description||'');
+});
 loadMapMarkers();
 </script>
 <script src="i18n.js"></script>

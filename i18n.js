@@ -85,7 +85,9 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Сохраняем перевод…","Зберігаємо переклад…","Saving translation…","Zapisywanie tłumaczenia…","Übersetzung wird gespeichert …","Enregistrement de la traduction…"],
 ["Не удалось загрузить перевод","Не вдалося завантажити переклад","Could not load translation","Nie udało się wczytać tłumaczenia","Übersetzung konnte nicht geladen werden","Impossible de charger la traduction"],
 ["Не удалось сохранить перевод","Не вдалося зберегти переклад","Could not save translation","Nie udało się zapisać tłumaczenia","Übersetzung konnte nicht gespeichert werden","Impossible d’enregistrer la traduction"],
-["Перевод сохранён для языка:","Переклад збережено для мови:","Translation saved for language:","Zapisano tłumaczenie dla języka:","Übersetzung gespeichert für:","Traduction enregistrée pour la langue :"]
+["Перевод сохранён для языка:","Переклад збережено для мови:","Translation saved for language:","Zapisano tłumaczenie dla języka:","Übersetzung gespeichert für:","Traduction enregistrée pour la langue :"],
+["Пульсация меток с новыми проектами","Пульсація позначок із новими проєктами","Pulse markers with new projects","Pulsowanie znaczników nowych projektów","Markierungen mit neuen Projekten pulsieren","Pulsation des repères avec de nouveaux projets"],
+["Цвет показывает наличие новых и уже реализованных проектов.","Колір показує наявність нових і вже реалізованих проєктів.","The color indicates both new and completed projects.","Kolor wskazuje na nowe i już zrealizowane projekty.","Die Farbe zeigt neue und bereits umgesetzte Projekte an.","La couleur indique les nouveaux projets et ceux déjà réalisés."]
 ];
 const codes = ['ru','uk','en','pl','de','fr'];
 const selectorOrder = ['uk','en','pl','de','fr','ru'];

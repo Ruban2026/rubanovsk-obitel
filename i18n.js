@@ -44,6 +44,9 @@ const rows = [["Рубановск","Рубановськ","Rubanovsk","Rubanows
 ["Здесь в лодке плывут в светлое будущее казаки-основатели Святого монастыря.","У цьому човні козаки-засновники Святого монастиря пливуть у світле майбутнє.","The Cossack founders of the Holy Monastery are sailing toward a bright future in this boat.","W tej łodzi kozaccy założyciele Świętego Klasztoru płyną ku świetlanej przyszłości.","In diesem Boot segeln die Kosaken-Gründer des Heiligen Klosters einer hellen Zukunft entgegen.","Dans cette barque, les cosaques fondateurs du Saint Monastère voguent vers un avenir radieux."]
 ["Пульсация меток с проектами","Пульсація позначок із проєктами","Pulse markers with projects","Pulsujące znaczniki projektów","Pulsierende Projektmarkierungen","Marqueurs de projets pulsants"],
 ["Содержит только то, что существует на данный момент без новых проектов.","Містить лише те, що існує на цей момент, без нових проєктів.","Contains only what exists at the moment, with no new projects.","Zawiera tylko to, co istnieje obecnie, bez nowych projektów.","Enthält nur das, was derzeit vorhanden ist, ohne neue Projekte.","Contient uniquement ce qui existe actuellement, sans nouveaux projets."],
+["Место содержит новые опубликованные проекты.","Місце містить нові опубліковані проєкти.","This location contains newly published projects.","To miejsce zawiera nowe opublikowane projekty.","An diesem Ort gibt es neu veröffentlichte Projekte.","Ce lieu contient de nouveaux projets publiés."],
+["Звуки природы","Звуки природи","Nature sounds","Dźwięki natury","Naturgeräusche","Sons de la nature"],
+["Птицы","Птахи","Birds","Ptaki","Vögel","Oiseaux"],
 ["Без названия","Без назви","Untitled","Bez nazwy","Ohne Namen","Sans nom"]
 ];
 const codes = ['ru','uk','en','pl','de','fr'];

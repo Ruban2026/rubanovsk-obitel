@@ -119,30 +119,36 @@ function applyLanguage(language,remember=false){
 }
 function addSelector(){
   const header=document.querySelector('header');
-  if(!header || document.getElementById('language-select')) return;
-  const select=document.createElement('select');
-  select.id='language-select';
-  select.setAttribute('aria-label','Website language');
-  select.style.cssText='width:auto;max-width:100%;min-width:125px;padding:8px 10px;border:1px solid #ffffff66;border-radius:10px;background:#ffffff12;color:inherit;font:inherit;cursor:pointer';
-  for(const code of selectorOrder){
-    const option=document.createElement('option');
-    option.value=code;option.textContent=languages[code].label;
-    option.style.color='#1d2c26';option.style.background='#fff';
-    select.append(option);
+  if(!header) return;
+  let select=document.getElementById('language-select');
+  if(!select){
+    select=document.createElement('select');
+    select.id='language-select';
+    select.setAttribute('aria-label','Язык сайта');
+    select.style.cssText='width:auto;max-width:100%;min-width:125px;padding:8px 10px;border:1px solid #ffffff66;border-radius:10px;background:#ffffff12;color:inherit;font:inherit;cursor:pointer';
+    for(const code of selectorOrder){
+      const option=document.createElement('option');
+      option.value=code;option.textContent=languages[code].label;
+      option.style.color='#1d2c26';option.style.background='#fff';
+      select.append(option);
+    }
+    const nav=header.querySelector('nav');
+    if(nav){nav.append(select);nav.style.alignItems='center'}
+    else{
+      const back=header.querySelector('.back');
+      if(back){
+        const controls=document.createElement('div');
+        controls.style.cssText='display:flex;align-items:center;gap:10px;flex-wrap:wrap';
+        back.parentNode.insertBefore(controls,back);
+        controls.append(select,back);
+      }else header.append(select);
+    }
+  }
+  if(!select.dataset.languageBound){
+    select.addEventListener('change',()=>applyLanguage(select.value,true));
+    select.dataset.languageBound='true';
   }
   select.value=currentLanguage;
-  select.addEventListener('change',()=>applyLanguage(select.value,true));
-  const nav=header.querySelector('nav');
-  if(nav){nav.append(select);nav.style.alignItems='center'}
-  else{
-    const back=header.querySelector('.back');
-    if(back){
-      const controls=document.createElement('div');
-      controls.style.cssText='display:flex;align-items:center;gap:10px;flex-wrap:wrap';
-      back.parentNode.insertBefore(controls,back);
-      controls.append(select,back);
-    }else header.append(select);
-  }
 }
 function translateDynamicText(){
   translateTextNodes(document);

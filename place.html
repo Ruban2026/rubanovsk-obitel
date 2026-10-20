@@ -192,7 +192,7 @@ function makeProjectCard(project,index,ratingRows){
     transferRow.append(transferSelect,transferButton);
     const actionButtons=document.createElement('div');actionButtons.className='project-admin-actions';
     const edit=document.createElement('button');edit.type='button';edit.className='project-admin-button project-admin-edit';edit.textContent='✎ Изменить';edit.setAttribute('aria-label','Изменить название и описание проекта');edit.title='Изменить название и описание';edit.addEventListener('click',()=>editProject(project));
-    const statusEdit=document.createElement('button');statusEdit.type='button';statusEdit.className='project-admin-button project-admin-status';statusEdit.textContent='◉ Изменить статус';statusEdit.setAttribute('aria-label','Изменить статус проекта');statusEdit.title='Изменить статус проекта';statusEdit.addEventListener('click',()=>updateProjectStatus(project));
+    const statusEdit=document.createElement('button');statusEdit.type='button';statusEdit.className='project-admin-button project-admin-status';statusEdit.textContent='Изменить статус проекта';statusEdit.setAttribute('aria-label','Изменить статус проекта');statusEdit.title='Изменить статус проекта';statusEdit.addEventListener('click',()=>updateProjectStatus(project));
     const remove=document.createElement('button');remove.type='button';remove.className='project-admin-button project-admin-delete';remove.textContent='⌫ Удалить';remove.setAttribute('aria-label','Удалить проект');remove.title='Удалить проект';remove.addEventListener('click',()=>deleteProject(project));
     actionButtons.append(edit,statusEdit,remove);adminActions.append(transferRow,actionButtons);details.append(adminActions);
   }

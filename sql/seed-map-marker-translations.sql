@@ -1,43 +1,78 @@
--- Rubanovsk: prefilled translations for the standard map markers.
--- Run once in Supabase SQL Editor. Existing Russian marker records are not changed.
--- Only markers whose original Russian title matches one of the titles below are updated/seeded.
+-- Rubanovsk: translations for all 14 current map markers (5 languages each).
+-- Run in Supabase SQL Editor. Russian originals in public.map_markers are not changed.
+-- UUIDs are used so edits to Russian titles will not break this script.
 INSERT INTO public.map_marker_translations (marker_id, language, title, description, updated_at)
-SELECT m.id, t.language, t.translated_title, t.translated_description, now()
-FROM public.map_markers AS m
-JOIN (
-  VALUES
-  -- Pond
-  ('Пруд', 'uk', 'Ставок', 'Водойма — один із помітних природних об’єктів території. Тут можна збирати пропозиції щодо дбайливого використання та збереження прибережної зони.'),
-  ('Пруд', 'en', 'Pond', 'The pond is one of the area’s notable natural features. Suggestions can focus on responsible use and preserving the shoreline.'),
-  ('Пруд', 'pl', 'Staw', 'Staw jest jednym z ważnych obiektów przyrodniczych tego terenu. Można tu zgłaszać pomysły na odpowiedzialne użytkowanie i ochronę brzegu.'),
-  ('Пруд', 'de', 'Teich', 'Der Teich ist eines der markanten Naturmerkmale des Gebiets. Hier können Vorschläge zur schonenden Nutzung und zum Schutz des Ufers gesammelt werden.'),
-  ('Пруд', 'fr', 'Étang', 'L’étang est l’un des éléments naturels remarquables du territoire. On peut proposer des idées pour son utilisation responsable et la préservation des berges.'),
-  -- Green area
-  ('Зелёная зона', 'uk', 'Зелена зона', 'Ділянка з деревами та садами. Мешканці можуть запропонувати ідеї щодо догляду за зеленими насадженнями та покращення проходів.'),
-  ('Зелёная зона', 'en', 'Green area', 'An area with trees and gardens. Residents can suggest ways to care for greenery and improve paths.'),
-  ('Зелёная зона', 'pl', 'Strefa zielona', 'Obszar z drzewami i ogrodami. Mieszkańcy mogą proponować pomysły na pielęgnację zieleni i poprawę przejść.'),
-  ('Зелёная зона', 'de', 'Grünfläche', 'Ein Gebiet mit Bäumen und Gärten. Bewohner können Ideen zur Pflege des Grüns und zur Verbesserung der Wege vorschlagen.'),
-  ('Зелёная зона', 'fr', 'Zone verte', 'Une zone avec des arbres et des jardins. Les habitants peuvent proposer des idées pour entretenir les espaces verts et améliorer les passages.'),
-  -- Existing roads
-  ('Существующие дороги', 'uk', 'Наявні дороги', 'Мережа доріг поєднує різні частини території. Тут можна обговорювати зручність проходу, доступність і стан доріг.'),
-  ('Существующие дороги', 'en', 'Existing roads', 'The road network connects different parts of the area. This is a place to discuss ease of passage, accessibility, and road maintenance.'),
-  ('Существующие дороги', 'pl', 'Istniejące drogi', 'Sieć dróg łączy różne części terenu. Można tu omawiać wygodę przejścia, dostępność i utrzymanie dróg.'),
-  ('Существующие дороги', 'de', 'Bestehende Straßen', 'Das Straßennetz verbindet verschiedene Teile des Gebiets. Hier können die Begehbarkeit, Barrierefreiheit und der Zustand der Straßen besprochen werden.'),
-  ('Существующие дороги', 'fr', 'Routes existantes', 'Le réseau routier relie différentes parties du territoire. On peut discuter ici de la facilité de passage, de l’accessibilité et de l’entretien des routes.'),
-  -- Gardens and open spaces
-  ('Сады и открытые участки', 'uk', 'Сади та відкриті ділянки', 'Зона садів і відкритих ділянок. Додавайте конкретні пропозиції, якщо хочете обговорити розвиток або догляд за цією територією.'),
-  ('Сады и открытые участки', 'en', 'Gardens and open areas', 'An area of gardens and open spaces. Share specific ideas for its development or care.'),
-  ('Сады и открытые участки', 'pl', 'Ogrody i otwarte tereny', 'Obszar ogrodów i otwartych terenów. Zgłaszaj konkretne pomysły dotyczące rozwoju lub pielęgnacji tego miejsca.'),
-  ('Сады и открытые участки', 'de', 'Gärten und Freiflächen', 'Ein Gebiet mit Gärten und Freiflächen. Hier können konkrete Vorschläge zur Entwicklung und Pflege eingebracht werden.'),
-  ('Сады и открытые участки', 'fr', 'Jardins et espaces ouverts', 'Une zone de jardins et d’espaces ouverts. Proposez des idées concrètes pour son aménagement ou son entretien.'),
-  -- Ship marker, if it exists under this Russian title
-  ('Корабль "Козацкая чайка"', 'uk', 'Корабель «Козацька чайка»', 'У цьому човні козаки-засновники Святого монастиря пливуть у світле майбутнє.'),
-  ('Корабль "Козацкая чайка"', 'en', 'Ship “Cossack Chaika”', 'The Cossack founders of the Holy Monastery are sailing toward a bright future in this boat.'),
-  ('Корабль "Козацкая чайка"', 'pl', 'Statek „Kozacka Czajka”', 'W tej łodzi kozaccy założyciele Świętego Klasztoru płyną ku świetlanej przyszłości.'),
-  ('Корабль "Козацкая чайка"', 'de', 'Schiff „Kosakische Möwe“', 'In diesem Boot segeln die Kosaken-Gründer des Heiligen Klosters einer hellen Zukunft entgegen.'),
-  ('Корабль "Козацкая чайка"', 'fr', 'Bateau « Tchaïka cosaque »', 'Dans cette barque, les cosaques fondateurs du Saint Monastère voguent vers un avenir radieux.')
-) AS t(original_title, language, translated_title, translated_description)
-  ON m.title = t.original_title
+VALUES
+  ('9e72f1f2-37d9-4ad3-ac24-79fe052ea3df', 'uk', 'Автобусна зупинка', 'Автобусна зупинка для всіх, хто хоче відвідати наш затишний монастир, щоб зміцнити душу й тіло.', now()),
+  ('9e72f1f2-37d9-4ad3-ac24-79fe052ea3df', 'en', 'Bus stop', 'A bus stop for everyone wishing to visit our welcoming monastery and strengthen both soul and body.', now()),
+  ('9e72f1f2-37d9-4ad3-ac24-79fe052ea3df', 'pl', 'Przystanek autobusowy', 'Przystanek autobusowy dla wszystkich, którzy chcą odwiedzić nasz przytulny klasztor i wzmocnić ducha oraz ciało.', now()),
+  ('9e72f1f2-37d9-4ad3-ac24-79fe052ea3df', 'de', 'Bushaltestelle', 'Eine Bushaltestelle für alle, die unser gemütliches Kloster besuchen und Seele und Körper stärken möchten.', now()),
+  ('9e72f1f2-37d9-4ad3-ac24-79fe052ea3df', 'fr', 'Arrêt de bus', 'Un arrêt de bus pour tous ceux qui souhaitent visiter notre monastère accueillant et fortifier leur âme et leur corps.', now()),
+  ('cf3a8517-ab33-43a7-97de-578f1e4b1233', 'uk', 'Берегова лінія ставка', 'Це місце завжди приваблює різних людей і рибалок. Ми завжди чекаємо на ваші пропозиції та нові ідеї для проєктів.', now()),
+  ('cf3a8517-ab33-43a7-97de-578f1e4b1233', 'en', 'Pond shoreline', 'This place always attracts different people and anglers. Your suggestions and new project ideas are always welcome.', now()),
+  ('cf3a8517-ab33-43a7-97de-578f1e4b1233', 'pl', 'Linia brzegowa stawu', 'To miejsce przyciąga różne osoby i wędkarzy. Zawsze czekamy na Wasze propozycje i nowe pomysły na projekty.', now()),
+  ('cf3a8517-ab33-43a7-97de-578f1e4b1233', 'de', 'Uferlinie des Teichs', 'Dieser Ort zieht immer wieder unterschiedliche Menschen und Angler an. Wir freuen uns auf Ihre Vorschläge und neue Projektideen.', now()),
+  ('cf3a8517-ab33-43a7-97de-578f1e4b1233', 'fr', 'Rive de l’étang', 'Cet endroit attire toujours des personnes diverses et des pêcheurs. Vos propositions et nouvelles idées de projets sont les bienvenues.', now()),
+  ('2b68d18c-4797-4644-a7f7-581179fa2357', 'uk', 'Вхідний майданчик до храму Покрови', '', now()),
+  ('2b68d18c-4797-4644-a7f7-581179fa2357', 'en', 'Entrance plaza to the Pokrov Church', '', now()),
+  ('2b68d18c-4797-4644-a7f7-581179fa2357', 'pl', 'Plac wejściowy do cerkwi Opieki Matki Bożej', '', now()),
+  ('2b68d18c-4797-4644-a7f7-581179fa2357', 'de', 'Eingangsplatz der Pokrow-Kirche', '', now()),
+  ('2b68d18c-4797-4644-a7f7-581179fa2357', 'fr', 'Esplanade d’entrée de l’église Pokrov', '', now()),
+  ('e7998bf5-2ba3-4d87-a673-31134279f00a', 'uk', 'Головний оглядовий майданчик ставка', 'Вихід до ставка для купання та відпочинку.', now()),
+  ('e7998bf5-2ba3-4d87-a673-31134279f00a', 'en', 'Main pond viewing area', 'Access to the pond for swimming and relaxation.', now()),
+  ('e7998bf5-2ba3-4d87-a673-31134279f00a', 'pl', 'Główny punkt widokowy nad stawem', 'Dojście do stawu, gdzie można pływać i odpoczywać.', now()),
+  ('e7998bf5-2ba3-4d87-a673-31134279f00a', 'de', 'Hauptaussichtspunkt am Teich', 'Zugang zum Teich zum Schwimmen und Entspannen.', now()),
+  ('e7998bf5-2ba3-4d87-a673-31134279f00a', 'fr', 'Point de vue principal sur l’étang', 'Accès à l’étang pour se baigner et se détendre.', now()),
+  ('e0079da5-ed5d-49da-921d-3cda3b7b6942', 'uk', 'Закладний камінь храму Воскресіння Христового', 'На цьому місці закладено камінь для спорудження нового храму курганного типу на честь Воскресіння Христового.', now()),
+  ('e0079da5-ed5d-49da-921d-3cda3b7b6942', 'en', 'Foundation stone of the Church of the Resurrection of Christ', 'The foundation stone for a new barrow-style church dedicated to the Resurrection of Christ was laid here.', now()),
+  ('e0079da5-ed5d-49da-921d-3cda3b7b6942', 'pl', 'Kamień węgielny cerkwi Zmartwychwstania Chrystusa', 'W tym miejscu położono kamień węgielny pod nową cerkiew typu kurhanowego pod wezwaniem Zmartwychwstania Chrystusa.', now()),
+  ('e0079da5-ed5d-49da-921d-3cda3b7b6942', 'de', 'Grundstein der Auferstehungskirche Christi', 'An dieser Stelle wurde der Grundstein für eine neue, kurganartige Kirche zu Ehren der Auferstehung Christi gelegt.', now()),
+  ('e0079da5-ed5d-49da-921d-3cda3b7b6942', 'fr', 'Pierre fondatrice de l’église de la Résurrection du Christ', 'C’est ici qu’a été posée la première pierre d’une nouvelle église de type tumulus dédiée à la Résurrection du Christ.', now()),
+  ('04ba828b-fe1a-4e51-9c73-81b88ee7fd8e', 'uk', 'Дзвіниця', 'Головна дзвіниця монастиря.', now()),
+  ('04ba828b-fe1a-4e51-9c73-81b88ee7fd8e', 'en', 'Bell tower', 'The monastery’s main bell tower.', now()),
+  ('04ba828b-fe1a-4e51-9c73-81b88ee7fd8e', 'pl', 'Dzwonnica', 'Główna dzwonnica klasztoru.', now()),
+  ('04ba828b-fe1a-4e51-9c73-81b88ee7fd8e', 'de', 'Glockenturm', 'Der Hauptglockenturm des Klosters.', now()),
+  ('04ba828b-fe1a-4e51-9c73-81b88ee7fd8e', 'fr', 'Clocher', 'Le clocher principal du monastère.', now()),
+  ('aa3c4ed3-39eb-423c-bbcb-7e594935e182', 'uk', 'Концертний майданчик', 'Концертний майданчик радо приймає талановитих людей із відкритим серцем і душею!', now()),
+  ('aa3c4ed3-39eb-423c-bbcb-7e594935e182', 'en', 'Concert venue', 'The concert venue welcomes talented people with open hearts and souls!', now()),
+  ('aa3c4ed3-39eb-423c-bbcb-7e594935e182', 'pl', 'Scena koncertowa', 'Scena koncertowa chętnie gości utalentowanych ludzi o otwartych sercach i duszach!', now()),
+  ('aa3c4ed3-39eb-423c-bbcb-7e594935e182', 'de', 'Konzertplatz', 'Der Konzertplatz heißt talentierte Menschen mit offenem Herzen und offener Seele herzlich willkommen!', now()),
+  ('aa3c4ed3-39eb-423c-bbcb-7e594935e182', 'fr', 'Espace de concert', 'Cet espace de concert accueille avec joie les personnes talentueuses au cœur et à l’âme ouverts !', now()),
+  ('208e42b3-65e7-4bc8-acc7-adb2a846f88f', 'uk', 'Корабель «Козацька чайка»', 'У цьому човні козаки-засновники Святого монастиря пливуть у світле майбутнє.', now()),
+  ('208e42b3-65e7-4bc8-acc7-adb2a846f88f', 'en', 'Ship “Cossack Chaika”', 'The Cossack founders of the Holy Monastery are sailing toward a bright future in this boat.', now()),
+  ('208e42b3-65e7-4bc8-acc7-adb2a846f88f', 'pl', 'Statek „Kozacka Czajka”', 'W tej łodzi kozaccy założyciele Świętego Klasztoru płyną ku świetlanej przyszłości.', now()),
+  ('208e42b3-65e7-4bc8-acc7-adb2a846f88f', 'de', 'Schiff „Kosakische Möwe“', 'In diesem Boot segeln die Kosaken-Gründer des Heiligen Klosters einer hellen Zukunft entgegen.', now()),
+  ('208e42b3-65e7-4bc8-acc7-adb2a846f88f', 'fr', 'Bateau « Tchaïka cosaque »', 'Dans cette barque, les cosaques fondateurs du Saint Monastère voguent vers un avenir radieux.', now()),
+  ('dd427767-762c-4720-9fa8-57d8d93905fe', 'uk', 'Йорданська купіль і пристань', 'Місце, де взимку можна купатися на свято Водохреща, а влітку — відпочивати, милуватися краєвидом і годувати лебедів.', now()),
+  ('dd427767-762c-4720-9fa8-57d8d93905fe', 'en', 'Epiphany bathing pool and pier', 'A place for bathing during Epiphany in winter, and for relaxing, enjoying the view, and feeding swans in summer.', now()),
+  ('dd427767-762c-4720-9fa8-57d8d93905fe', 'pl', 'Kąpielisko na Święto Jordanu i przystań', 'Zimą można tu kąpać się z okazji święta Jordanu, a latem odpoczywać, podziwiać widoki i karmić łabędzie.', now()),
+  ('dd427767-762c-4720-9fa8-57d8d93905fe', 'de', 'Taufbecken zum Fest der Taufe Christi und Anlegesteg', 'Im Winter kann man hier zum Fest der Taufe Christi baden; im Sommer kann man sich erholen, die Aussicht genießen und Schwäne füttern.', now()),
+  ('dd427767-762c-4720-9fa8-57d8d93905fe', 'fr', 'Bassin de baignade de l’Épiphanie et embarcadère', 'En hiver, on peut s’y baigner pour la fête du Baptême du Christ ; en été, se détendre, admirer le paysage et nourrir les cygnes.', now()),
+  ('26904d8e-bbd0-4147-8a66-a24824a563a9', 'uk', 'Музей', 'Ви завжди можете відвідати наш музей, який розповість вам багато нового та цікавого!', now()),
+  ('26904d8e-bbd0-4147-8a66-a24824a563a9', 'en', 'Museum', 'You can always visit our museum, where you will discover many new and interesting things!', now()),
+  ('26904d8e-bbd0-4147-8a66-a24824a563a9', 'pl', 'Muzeum', 'Zawsze możesz odwiedzić nasze muzeum, które opowie Ci wiele nowych i ciekawych rzeczy!', now()),
+  ('26904d8e-bbd0-4147-8a66-a24824a563a9', 'de', 'Museum', 'Besuchen Sie jederzeit unser Museum und erfahren Sie viel Neues und Interessantes!', now()),
+  ('26904d8e-bbd0-4147-8a66-a24824a563a9', 'fr', 'Musée', 'Vous pouvez toujours visiter notre musée, qui vous fera découvrir de nombreuses choses nouvelles et intéressantes !', now()),
+  ('671b19a0-b122-4604-901b-62c065d1b48a', 'uk', 'Джерельце', 'Джерельце, де завжди можна освіжитися в спекотний день і набрати прохолодної джерельної води.', now()),
+  ('671b19a0-b122-4604-901b-62c065d1b48a', 'en', 'Spring', 'A little spring where you can cool off on a hot day and collect fresh spring water.', now()),
+  ('671b19a0-b122-4604-901b-62c065d1b48a', 'pl', 'Źródełko', 'Źródełko, przy którym można ochłodzić się w upalny dzień i nabrać świeżej wody źródlanej.', now()),
+  ('671b19a0-b122-4604-901b-62c065d1b48a', 'de', 'Quelle', 'Eine kleine Quelle, an der man sich an heißen Tagen erfrischen und frisches Quellwasser schöpfen kann.', now()),
+  ('671b19a0-b122-4604-901b-62c065d1b48a', 'fr', 'Petite source', 'Une petite source où l’on peut se rafraîchir par temps chaud et puiser de l’eau fraîche.', now()),
+  ('7294586a-b9c3-4398-8dbf-829ba449c1f9', 'uk', 'Ринок-майданчик', 'Ринок містить торгові точки для всіх охочих та інформаційні стенди з картою нашої обителі й планами її розвитку.', now()),
+  ('7294586a-b9c3-4398-8dbf-829ba449c1f9', 'en', 'Market square', 'The market has stalls open to everyone and information boards showing the map of our monastery and its development plans.', now()),
+  ('7294586a-b9c3-4398-8dbf-829ba449c1f9', 'pl', 'Plac targowy', 'Na targu znajdują się stoiska dostępne dla wszystkich oraz tablice informacyjne z mapą naszego klasztoru i planami jego rozwoju.', now()),
+  ('7294586a-b9c3-4398-8dbf-829ba449c1f9', 'de', 'Marktplatz', 'Der Markt bietet Stände für alle sowie Informationstafeln mit dem Lageplan unseres Klosters und seinen Entwicklungsplänen.', now()),
+  ('7294586a-b9c3-4398-8dbf-829ba449c1f9', 'fr', 'Place du marché', 'Le marché accueille des stands ouverts à tous et des panneaux d’information présentant le plan de notre monastère et ses projets de développement.', now()),
+  ('b16acc12-bb84-40aa-ab3f-c43f19e49016', 'uk', 'Оглядовий майданчик', 'Тут ви завжди можете присісти на лавку й перепочити, щоб зберегти найкращі спогади про це незабутнє місце на все життя!', now()),
+  ('b16acc12-bb84-40aa-ab3f-c43f19e49016', 'en', 'Viewing point', 'You can always sit on a bench here and catch your breath, taking away lifelong memories of this unforgettable place!', now()),
+  ('b16acc12-bb84-40aa-ab3f-c43f19e49016', 'pl', 'Punkt widokowy', 'Możesz tu usiąść na ławce i odpocząć, zachowując na całe życie najpiękniejsze wspomnienia z tego niezapomnianego miejsca!', now()),
+  ('b16acc12-bb84-40aa-ab3f-c43f19e49016', 'de', 'Aussichtspunkt', 'Hier können Sie sich jederzeit auf eine Bank setzen und durchatmen, um lebenslange Erinnerungen an diesen unvergesslichen Ort mitzunehmen!', now()),
+  ('b16acc12-bb84-40aa-ab3f-c43f19e49016', 'fr', 'Belvédère', 'Vous pouvez toujours vous asseoir sur un banc et reprendre votre souffle, en gardant pour toute la vie les plus beaux souvenirs de ce lieu inoubliable !', now()),
+  ('6e02e9c3-afd5-4cb8-b38d-dc63185f123e', 'uk', 'Храм Олександра та Єлизавети', 'Новий храм на честь святих Олександра та Єлизавети, мощі яких нині перебувають у нашому головному храмі Покрови Пресвятої Богородиці.', now()),
+  ('6e02e9c3-afd5-4cb8-b38d-dc63185f123e', 'en', 'Church of Alexander and Elizabeth', 'A new church dedicated to Saints Alexander and Elizabeth, whose relics are currently kept in our main Church of the Protection of the Holy Mother of God.', now()),
+  ('6e02e9c3-afd5-4cb8-b38d-dc63185f123e', 'pl', 'Cerkiew świętych Aleksandra i Elżbiety', 'Nowa cerkiew pod wezwaniem świętych Aleksandra i Elżbiety, których relikwie znajdują się obecnie w naszej głównej cerkwi Opieki Najświętszej Bogurodzicy.', now()),
+  ('6e02e9c3-afd5-4cb8-b38d-dc63185f123e', 'de', 'Kirche der Heiligen Alexander und Elisabeth', 'Eine neue Kirche zu Ehren der Heiligen Alexander und Elisabeth, deren Reliquien sich derzeit in unserer Hauptkirche zum Schutz der Allerheiligsten Gottesmutter befinden.', now()),
+  ('6e02e9c3-afd5-4cb8-b38d-dc63185f123e', 'fr', 'Église des saints Alexandre et Élisabeth', 'Une nouvelle église dédiée aux saints Alexandre et Élisabeth, dont les reliques se trouvent actuellement dans notre église principale de la Protection de la Très Sainte Mère de Dieu.', now())
 ON CONFLICT (marker_id, language)
 DO UPDATE SET
   title = EXCLUDED.title,

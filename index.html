@@ -69,7 +69,7 @@ footer{background:#e9eee7;padding:24px 22px;text-align:center;color:var(--muted)
 <main>
 <section class="hero"><div class="eyebrow">Наше место · наше будущее</div><h1>Рубановский монастырь начинается с каждого</h1><p class="hero-slogan">Создадим Рай на земле вместе!</p></section>
 <section id="map" aria-label="Карта территории">
-<div class="map-side-panels" id="map-side-panels"><div class="map-pulse-control"><label class="map-effect-option"><input id="effect-marker-pulse" type="checkbox" checked> Пульсация меток с проектами</label></div><div class="map-panel-divider" aria-hidden="true"></div><details class="map-effects-panel"><summary>Настройки эффектов</summary><div class="map-effect-options"><label class="map-effect-option"><input id="effect-clouds" type="checkbox" checked> Лёгкие облака</label><label class="map-effect-option"><input id="effect-wind-sound" type="checkbox"> Звук лёгкого ветерка</label></div></details><aside class="map-legend" aria-label="Пояснение к меткам"><h3>Как читать метки</h3><div class="legend-item"><span class="legend-marker legend-marker-plain" aria-hidden="true"></span><div><strong>Зелёная метка</strong><p>Содержит только то, что существует на данный момент без новых проектов.</p></div></div><div class="legend-item"><span class="legend-marker legend-marker-projects" aria-hidden="true"></span><div><strong>Терракотовая метка</strong><p>У этого места уже есть опубликованные проекты. Метка мягко пульсирует, чтобы её было легче заметить.</p></div></div><p class="legend-note">Цвет показывает наличие проектов, а не оценку качества места.</p></aside></div>
+<div class="map-side-panels" id="map-side-panels"><div class="map-pulse-control"><label class="map-effect-option"><input id="effect-marker-pulse" type="checkbox" checked> Пульсация меток с проектами</label></div><div class="map-panel-divider" aria-hidden="true"></div><details class="map-effects-panel"><summary>Настройки эффектов</summary><div class="map-effect-options"><label class="map-effect-option"><input id="effect-clouds" type="checkbox" checked> Лёгкие облака</label><label class="map-effect-option"><input id="effect-birds" type="checkbox" checked> Птицы</label><label class="map-effect-option"><input id="effect-wind-sound" type="checkbox"> Звуки природы</label></div></details><aside class="map-legend" aria-label="Пояснение к меткам"><h3>Как читать метки</h3><div class="legend-item"><span class="legend-marker legend-marker-plain" aria-hidden="true"></span><div><strong>Зелёная метка</strong><p>Содержит только то, что существует на данный момент без новых проектов.</p></div></div><div class="legend-item"><span class="legend-marker legend-marker-projects" aria-hidden="true"></span><div><strong>Терракотовая метка</strong><p>Место содержит новые опубликованные проекты.</p></div></div><p class="legend-note">Цвет показывает наличие проектов, а не оценку качества места.</p></aside></div>
 <div class="map-shell"><div class="map-stage"><img src="RubanovskPlane_3x.WebP" alt="Аэрофотография территории Рубановского с прудом, зелёной зоной, дорогами и садами" loading="eager">
 <div class="map-clouds" aria-hidden="true"><span class="map-cloud cloud-one"></span><span class="map-cloud cloud-two"></span><span class="map-cloud cloud-three"></span><span class="map-cloud cloud-four"></span><span class="map-cloud cloud-five"></span><span class="map-cloud cloud-six"></span><span class="map-cloud cloud-seven"></span><span class="map-cloud cloud-eight"></span><span class="map-cloud cloud-nine"></span><span class="map-cloud cloud-ten"></span><span class="map-cloud cloud-eleven"></span><span class="map-cloud cloud-twelve"></span></div><div id="map-birds" class="map-birds" aria-hidden="true"></div>
 <div id="map-markers" aria-label="Метки карты"></div>
@@ -522,6 +522,7 @@ const cloudCountSlider=document.getElementById('effect-cloud-count');
 const cloudCountValue=document.getElementById('effect-cloud-count-value');
 const pulseToggle=document.getElementById('effect-marker-pulse');
 const windToggle=document.getElementById('effect-wind-sound');
+const birdsToggle=document.getElementById('effect-birds');
 
 let windAudioContext=null,windGain=null,windMasterGain=null,windSource=null,windFilter=null,windLfo=null,windLfoGain=null,windModulationTimer=null,windCurrent=0,windTarget=0,windNextChange=0;
 const birdLayer=document.getElementById('map-birds'),birdActors=[];
@@ -577,6 +578,7 @@ function createBird(kind,goosePalette=0){
 
 let nextFlockAt=0,nextSwallowAt=0;
 function maybeSpawnBirds(now){
+  if(!birdsToggle.checked)return;
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const geese=birdActors.filter(b=>b.kind==='goose');
   // Several flocks may cross the map at once; each flock keeps its own plumage.
@@ -613,8 +615,10 @@ function maybeSpawnBirds(now){
   if(windToggle.checked&&now>nextSwallowCall){nextSwallowCall=now+6500+Math.random()*12000;setTimeout(()=>{if(windToggle.checked)chirpSwallow();},800+Math.random()*3000);}
 }
 
-let birdLastTime=0;
+let birdLastTime=0,birdAnimationRunning=false,birdFrameId=0;
 function birdTick(now){
+  birdFrameId=0;
+  if(!birdsToggle.checked){birdActors.forEach(b=>b.el.remove());birdActors.length=0;birdAnimationRunning=false;return;}
   const w=birdLayer.clientWidth||window.innerWidth,h=birdLayer.clientHeight||window.innerHeight;
   const dt=Math.min(32,now-(birdLastTime||now));birdLastTime=now;maybeSpawnBirds(now);
   for(let i=birdActors.length-1;i>=0;i--){
@@ -639,15 +643,17 @@ function birdTick(now){
     else{const wing=b.el.querySelectorAll('.wing');wing.forEach((el,j)=>{el.style.transform='rotate('+(b.flapping?(j===0?-20:20)*Math.sin(now*.018+b.flapPhase):0)+'deg)';});}
     if(b.x<-90||b.x>w+90||b.y<-90||b.y>h+90||(b.kind!=='goose'&&b.age>b.life)){b.el.remove();birdActors.splice(i,1);}
   }
-  requestAnimationFrame(birdTick);
+  birdFrameId=requestAnimationFrame(birdTick);
 }
-requestAnimationFrame(birdTick);
+function startBirds(){if(birdAnimationRunning)return;birdAnimationRunning=true;birdLastTime=0;birdFrameId=requestAnimationFrame(birdTick);}
+function stopBirds(){birdsToggle.checked=false;try{localStorage.setItem('rubanovsk_effect_birds','false');}catch(error){}if(birdFrameId)cancelAnimationFrame(birdFrameId);birdFrameId=0;birdActors.forEach(b=>b.el.remove());birdActors.length=0;birdAnimationRunning=false;}
+function handleBirdToggle(){try{localStorage.setItem('rubanovsk_effect_birds',String(birdsToggle.checked));}catch(error){}if(birdsToggle.checked)startBirds();else stopBirds();}
 function applyMapEffects(){mapEffects.classList.toggle('map-effects-clouds-off',!cloudsToggle.checked);mapEffects.classList.toggle('map-effects-pulse-off',!pulseToggle.checked);try{localStorage.setItem('rubanovsk_effect_clouds',String(cloudsToggle.checked));localStorage.setItem('rubanovsk_effect_marker_pulse',String(pulseToggle.checked));}catch(error){}updateCloudSpeed();}
 function handleWindToggle(){try{localStorage.setItem('rubanovsk_effect_wind_sound',String(windToggle.checked));}catch(error){}if(windToggle.checked)startWindSound().then(()=>{if(windToggle.checked)chirpSwallow();}).catch(error=>{console.warn('Звук ждёт разрешения браузера или первого взаимодействия:',error);});else stopWindSound();}
 function applyCloudCount(){if(!cloudCountSlider||!cloudCountValue)return;const count=Math.max(4,Math.min(12,Number.parseInt(cloudCountSlider.value,10)||8));cloudCountSlider.value=String(count);cloudCountValue.value=String(count);cloudCountValue.textContent=String(count);const cloudLayer=document.querySelector('.map-clouds');if(cloudLayer)cloudLayer.className='map-clouds cloud-count-'+count;try{localStorage.setItem('rubanovsk_cloud_count',String(count));}catch(error){}}
 if(cloudCountSlider){try{const savedCloudCount=Number.parseInt(localStorage.getItem('rubanovsk_cloud_count'),10);if(Number.isFinite(savedCloudCount))cloudCountSlider.value=String(Math.max(4,Math.min(12,savedCloudCount)));}catch(error){}cloudCountSlider.addEventListener('input',applyCloudCount);applyCloudCount();}
-cloudsToggle.checked=readEffectPreference('rubanovsk_effect_clouds',true);pulseToggle.checked=readEffectPreference('rubanovsk_effect_marker_pulse',true);windToggle.checked=true;try{localStorage.setItem('rubanovsk_effect_wind_sound','true');}catch(error){}
-cloudsToggle.addEventListener('change',applyMapEffects);pulseToggle.addEventListener('change',applyMapEffects);windToggle.addEventListener('change',handleWindToggle);updateCloudSpeed();applyMapEffects();
+cloudsToggle.checked=readEffectPreference('rubanovsk_effect_clouds',true);pulseToggle.checked=readEffectPreference('rubanovsk_effect_marker_pulse',true);birdsToggle.checked=readEffectPreference('rubanovsk_effect_birds',true);windToggle.checked=true;try{localStorage.setItem('rubanovsk_effect_wind_sound','true');}catch(error){}
+cloudsToggle.addEventListener('change',applyMapEffects);pulseToggle.addEventListener('change',applyMapEffects);birdsToggle.addEventListener('change',handleBirdToggle);windToggle.addEventListener('change',handleWindToggle);updateCloudSpeed();applyMapEffects();startBirds();
 // Sound is enabled by default; browsers may defer audio until the first user gesture.
 handleWindToggle();
 const resumeDefaultAudio=()=>{if(windToggle.checked&&windAudioContext&&windAudioContext.state!=='running')startWindSound().catch(error=>console.warn('Звук ждёт взаимодействия с сайтом:',error));};

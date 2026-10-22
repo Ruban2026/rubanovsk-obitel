@@ -20,7 +20,7 @@ form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;f
 .projects-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:0 0 14px}.projects-heading h2{margin:0;color:var(--forest);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.025em}.projects-heading p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
 .project-list{display:grid;gap:14px}.project{display:grid;grid-template-columns:minmax(200px,.9fr) minmax(260px,1.5fr);grid-template-areas:"top top" "image description";grid-template-rows:auto minmax(0,1fr);gap:14px 22px;align-items:start;height:440px;box-sizing:border-box;overflow:hidden;background:linear-gradient(145deg,#fff 0%,#fdfefb 100%);border:1px solid #dce5dc;border-radius:18px;padding:20px;box-shadow:0 5px 18px #183c2c08;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.project:hover{border-color:#c6d8c8;box-shadow:0 10px 28px #183c2c12;transform:translateY(-2px)}.project-top{grid-area:top;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:13px;border-bottom:1px solid #e6ece5}.project-name{display:flex;gap:12px;align-items:center;min-width:0;flex:1}.project-status-badge{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;padding:7px 13px;border:1px solid;border-radius:999px;font-size:.8rem;font-weight:800;line-height:1.2;letter-spacing:.01em;white-space:nowrap}.project-status-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px currentColor;opacity:.18}.project-status-in-progress{background:#fff1e7;border-color:#e7b99d;color:#934b2f}.project-status-completed{background:#e6f0e5;border-color:#bfd5bf;color:#285b40}.project.status-in-progress{background:linear-gradient(145deg,#fffaf6 0%,#fffdfb 100%);border-color:#ead8cb}.project.status-completed{background:linear-gradient(145deg,#f0f7ed 0%,#fbfdf9 100%);border-color:#cbdccb}.number{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:13px;background:linear-gradient(145deg,#eaf2e8,#dceadd);color:var(--forest);font-weight:850;box-shadow:inset 0 0 0 1px #d2e2d2}.project h3{margin:0;color:var(--forest);font-size:1.13rem;line-height:1.35;letter-spacing:-.015em;overflow-wrap:anywhere}.project-vote{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none}.stars{display:flex;gap:2px;white-space:nowrap}.star-button{border:0;background:transparent;color:#c7cec7;padding:0 2px;font-size:1.55rem;line-height:1.1;cursor:pointer}.star-button.active,.star-button.chosen{color:#e5a521}.star-button:disabled{cursor:default;opacity:1}.rating-caption{font-size:.78rem;color:var(--muted);text-align:right}.project-media{grid-area:image;min-width:0;min-height:0;overflow:hidden}.project-image{width:100%;max-height:230px;aspect-ratio:4/3;object-fit:cover;border-radius:13px;background:#f2f2ec;box-shadow:0 3px 10px #173f3510;transition:filter .2s ease}.project-image:hover{filter:saturate(1.04)}.project-description-wrap{grid-area:description;min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;overflow:hidden}.project-description{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 9px 8px 0;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;scrollbar-gutter:stable;line-height:1.7}.project-description::-webkit-scrollbar{width:6px}.project-description::-webkit-scrollbar-thumb{background:#d4dfd4;border-radius:8px}.project-description::-webkit-scrollbar-track{background:transparent}.project-date{flex:none;font-size:.8rem;color:var(--muted);margin-top:12px}.empty{background:#fff;border:1px dashed #c8d5ca;border-radius:16px;padding:26px;color:var(--muted);box-shadow:0 4px 16px #173f3506}.empty strong{display:block;color:var(--forest);font-size:1.05rem;margin-bottom:5px}
 .admin{margin-top:35px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;color:var(--muted);font-size:.86rem}.text-button{background:transparent;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}.project-admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.project-admin-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:8px 12px;border:1px solid transparent;border-radius:10px;font:inherit;font-size:.84rem;font-weight:650;line-height:1.2;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;border-color:transparent;box-shadow:0 2px 5px #173f3510}.project-admin-button:hover{transform:translateY(-1px);box-shadow:0 5px 12px #173f3520}.project-admin-edit{background:linear-gradient(180deg,#f3f7f2,#e5eee5);color:#244d3d;border-color:#cfdfd0}.project-admin-edit:hover{background:#dceadd}.project-admin-status{background:linear-gradient(180deg,#fff5eb,#f7e5d4);color:#874c2e;border-color:#e9c8ad}.project-admin-status:hover{background:#f2ddc9}.project-admin-delete{background:linear-gradient(180deg,#fff5f2,#f9e5df);color:#963e31;border-color:#efd0c8}.project-admin-delete:hover{background:#f5d9d1}.project-transfer-button{min-height:38px;padding:9px 13px;border-radius:10px;box-shadow:0 3px 8px #173f3520}
-.modal-backdrop{position:fixed;inset:0;background:#0b211bcc;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal-backdrop.open{display:flex}.modal{background:linear-gradient(145deg,#fff,#fbfcf8);border:1px solid #e0e8df;border-radius:20px;padding:26px;max-width:460px;width:100%;box-shadow:0 20px 80px #0004}.modal-top{display:flex;align-items:start;justify-content:space-between;gap:20px}.modal h2{font-size:1.4rem;margin:0;color:var(--forest)}.close{border:0;background:#edf1ec;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.2rem;flex:none}.modal form{margin-top:18px}.translation-modal-backdrop{z-index:15}.translation-modal{max-width:760px;max-height:min(90vh,900px);overflow:auto}.translation-source{background:#f0f5ee;border:1px solid #dce7d9;border-radius:12px;padding:13px 15px;white-space:pre-wrap;overflow-wrap:anywhere}.translation-source strong{display:block;color:var(--forest);font-size:.82rem;margin-bottom:5px}.translation-form{display:grid;gap:13px}.translation-language-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}.translation-language-row select{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}.translation-modal textarea{min-height:95px}.translation-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.translation-status{font-size:.88rem;color:var(--muted);min-height:1.4em}@media(max-width:760px){.translation-modal{padding:18px}.translation-language-row{grid-template-columns:1fr}}
+.modal-backdrop{position:fixed;inset:0;background:#0b211bcc;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal-backdrop.open{display:flex}.modal{background:linear-gradient(145deg,#fff,#fbfcf8);border:1px solid #e0e8df;border-radius:20px;padding:26px;max-width:460px;width:100%;box-shadow:0 20px 80px #0004}.modal-top{display:flex;align-items:start;justify-content:space-between;gap:20px}.modal h2{font-size:1.4rem;margin:0;color:var(--forest)}.close{border:0;background:#edf1ec;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.2rem;flex:none}.modal form{margin-top:18px}.translation-modal-backdrop{z-index:15}.translation-modal{max-width:760px;max-height:min(90vh,900px);overflow:auto}.translation-source{background:#f0f5ee;border:1px solid #dce7d9;border-radius:12px;padding:13px 15px;white-space:pre-wrap;overflow-wrap:anywhere}.translation-source strong{display:block;color:var(--forest);font-size:.82rem;margin-bottom:5px}.translation-form{display:grid;gap:13px}.translation-language-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}.translation-language-row select{width:100%;font:inherit;border:1px solid #cfd9d0;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}.translation-modal textarea{min-height:95px}.translation-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.translation-status{font-size:.88rem;color:var(--muted);min-height:1.4em}.rich-editor{border:1px solid #cfd9d0;border-radius:12px;overflow:hidden;background:#fff}.rich-toolbar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:8px;border-bottom:1px solid #dce4dc;background:#f5f8f3}.rich-tool{min-width:34px;min-height:34px;padding:5px 9px;border:1px solid #d3ded2;border-radius:7px;background:#fff;color:#244d3d;font:inherit;font-weight:700;cursor:pointer}.rich-tool:hover,.rich-tool:focus-visible{background:#e6efe4}.rich-toolbar select{width:auto;max-width:100%;min-height:34px;padding:5px 7px;border:1px solid #d3ded2;border-radius:7px;background:#fff;color:var(--ink);font:inherit;font-size:.86rem}.rich-content{min-height:170px;max-height:420px;overflow:auto;padding:12px 14px;outline:none;line-height:1.65;overflow-wrap:anywhere}.rich-content:empty:before{content:attr(data-placeholder);color:#8a978e;pointer-events:none}.rich-content ul,.rich-content ol{padding-left:1.6em}.rich-content blockquote{margin:.6em 0;padding:.25em .8em;border-left:3px solid #9bb99c;color:#52665a}.rich-editor-footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:6px 10px;border-top:1px solid #edf1ec;background:#fbfcf9}.rich-hint,.rich-count{font-size:.76rem;color:var(--muted)}.rich-edit-backdrop{z-index:18}.rich-edit-modal{max-width:850px;max-height:92vh;overflow:auto}.rich-edit-modal form{max-width:none}.rich-edit-modal .rich-content{min-height:260px;max-height:45vh}.project-description p{margin:0 0 .65em}.project-description ul,.project-description ol{padding-left:1.5em;margin:.25em 0 .7em}.project-description blockquote{margin:.5em 0;padding:.2em .8em;border-left:3px solid #9bb99c;color:#52665a}.project-description span{overflow-wrap:anywhere}@media(max-width:760px){.translation-modal{padding:18px}.translation-language-row{grid-template-columns:1fr}.rich-edit-modal{padding:16px}.rich-content{min-height:145px}.rich-toolbar{gap:4px}.rich-toolbar select{max-width:135px}}
 @media(max-width:760px){header{align-items:flex-start;flex-direction:column}.project{height:680px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 270px minmax(0,1fr);grid-template-areas:"top" "image" "description";gap:12px}.project-top{align-items:flex-start;flex-wrap:wrap;row-gap:10px}.project-name{align-items:center;flex:1 1 calc(100% - 110px)}.project-status-badge{order:3;margin:0 auto}.project-vote{align-items:flex-end;order:2}.project-media{overflow:hidden}.project-image{max-height:210px;aspect-ratio:16/9}.project-thumbnails{grid-template-columns:repeat(5,minmax(0,1fr))}.project-description-wrap{min-height:0}.projects-heading{align-items:start;flex-direction:column}.admin{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
@@ -33,7 +33,7 @@ form{display:grid;gap:14px;max-width:850px;margin-top:14px}label{display:block;f
 <div class="form-inner"><p>Опишите конкретную идею для этого места и, если есть, добавьте фотографию. После публикации проект появится в общем списке.</p>
 <form id="project-form">
 <div><label for="project-title">Название проекта</label><input id="project-title" name="title" required maxlength="120" placeholder="Например, обустроить прогулочную дорожку"></div>
-<div><label for="project-description">Описание проекта</label><textarea id="project-description" name="description" required maxlength="3000" placeholder="Что предлагается сделать, для чего это нужно и как это может выглядеть?"></textarea></div>
+<div><label for="project-description-rich-content">Описание проекта</label><div class="rich-editor" id="project-description-rich"><div class="rich-toolbar" role="toolbar" aria-label="Форматирование описания"></div><div class="rich-content" id="project-description-rich-content" contenteditable="true" role="textbox" aria-multiline="true" aria-required="true" data-placeholder="Что предлагается сделать, для чего это нужно и как это может выглядеть?"></div><div class="rich-editor-footer"><span class="rich-hint">Выделите текст и выберите форматирование. Переносы строк и списки сохраняются.</span><span class="rich-count" data-rich-count>0 / 3000</span></div></div><textarea id="project-description" name="description" maxlength="3000" style="display:none" aria-hidden="true"></textarea></div>
 <div><label for="project-image">Фотографии проекта (до 5 штук, JPG, PNG или WebP)</label><div class="file-picker-row"><input class="file-input-hidden" id="project-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" multiple><label class="file-picker-button" for="project-image">Выбрать фотографии</label><span class="file-picker-hint">Можно выбрать до 5 изображений</span></div><p class="notice">До 5 фотографий на проект. Каждая будет автоматически уменьшена до 2 МБ, общий объём — до 10 МБ.</p><div id="image-preview" class="preview-gallery" aria-label="Предпросмотр выбранных фотографий"></div></div>
 <button class="primary" id="project-submit" type="submit">Опубликовать проект</button><p class="notice" id="form-status" role="status">Заполните поля и нажмите «Опубликовать проект».</p>
 </form></div>
@@ -54,6 +54,52 @@ const places={
   roads:{name:'Существующие дороги',description:'Проекты по улучшению дорог, проходов, доступности и удобству перемещения по территории.'},
   gardens:{name:'Сады и открытые участки',description:'Проекты по развитию садов, использованию открытых участков и совместному уходу за территорией.'}
 };
+function richEditorMarkup(){return '<div class="rich-toolbar" role="toolbar" aria-label="Форматирование описания">'+
+'<button class="rich-tool" type="button" data-rich-command="bold" title="Жирный" aria-label="Жирный"><b>B</b></button>'+
+'<button class="rich-tool" type="button" data-rich-command="italic" title="Курсив" aria-label="Курсив"><i>I</i></button>'+
+'<button class="rich-tool" type="button" data-rich-command="underline" title="Подчёркнутый" aria-label="Подчёркнутый"><u>U</u></button>'+
+'<button class="rich-tool" type="button" data-rich-command="insertUnorderedList" title="Маркированный список" aria-label="Маркированный список">• Список</button>'+
+'<button class="rich-tool" type="button" data-rich-command="insertOrderedList" title="Нумерованный список" aria-label="Нумерованный список">1. Список</button>'+
+'<button class="rich-tool" type="button" data-rich-command="formatBlock" data-rich-value="blockquote" title="Цитата" aria-label="Цитата">❝</button>'+
+'<button class="rich-tool" type="button" data-rich-command="removeFormat" title="Убрать форматирование" aria-label="Убрать форматирование">Tx</button>'+
+'<label class="notice" style="margin:0 0 0 4px">Размер <select data-rich-size aria-label="Размер шрифта"><option value="">Обычный</option><option value="12px">12</option><option value="14px">14</option><option value="16px">16</option><option value="18px">18</option><option value="24px">24</option><option value="32px">32</option></select></label>'+
+'<label class="notice" style="margin:0">Шрифт <select data-rich-font aria-label="Тип шрифта"><option value="">По умолчанию</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option><option value="Verdana, sans-serif">Verdana</option><option value="Tahoma, sans-serif">Tahoma</option></select></label></div>'+
+'<div class="rich-content" contenteditable="true" role="textbox" aria-multiline="true" aria-required="true" data-placeholder="Введите описание проекта…"></div>'+
+'<div class="rich-editor-footer"><span class="rich-hint">Выделите текст и нажмите кнопку форматирования.</span><span class="rich-count" data-rich-count>0 / 3000</span></div>'}
+function sanitizeRichHtml(input){
+ const parsed=new DOMParser().parseFromString(String(input||''),'text/html');
+ const allowed=new Set(['P','BR','B','STRONG','I','EM','U','S','UL','OL','LI','BLOCKQUOTE','SPAN']);
+ const safeFonts=new Set(['Arial, sans-serif','Georgia, serif','Verdana, sans-serif','Tahoma, sans-serif']);
+ const safeSizes=new Set(['12px','14px','16px','18px','24px','32px']);
+ function clean(node,parent){
+   if(node.nodeType===Node.TEXT_NODE){parent.append(document.createTextNode(node.nodeValue||''));return}
+   if(node.nodeType!==Node.ELEMENT_NODE)return;
+   const tag=node.tagName;
+   if(['SCRIPT','STYLE','IFRAME','OBJECT','SVG','MATH','VIDEO','AUDIO','IMG','INPUT','FORM'].includes(tag))return;
+   if(tag==='DIV'||tag==='SECTION'){const p=document.createElement('p');Array.from(node.childNodes).forEach(child=>clean(child,p));parent.append(p);return}
+   if(tag==='FONT'){
+     const span=document.createElement('span');const sizeMap={'1':'12px','2':'12px','3':'14px','4':'16px','5':'18px','6':'24px','7':'32px'};
+     const size=sizeMap[node.getAttribute('size')||''];const font=node.getAttribute('face')||'';
+     if(size&&safeSizes.has(size))span.style.fontSize=size;if(safeFonts.has(font))span.style.fontFamily=font;
+     Array.from(node.childNodes).forEach(child=>clean(child,span));parent.append(span);return;
+   }
+   if(!allowed.has(tag)){Array.from(node.childNodes).forEach(child=>clean(child,parent));return}
+   const element=document.createElement(tag.toLowerCase());
+   if(tag==='SPAN'){const size=node.style&&node.style.fontSize;const font=node.style&&node.style.fontFamily;if(safeSizes.has(size))element.style.fontSize=size;if(safeFonts.has(font))element.style.fontFamily=font}
+   Array.from(node.childNodes).forEach(child=>clean(child,element));parent.append(element);
+ }
+ const root=document.createElement('div');Array.from(parsed.body.childNodes).forEach(child=>clean(child,root));return root.innerHTML;
+}
+function richHtmlText(input){const parsed=new DOMParser().parseFromString(String(input||''),'text/html');return (parsed.body.textContent||'').replace(/\\u00a0/g,' ').trim()}
+function wireRichEditor(wrapper){
+ const editor=wrapper.querySelector('.rich-content');if(!editor)return null;const counter=wrapper.querySelector('[data-rich-count]');
+ const updateCount=()=>{if(counter){const length=editor.innerHTML.length;counter.textContent=length+' / 3000';counter.style.color=length>3000?'#963e31':'var(--muted)'}};
+ wrapper.querySelectorAll('[data-rich-command]').forEach(button=>{button.addEventListener('mousedown',event=>event.preventDefault());button.addEventListener('click',()=>{const command=button.dataset.richCommand;if(command==='formatBlock')document.execCommand(command,false,'<blockquote>');else document.execCommand(command,false,null);editor.focus();updateCount()})});
+ const sizeSelect=wrapper.querySelector('[data-rich-size]');if(sizeSelect)sizeSelect.addEventListener('change',()=>{if(!sizeSelect.value)return;const map={'12px':'2','14px':'3','16px':'4','18px':'5','24px':'6','32px':'7'};document.execCommand('fontSize',false,map[sizeSelect.value]||'4');editor.focus();sizeSelect.value='';updateCount()});
+ const fontSelect=wrapper.querySelector('[data-rich-font]');if(fontSelect)fontSelect.addEventListener('change',()=>{if(!fontSelect.value)return;document.execCommand('fontName',false,fontSelect.value);editor.focus();fontSelect.value='';updateCount()});
+ editor.addEventListener('input',updateCount);editor.addEventListener('paste',()=>setTimeout(updateCount,0));updateCount();return {editor,updateCount};
+}
+function createRichEditor(wrapper,initialHtml){wrapper.innerHTML=richEditorMarkup();const wired=wireRichEditor(wrapper);wired.editor.innerHTML=sanitizeRichHtml(initialHtml||'');wired.updateCount();return wired}
 const params=new URLSearchParams(location.search);
 const placeSlug=params.get('place');
 let place=places[placeSlug]||null;
@@ -224,7 +270,7 @@ function makeProjectCard(project,index,ratingRows){
       middle.append(thumbnails);
     }
   }else{const noImage=document.createElement('div');noImage.className='empty';noImage.style.padding='18px';noImage.textContent='Фотография не добавлена';middle.append(noImage)}
-  const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('p');description.className='project-description';description.textContent=project.description;details.append(description);
+  const details=document.createElement('div');details.className='project-description-wrap';const description=document.createElement('div');description.className='project-description';description.innerHTML=sanitizeRichHtml(project.description);details.append(description);
   const date=document.createElement('p');date.className='project-date';date.textContent=project.created_at?'Добавлен: '+new Date(project.created_at).toLocaleDateString(({ru:'ru-RU',uk:'uk-UA',en:'en-GB',pl:'pl-PL',de:'de-DE',fr:'fr-FR'})[window.siteLanguage]||'ru-RU'):'';details.append(date);
   if(isAdmin){
     const adminActions=document.createElement('div');adminActions.style.display='grid';adminActions.style.gap='8px';
@@ -571,19 +617,24 @@ async function updateProjectStatus(project){
 }
 async function editProject(project){
   if(!isAdmin||!adminSession)return;
-  const title=prompt('Новое название проекта:',project.sourceTitle||project.title||'');
-  if(title===null)return;
-  if(!title.trim()){alert('Название проекта не может быть пустым.');return;}
-  const description=prompt('Новое описание проекта:',project.sourceDescription||project.description||'');
-  if(description===null)return;
-  try{
-    const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{method:'PATCH',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({title:title.trim(),description:description.trim()})});
-    if(!response.ok)throw new Error('Не удалось изменить проект (HTTP '+response.status+'). '+await response.text());
-    const updated=await response.json();
-    if(!Array.isArray(updated)||updated.length!==1)throw new Error('Supabase не обновил запись. Проверьте политику RLS UPDATE для администраторов.');
-    await loadProjects();
-    alert('Название и описание проекта сохранены.');
-  }catch(error){alert(error.message)}
+  const backdrop=document.createElement('div');backdrop.className='modal-backdrop open rich-edit-backdrop';backdrop.setAttribute('role','dialog');backdrop.setAttribute('aria-modal','true');backdrop.setAttribute('aria-labelledby','rich-edit-title');
+  backdrop.innerHTML='<div class="modal rich-edit-modal"><div class="modal-top"><h2 id="rich-edit-title">Редактировать проект</h2><button class="close" type="button" data-edit-close aria-label="Закрыть">×</button></div><form data-edit-form><div><label for="rich-edit-name">Название проекта</label><input id="rich-edit-name" name="title" maxlength="120" required></div><div><label>Описание проекта</label><div class="rich-editor" data-edit-rich></div><p class="notice" data-edit-status role="status">Абзацы и форматирование сохранятся после сохранения.</p></div><div class="translation-actions"><button class="primary" type="submit" data-edit-save>Сохранить изменения</button><button class="text-button" type="button" data-edit-close>Отмена</button></div></form></div>';
+  document.body.append(backdrop);const nameInput=backdrop.querySelector('[name="title"]');nameInput.value=project.sourceTitle||project.title||'';
+  const editorWrap=backdrop.querySelector('[data-edit-rich]');const rich=createRichEditor(editorWrap,project.sourceDescription||project.description||'');const close=()=>backdrop.remove();
+  backdrop.querySelectorAll('[data-edit-close]').forEach(button=>button.addEventListener('click',close));backdrop.addEventListener('click',event=>{if(event.target===backdrop)close()});nameInput.focus();
+  backdrop.querySelector('[data-edit-form]').addEventListener('submit',async event=>{
+    event.preventDefault();const titleValue=nameInput.value.trim();const description=sanitizeRichHtml(rich.editor.innerHTML);const plainText=richHtmlText(description);const status=backdrop.querySelector('[data-edit-status]');const save=backdrop.querySelector('[data-edit-save]');
+    if(!titleValue){status.textContent='Название проекта не может быть пустым.';nameInput.focus();return}
+    if(!plainText){status.textContent='Добавьте описание проекта.';rich.editor.focus();return}
+    if(description.length>3000){status.textContent='Форматированный текст превышает лимит базы в 3000 символов. Сократите описание или уберите часть форматирования.';return}
+    save.disabled=true;status.textContent='Сохраняем проект…';
+    try{
+      const response=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+encodeURIComponent(project.id),{method:'PATCH',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+adminSession.access_token,'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify({title:titleValue,description})});
+      if(!response.ok)throw new Error('Не удалось изменить проект (HTTP '+response.status+'). '+await response.text());
+      const updated=await response.json();if(!Array.isArray(updated)||updated.length!==1)throw new Error('Supabase не обновил запись. Проверьте политику RLS UPDATE для администраторов.');
+      close();await loadProjects();alert('Название и описание проекта сохранены.');
+    }catch(error){status.textContent=error.message}finally{save.disabled=false}
+  });
 }
 async function moveProject(project,newPlace){
   if(!isAdmin||!adminSession||!newPlace||newPlace===project.place)return;
@@ -614,10 +665,15 @@ async function deleteProject(project){
     await loadProjects();alert('Проект удалён.');
   }catch(error){alert(error.message)}
 }
+const newProjectRich=wireRichEditor(document.getElementById('project-description-rich'));const newProjectEditor=newProjectRich.editor;
+newProjectEditor.addEventListener('input',()=>{form.elements.description.value=sanitizeRichHtml(newProjectEditor.innerHTML)});
 form.addEventListener('submit',async event=>{
   event.preventDefault();if(!place){formStatus.textContent='Сначала выберите место на карте.';return}
-  const data={place:placeSlug,title:form.elements.title.value.trim(),description:form.elements.description.value.trim()};
-  const files=Array.from(imageInput.files||[]);if(!data.title||!data.description)return;
+  const description=sanitizeRichHtml(newProjectEditor.innerHTML);const descriptionText=richHtmlText(description);
+  const data={place:placeSlug,title:form.elements.title.value.trim(),description};const files=Array.from(imageInput.files||[]);
+  if(!data.title){formStatus.textContent='Введите название проекта.';return}
+  if(!descriptionText){formStatus.textContent='Введите описание проекта.';newProjectEditor.focus();return}
+  if(description.length>3000){formStatus.textContent='Форматированное описание превышает лимит базы в 3000 символов. Сократите текст или уберите часть форматирования.';return}
   if(files.length>5){formStatus.textContent='Можно прикрепить не более 5 фотографий.';return}
   submitButton.disabled=true;const uploadedUrls=[];formStatus.textContent=files.length?'Обрабатываем и загружаем фотографии…':'Сохраняем проект…';
   try{
@@ -632,7 +688,7 @@ form.addEventListener('submit',async event=>{
     formStatus.textContent='Сохраняем проект…';
     const response=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+(adminSession?adminSession.access_token:SUPABASE_PUBLISHABLE_KEY),'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(data)});
     if(!response.ok)throw new Error('Не удалось сохранить проект (HTTP '+response.status+'). '+await response.text());
-    form.reset();clearImagePreview();formStatus.textContent='Проект опубликован и добавлен в общий список.';await loadProjects();document.getElementById('new-project').open=false;
+    form.reset();newProjectEditor.innerHTML='';form.elements.description.value='';newProjectRich.updateCount();clearImagePreview();formStatus.textContent='Проект опубликован и добавлен в общий список.';await loadProjects();document.getElementById('new-project').open=false;
   }catch(error){
     formStatus.textContent='Ошибка: '+error.message;
     if(uploadedUrls.length)deleteProjectImagesFromStorage(uploadedUrls,adminSession?adminSession.access_token:null).catch(()=>{});

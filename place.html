@@ -665,7 +665,7 @@ async function deleteProject(project){
     await loadProjects();alert('Проект удалён.');
   }catch(error){alert(error.message)}
 }
-const newProjectRich=wireRichEditor(document.getElementById('project-description-rich'));const newProjectEditor=newProjectRich.editor;
+const newProjectWrapper=document.getElementById('project-description-rich');const newProjectRich=createRichEditor(newProjectWrapper,'');const newProjectEditor=newProjectRich.editor;newProjectEditor.id='project-description-rich-content';
 newProjectEditor.addEventListener('input',()=>{form.elements.description.value=sanitizeRichHtml(newProjectEditor.innerHTML)});
 form.addEventListener('submit',async event=>{
   event.preventDefault();if(!place){formStatus.textContent='Сначала выберите место на карте.';return}

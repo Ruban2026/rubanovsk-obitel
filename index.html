@@ -201,11 +201,11 @@ async function loadMapMarkers(){
     mapMarkers=await response.json();mapDataReady=true;markerStatus.dataset.customMessage='';
     if(!mapMarkers.length){mapMarkers=defaultMapMarkers.map(item=>({...item}));markerStatus.textContent='В таблице пока нет сохранённых меток. Показаны стартовые метки карты.';}
     try{
-      const projectsResponse=await fetch(SUPABASE_URL+'/rest/v1/projects?select=place',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
+      const projectsResponse=await fetch(SUPABASE_URL+'/rest/v1/projects?select=place,status',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});
       if(projectsResponse.ok){
         const projectRows=await projectsResponse.json();
-        const placesWithProjects=new Set(projectRows.map(project=>project.place).filter(Boolean));
-        mapMarkers.forEach(marker=>{marker.hasProjects=!!marker.place&&placesWithProjects.has(marker.place)});
+        const placesWithNewProjects=new Set(projectRows.filter(project=>project.status!=='completed').map(project=>project.place).filter(Boolean));
+        mapMarkers.forEach(marker=>{marker.hasProjects=!!marker.place&&placesWithNewProjects.has(marker.place)});
       }
     }catch(_projectsError){}
     selectedMarkerId=null;await loadMarkerTranslations();renderMapMarkers();

@@ -632,7 +632,7 @@ function createBird(kind,goosePalette=0){
   el.setAttribute('viewBox','0 0 100 70');el.setAttribute('class','map-bird '+kind);
   // A compact, straight-necked goose silhouette with wings rooted at the centre of the body.
   el.innerHTML='<path class="wing wing-top" d="M47 35 Q37 18 11 5 Q17 29 44 38 Z"/><path class="wing wing-bottom" d="M47 35 Q37 52 11 65 Q17 41 44 32 Z"/><path class="body" d="M8 35 Q20 27 42 31 L66 33 L77 35 L66 38 L42 39 Q20 43 8 35 Z"/><path class="body" d="M65 33 L73 32 L78 35 L73 38 L65 37 Z"/><circle class="body" cx="75" cy="34" r="2.2"/><path class="beak" d="M77 33.5 L84 35 L77 36.5 Z"/>';
-  if(kind==='swallow'){el.innerHTML='<path class="wing wing-top" d="M46 35 C37 29 29 17 13 11 C17 21 27 33 43 37 C37 30 29 23 21 18 C31 24 40 32 46 35 Z"/><path class="wing wing-bottom" d="M46 35 C37 41 29 53 13 59 C17 49 27 37 43 33 C37 40 29 47 21 52 C31 46 40 38 46 35 Z"/><path class="body" d="M19 35 L13 29 L25 32 L39 33 L55 33 L63 35 L55 38 L39 38 L25 39 Z"/><path class="body" d="M52 34 L59 33 L63 35 L59 37 L53 37 Z"/><path class="neck-mark" d="M52.5 33.2 Q55.5 32.5 58 34.1 L57 36.1 Q54.5 35.2 52.5 35.5 Z"/><circle class="body" cx="60" cy="34" r="1.2"/><path class="beak" d="M61 34.5 L66 35 L61 35.5 Z"/>';if(Math.random()<.38)el.querySelector('.neck-mark').style.opacity='1';}
+  if(kind==='swallow'){el.innerHTML='<path class="wing wing-top" d="M46 35 C37 28 28 16 13 11 C17 23 27 35 43 40 C39 33 32 27 24 21 C34 27 42 32 46 35 Z"/><path class="wing wing-bottom" d="M46 35 C37 42 28 54 13 59 C17 47 27 35 43 30 C39 37 32 43 24 49 C34 43 42 38 46 35 Z"/><path class="body" d="M19 35 L13 29 L25 32 L39 33 L55 33 L63 35 L55 38 L39 38 L25 39 Z"/><path class="body" d="M52 34 L59 33 L63 35 L59 37 L53 37 Z"/><path class="neck-mark" d="M52.5 33.2 Q55.5 32.5 58 34.1 L57 36.1 Q54.5 35.2 52.5 35.5 Z"/><circle class="body" cx="60" cy="34" r="1.2"/><path class="beak" d="M61 34.5 L66 35 L61 35.5 Z"/>';if(Math.random()<.38)el.querySelector('.neck-mark').style.opacity='1';}
   if(kind==='goose'){
     const plumage=[
       [['#686d6b','#424847','#443c32'],['#747a77','#4a504e','#514538'],['#5d6362','#383f3e','#3f372e']],
@@ -684,7 +684,7 @@ function maybeSpawnBirds(now){
     else if(edge===2){b.x=w*Math.random();b.y=-55;b.tx=w*Math.random();b.ty=h+80;}
     else{b.x=w*Math.random();b.y=h+55;b.tx=w*Math.random();b.ty=-80;}
     b.heading=Math.atan2(b.ty-b.y,b.tx-b.x);b.speed=.05+Math.random()*.02;b.vx=Math.cos(b.heading)*b.speed;b.vy=Math.sin(b.heading)*b.speed;
-    b.changeAt=Infinity;b.el.style.width='21px';b.el.style.height='15px';
+    b.changeAt=now+1500+Math.random()*2800;b.el.style.width='21px';b.el.style.height='15px';
     nextSwallowAt=now+6500+Math.random()*11000;
   }
   if(windToggle.checked&&now>nextSwallowCall){nextSwallowCall=now+6500+Math.random()*12000;setTimeout(()=>{if(windToggle.checked)chirpSwallow();},800+Math.random()*3000);}
@@ -698,7 +698,7 @@ function birdTick(now){
   const dt=Math.min(32,now-(birdLastTime||now));birdLastTime=now;maybeSpawnBirds(now);
   for(let i=birdActors.length-1;i>=0;i--){
     const b=birdActors[i];b.age+=dt;
-    
+    if(b.kind==='swallow'&&now>b.changeAt){b.tx=Math.random()*w;b.ty=Math.random()*h;b.changeAt=now+1800+Math.random()*4200;}
     const desired=Math.atan2(b.ty-b.y,b.tx-b.x);
     let turn=((desired-b.heading+Math.PI*3)%(Math.PI*2))-Math.PI;
     const maxTurn=(b.kind==='goose'?.000006:.00028)*dt;
